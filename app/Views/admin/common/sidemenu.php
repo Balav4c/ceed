@@ -115,19 +115,18 @@
                 </div>
               </li> -->
               <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
+                <a class="nav-link" href="<?= base_url('admin/manage_user') ?>">
                   <i class="fas fa-th-list"></i>
                   <p>Manage User</p>
-                  <span class="caret"></span>
+                  <!-- <span class="caret"></span> -->
                 </a>
               </li>
-               <li class="nav-item">
-                <a data-bs-toggle="collapse" href="#sidebarLayouts">
-                  <i class="fas fa-th-list"></i>
-                  <p>Manage Role</p>
-                  <span class="caret"></span>
+              <li class="nav-item">
+                <a class="nav-link" href="<?= base_url('admin/manage_role') ?>">
+                    <i class="fas fa-th-list"></i>
+                    <p>Manage Role</p>
                 </a>
-              </li>
+            </li>
               <!-- <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#forms">
                   <i class="fas fa-pen-square"></i>
