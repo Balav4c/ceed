@@ -10,7 +10,7 @@ class LoginModel extends Model {
 	}
 	public function checkLoginUser($email, $password) {
 		
-		return $this->db->query("select * from user where us_Email = '".$email."' and us_Password = '".$password."'")->getRow();
+		return $this->db->query("select * from user where email = '".$email."' and password = '".$password."'")->getRow();
 
 	}
 }
