@@ -56,7 +56,7 @@ $(document).ready(function() {
                 },
 
                 {
-                    data: "role_id",
+                    data: "permissions",
                     render: function (id, type, row, meta) {
                         const permissions = row.permissions || [];
                         if (permissions.length > 0) {
@@ -84,7 +84,7 @@ $(document).ready(function() {
                     render: function (id) {
                         return `
                         <div class="d-flex align-items-center gap-3">
-                            <a href="<?= base_url('admin/manage_role/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                            <a href="<?= base_url('admin/add_role/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
                             <a href="javascript:void(0);" class="delete-all" data-id="${id}" title="Delete" style="color: #dc3545;">
@@ -141,5 +141,101 @@ $(document).ready(function() {
             }
         });
     });
+
+    //  const $saveBtn = $('.enter-btn');
+    // const $form = $('#roleForm');
+    // const originalData = {
+    //     roleName: $('#role_name').val().trim(),
+    //     checkboxes: {}
+    // };
+
+    $('input.form-check-input').each(function () {
+        originalData.checkboxes[$(this).attr('id')] = $(this).prop('checked');
+    });
+
+    const isEdit = $('#role_id').val().trim() !== '';
+
+    if (isEdit) {
+        $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+    }
+
+    $('#select_all_permissions').on('change', function () {
+        $('.permission-checkbox').prop('checked', this.checked).trigger('change');
+    });
+
+    $('.permission-checkbox').on('change', function () {
+        const allChecked = $('.permission-checkbox').length === $('.permission-checkbox:checked').length;
+        $('#select_all_permissions').prop('checked', allChecked);
+    });
+
+    const total = $('.permission-checkbox').length;
+    const checked = $('.permission-checkbox:checked').length;
+    $('#select_all_permissions').prop('checked', total === checked);
+
+    function checkIfChanged() {
+        const currentName = $('#role_name').val().trim();
+        let changed = currentName !== originalData.roleName;
+
+        $('input.permission-checkbox').each(function () {
+            const id = $(this).attr('id');
+            if ($(this).prop('checked') !== originalData.checkboxes[id]) {
+                changed = true;
+            }
+        });
+
+        if (isEdit) {
+            if (changed) {
+                $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+            } else {
+                $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+            }
+        }
+    }
+
+    $('#role_name').on('input', checkIfChanged);
+    $('.permission-checkbox').on('change', checkIfChanged);
+
+    $saveBtn.on('click', function (e) {
+        e.preventDefault();
+
+        let roleName = $('#role_name').val().trim();
+        let role_id = $('#role_id').val().trim();
+
+        if (!roleName.match(/[a-zA-Z]/)) {
+            showMessage('Role name must contain at least one letter.', 'danger');
+            return;
+        }
+
+        $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+
+        const form = $form[0];
+        const formData = new FormData(form);
+
+        $.ajax({
+            url: role_id ? '<?= base_url('admin/manage_role/update') ?>/' + role_id : '<?= base_url('admin/manage_role/store') ?>',
+            type: 'POST',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (response) {
+                if (response.status === 'error') {
+                    showMessage(response.message, 'danger');
+                    $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+                } else {
+                    showMessage(response.message, 'success');
+                    setTimeout(() => {
+                        $('.alert').fadeOut();
+                        window.location.href = "<?= base_url('admin/manage_role') ?>";
+                    }, 2000);
+                }
+            },
+            error: function () {
+                showMessage('Something Went wrong. Please Try Again.', 'danger');
+                $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+            }
+        });
+    });
+
 });
 </script>
