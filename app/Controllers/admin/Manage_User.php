@@ -2,7 +2,7 @@
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 
-class Dashboard extends BaseController 
+class Manage_User extends BaseController 
 {
 	  
 	public function __construct() 
@@ -15,8 +15,16 @@ class Dashboard extends BaseController
 	{
 	        $template = view('admin/common/header');
             $template.= view('admin/common/sidemenu');
-			$template.= view('admin/dashboard');
+			$template.= view('admin/manage_user');
             $template.= view('admin/common/footer');
 			return $template;
 	}
+    public function get()
+	{
+	        $template = view('admin/common/header');
+            $template.= view('admin/common/sidemenu');
+			$template.= view('admin/adduser');
+            $template.= view('admin/common/footer');
+			return $template;
+	} 
 }
