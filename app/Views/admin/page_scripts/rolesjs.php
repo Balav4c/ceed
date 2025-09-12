@@ -1,17 +1,29 @@
 <script>
+$(document).ready(function() {
+    $('#select_all_permissions').on('change', function() {
+        $('.permission-checkbox').prop('checked', $(this).prop('checked'));
+    });
+
+    $('.permission-checkbox').on('change', function() {
+        if ($('.permission-checkbox:checked').length === $('.permission-checkbox').length) {
+            $('#select_all_permissions').prop('checked', true);
+        } else {
+            $('#select_all_permissions').prop('checked', false);
+        }
+    });
+
     function formatDateToDMY(input) {
     const date = new Date(input);
     const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0'); // months are 0-based
+    const month = String(date.getMonth() + 1).padStart(2, '0'); 
     const year = date.getFullYear();
     return `${day}-${month}-${year}`;
 }
     let table="";
-    $(document).ready(function () {
         const alertBox = $('.alert');
         table = $('#roleTable').DataTable({
             ajax: {
-                url: "<?= base_url('manage_role/rolelistajax') ?>",
+                url: "<?= base_url('admin/manage_role/rolelistajax') ?>",
                 type: "POST",
                 dataSrc: "data"
             },
@@ -57,7 +69,7 @@
                     data: "created_at",
                     render: function (data) {
                         const d = new Date(data);
-                        return isNaN(d) ? '-' : formatDateToDMY(d);//d.toISOString().split('T')[0];
+                        return isNaN(d) ? '-' : formatDateToDMY(d);
                     }
                 },
                 {
@@ -72,7 +84,7 @@
                     render: function (id) {
                         return `
                         <div class="d-flex align-items-center gap-3">
-                            <a href="<?= base_url('rolemanagement/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                            <a href="<?= base_url('admin/manage_role/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
                             <a href="javascript:void(0);" class="delete-all" data-id="${id}" title="Delete" style="color: #dc3545;">
@@ -90,7 +102,7 @@
                 { searchable: false, orderable: false, targets: [0, 2, 5] } 
             ],
             language: {
-        infoFiltered: "", // ✅ Hides "(filtered from X total entries)"
+        infoFiltered: "", 
     }
         });
 
@@ -105,43 +117,29 @@
         });
 
 
-        let deleteId = null;
-        const deleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    $('#roleForm').on('submit', function(e) {
+        e.preventDefault();
+        var form = $(this);
+        var url = form.attr('action');
 
-        $(document).on('click', '.delete-all', function () {
-            deleteId = $(this).data('id');
-            deleteModal.show(); 
-        });
-
-        $('#confirm-delete-btn').on('click', function () {
-            if (!deleteId) return;
-
-            $.ajax({
-                url: "<?= base_url('rolemanagement/delete') ?>",
-                type: "POST",
-                data: {
-                    role_id: deleteId,
-                    '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
-                },
-                dataType: "json",
-                success: function (res) {
-                    if (res.status === 'success') {
-                        alertBox.removeClass().addClass('alert alert-danger text-center position-fixed').text('Role Deleted Successfully.').fadeIn();
-                        setTimeout(() => alertBox.fadeOut(), 2000);
-                        table.ajax.reload(null, false);
-                    } else {
-                        alertBox.removeClass().addClass('alert alert-warning text-center position-fixed').text(res.message || 'Delete Failed.').fadeIn();
-                        setTimeout(() => alertBox.fadeOut(), 3000);
-                    }
-                },
-                error: function () {
-                    alertBox.removeClass().addClass('alert alert-danger text-center position-fixed').text('Error Occurred While Deleting Role.').fadeIn();
-                    setTimeout(() => alertBox.fadeOut(), 3000);
+       $.ajax({
+            url: url,
+            type: 'POST',
+            data: form.serialize(),
+            dataType: 'json',
+            success: function(res) {
+                if (res.status === 'success') {
+                    alert('Role saved successfully!');
+                    window.location.href = "<?= base_url('admin/manage_role') ?>";
+                } else {
+                    alert('Error: ' + res.message);
                 }
-            });
-
-            deleteModal.hide(); 
-            deleteId = null;   
+            },
+            error: function(xhr, status, error) {
+                console.log(xhr.responseText);
+                alert('Something went wrong! Check console for details.');
+            }
         });
     });
+});
 </script>
