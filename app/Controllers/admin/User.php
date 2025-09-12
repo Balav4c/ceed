@@ -1,17 +1,17 @@
 <?php
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
-use App\Models\admin\ManageUser_Model;
+use App\Models\admin\UserModel;
 
 
-class Manage_User extends BaseController 
+class User extends BaseController 
 {
 	  
 	public function __construct() 
 	{
 		$this->session = \Config\Services::session();
 		$this->input = \Config\Services::request();
-         $this->ManageUser_Model = new ManageUser_Model();
+         $this->userModel = new UserModel();
 
 	}
 	public function index()
@@ -64,39 +64,30 @@ class Manage_User extends BaseController
     //         'message' => 'User Added Successfully.'
     //     ]);
     // }
-public function createUser() {
-    $user_id = $this->input->getPost('user_id');
-    $name = $this->input->getPost('name');
-    $password = $this->input->getPost('password');
-    $email = $this->input->getPost('email');
- 
-    if ($email) {
-        // 🔍 Check if category name already exists
-        $exists = $this->userModel->isCategoryExists($name, $user_id);
-        if ($exists) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                
-                'message' => 'Email already exists.'
-            ]);
-        }
- 
+public function saveUser() {
+    $user_id = $this->request->getPost('user_id');
+    $name = $this->request->getPost('name');
+    $email = $this->request->getPost('email');
+    $password = $this->request->getPost('password');
+
+    if ($name && $email && $password) {
         $data = [
             'name' => $name,
-            'password' => $password,
             'email' => $email,
+            'password' => password_hash($password, PASSWORD_DEFAULT),
             'status' => 1,
             'created_on' => date("Y-m-d H:i:s"),
         ];
- 
+
         if (empty($user_id)) {
             $CreateUser = $this->userModel->userInsert($data);
             return $this->response->setJSON([
                 "status" => 1,
-                "msg" => "Category Created Successfully.",
-                "redirect" => base_url('category')
+                "msg" => "User Created Successfully.",
+                "redirect" => base_url('admin/manage_user')
             ]);
         } else {
+            $data['modified_on'] = date("Y-m-d H:i:s");
             $modifyUser = $this->userModel->updateUser($user_id, $data);
             return $this->response->setJSON([
                 "status" => 1,
@@ -112,51 +103,51 @@ public function createUser() {
     }
 }
 
-    public function store()
-{
-        $request = $this->request;
-        $roleModel = new RoleModel();
-        $roleMenuModel = new RoleMenuModel();
+//     public function store()
+// {
+//         $request = $this->request;
+//         $roleModel = new RoleModel();
+//         $roleMenuModel = new RoleMenuModel();
  
-        $role_id   = $request->getPost('role_id');
-        $role_name = $request->getPost('role_name');
-        $menus     = $request->getPost('menus');
-        if (empty($role_name)) {
-            return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => 'Role Name is required'
-            ]);
-        }
+//         $role_id   = $request->getPost('role_id');
+//         $role_name = $request->getPost('role_name');
+//         $menus     = $request->getPost('menus');
+//         if (empty($role_name)) {
+//             return $this->response->setJSON([
+//                 'status'  => 'error',
+//                 'message' => 'Role Name is required'
+//             ]);
+//         }
  
-        if ($role_id) {
-            $roleModel->update($role_id, ['role_name' => $role_name]);
-        } else {
-            $role_id = $roleModel->insert(['role_name' => $role_name], true);
-        }
+//         if ($role_id) {
+//             $roleModel->update($role_id, ['role_name' => $role_name]);
+//         } else {
+//             $role_id = $roleModel->insert(['role_name' => $role_name], true);
+//         }
  
-        if (!$role_id) {
-            return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => 'Failed to save role (check DB structure)'
-            ]);
-        }
+//         if (!$role_id) {
+//             return $this->response->setJSON([
+//                 'status'  => 'error',
+//                 'message' => 'Failed to save role (check DB structure)'
+//             ]);
+//         }
  
-        $roleMenuModel->where('role_id', $role_id)->delete();
-       if (!empty($menus)) {
-        $data = [];
-        foreach ($menus as $menuName) {
-            $data[] = [
-                'role_id'   => $role_id,
-                'menu_name' => $menuName,
-                'access'    => 1  
-            ];
-        }
-            $roleMenuModel->insertBatch($data);
-        }
+//         $roleMenuModel->where('role_id', $role_id)->delete();
+//        if (!empty($menus)) {
+//         $data = [];
+//         foreach ($menus as $menuName) {
+//             $data[] = [
+//                 'role_id'   => $role_id,
+//                 'menu_name' => $menuName,
+//                 'access'    => 1  
+//             ];
+//         }
+//             $roleMenuModel->insertBatch($data);
+//         }
  
-        return $this->response->setJSON(['status' => 'success']);
+//         return $this->response->setJSON(['status' => 'success']);
  
-}
+// }
 //     public function userlistajax()
 // {
 //     header('Content-Type: application/json');
