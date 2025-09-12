@@ -5,7 +5,7 @@
                 <div class="alert d-none text-center position-fixed" role="alert"></div>
                 <div class="row align-items-center">
                     <div class="col-12 col-md-6">
-                        <h3 class="mb-3 mb-md-0">Mange User</h3>
+                        <h3 class="mb-3 mb-md-0">Manage User</h3>
                     </div>
                 <div class="col-12 col-md-6 text-end">
                 <a href="<?= base_url('admin/adduser') ?>" class="btn btn-secondary  w-md-auto mt-2 mt-md-0">Add New User</a>
