@@ -47,11 +47,6 @@
                                 <input type="email" class="form-control" name="email" id="email"
                                     placeholder="Enter Email" required>
                             </div>
-                            <!-- <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <input type="password" class="form-control" name="password" id="password"
-                                    placeholder="Password" required>
-                            </div> -->
                             <div class="mb-3 position-relative">
                                 <label for="password" class="form-label">Password</label>
                                 <div class="input-group">
@@ -62,6 +57,11 @@
                                     </span>
                                 </div>
                             </div>
+                            <!--Captcha-->
+                            <div class="g-recaptcha" data-sitekey="6Le-VXcrAAAAAFdEqJLtM5DxM6GoGl7cJdV6hknL"></div>
+
+
+                            <br>
 
                             <button type="submit" id="loginCheck" class="btn btn-bg w-100 text-white">Log in</button>
                         </form>
@@ -74,10 +74,16 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/popper.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/bootstrap.min.js"></script>
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
     $('#loginCheck').click(function(e) {
         e.preventDefault();
+        var response = grecaptcha.getResponse();
+        if (response.length === 0) {
+            $('#errorDiv')
+                .html('<div class="alert alert-danger">Please complete the reCAPTCHA.</div>');
+            return;
+        }
 
         let email = $('#email').val().trim();
         let password = $('#password').val().trim();
