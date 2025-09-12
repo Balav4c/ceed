@@ -7,11 +7,7 @@ class UserModel extends Model {
 
     protected $table = 'user';
     protected $primaryKey = 'user_id';
-    protected $allowedFields = ['name', 'email', 'password', 'status', 'created_on', 'modified_on'];
-
-    public function __construct() {
-        $this->db = \Config\Database::connect();
-    }
+    protected $allowedFields = ['role_id', 'name', 'email', 'password', 'status', 'created_at', 'updated_at'];
 
     public function userInsert($data) {
         return $this->db->table($this->table)->insert($data);
@@ -23,4 +19,3 @@ class UserModel extends Model {
                         ->update($data);
     }
 }
-?>
