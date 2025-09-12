@@ -16,4 +16,7 @@ $routes->get('admin/adduser', 'admin\Manage_User::get');
 
 
 $routes->get('admin/manage_role' , 'admin\Manage_Role::index');
-$routes->get('admin/rolelist' , 'admin\Manage_Role::rolelist');
+$routes->get('admin/add_role' , 'admin\Manage_Role::addrole');
+$routes->post('admin/manage_role/store', 'admin\Manage_Role::store');
+$routes->post('admin/manage_role/rolelistajax', 'admin\Manage_Role::rolelistajax');
+

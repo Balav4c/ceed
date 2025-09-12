@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Models;
+namespace App\Models\Admin;
 
 use CodeIgniter\Model;
 
-class RoleMenu_Model extends Model
+class RoleMenuModel extends Model
 {
     protected $table = 'role_menus';
     protected $primaryKey = 'rolemenu_id';
