@@ -32,12 +32,7 @@
           <div class="sidebar-content">
             <ul class="nav nav-secondary">
               <li class="nav-item active">
-                <a
-                  data-bs-toggle="collapse"
-                  href="#dashboard"
-                  class="collapsed"
-                  aria-expanded="false"
-                >
+               <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
                   <i class="fas fa-home"></i>
                   <p>Dashboard</p>
                   <span class="caret"></span>

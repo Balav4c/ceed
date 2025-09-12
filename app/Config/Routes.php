@@ -15,3 +15,4 @@ $routes->get('admin/manage_user' , 'admin\Manage_User::index');
 
 
 $routes->get('admin/manage_role' , 'admin\Manage_Role::index');
+$routes->get('admin/rolelist' , 'admin\Manage_Role::rolelist');
