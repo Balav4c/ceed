@@ -3,14 +3,14 @@
         <div class="card">
             <!-- <div class="alert d-none text-center position-fixed" role="alert"></div> -->
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">Add New Role and Permissions</h3>
+               <h3 class="mb-0"><?= isset($role['role_id']) ? 'Edit Role' : 'Add New Role and Permissions' ?></h3>
             </div>
             <div class="card-body">
                 <form id="roleForm" action="<?= base_url('admin/manage_role/store') ?>" class="p-3">
-                    <input type="hidden" name="role_id" id="role_id" >
+                    <input type="hidden" name="role_id" id="role_id" value="<?= isset($role['role_id']) ? esc($role['role_id']) : '' ?>">
                     <div class="mb-3">
                         <label for="role_name" class="form-label">Role Name <span class="text-danger">*</span></label>
-                        <input type="text" name="role_name" id="role_name" class="form-control capitalize"
+                        <input type="text" name="role_name" id="role_name" class="form-control capitalize" value="<?= isset($role['role_name']) ? esc($role['role_name']) : '' ?>" required
                             required>
                     </div>
                     <div class="card mb-3">
@@ -25,11 +25,14 @@
                             <div class="row">
                                 <?php
                                     $menus = ['Dashboard', 'Manage User', 'Manage Role'];
-                                    foreach ($menus as $menu) : ?>
+                                    foreach ($menus as $menu) : 
+                                        $menuKey = strtolower(str_replace(' ', '_', $menu));
+                                            $isChecked = (isset($access[$menuKey]) && $access[$menuKey] == 1) ? 'checked' : '';
+                                        ?>
                                         <div class="col-md-4">
                                             <div class="form-check mb-2">
-                                                <input class="form-check-input permission-checkbox" type="checkbox" name="menus[]" value="<?= strtolower(str_replace(' ', '_', $menu)) ?>" id="<?= strtolower(str_replace(' ', '_', $menu)) ?>">
-                                                <label class="form-check-label" for="<?= strtolower(str_replace(' ', '_', $menu)) ?>">
+                                                <input class="form-check-input permission-checkbox" type="checkbox" name="menus[]" value="<?= $menuKey ?>" id="<?= $menuKey ?>" <?= $isChecked ?>>
+                                                <label class="form-check-label" for="<?= $menuKey ?>">
                                                     <?= $menu ?>
                                                 </label>
                                             </div>
