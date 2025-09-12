@@ -47,8 +47,8 @@
                     <!-- Logo Header -->
                     <div class="logo-header" data-background-color="dark">
                         <a href="index.html" class="logo">
-                            <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/kaiadmin/logo_light.svg" alt="navbar brand" class="navbar-brand"
-                                height="20" />
+                            <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/kaiadmin/logo_light.svg"
+                                alt="navbar brand" class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
                             <button class="btn btn-toggle toggle-sidebar">
@@ -111,7 +111,8 @@
                                             <div class="notif-center">
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/jm_denis.jpg" alt="Img Profile" />
+                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/jm_denis.jpg"
+                                                            alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Jimmy Denis</span>
@@ -121,7 +122,8 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/chadengle.jpg" alt="Img Profile" />
+                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/chadengle.jpg"
+                                                            alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Chad</span>
@@ -131,7 +133,8 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/mlane.jpg" alt="Img Profile" />
+                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/mlane.jpg"
+                                                            alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Jhon Doe</span>
@@ -143,7 +146,8 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/talha.jpg" alt="Img Profile" />
+                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/talha.jpg"
+                                                            alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="subject">Talha</span>
@@ -198,7 +202,8 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile2.jpg" alt="Img Profile" />
+                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile2.jpg"
+                                                            alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
                                                         <span class="block">
@@ -296,16 +301,17 @@
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
                                     aria-expanded="false">
                                     <div class="avatar-sm">
-                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg" alt="..." class="avatar-img rounded-circle" />
+                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg"
+                                            alt="..." class="avatar-img rounded-circle" />
                                     </div>
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
-                                        <span class="fw-bold">Admin</span>
+                                        <span class="fw-bold"> <?= session()->get('user_name'); ?></span>
                                     </span>
                                 </a>
                                 <ul class="dropdown-menu dropdown-user animated fadeIn">
                                     <div class="dropdown-user-scroll scrollbar-outer">
-                                        <li>
+                                        <!-- <li>
                                             <div class="user-box">
                                                 <div class="avatar-lg">
                                                     <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg" alt="image profile"
@@ -318,16 +324,16 @@
                                                         Profile</a>
                                                 </div>
                                             </div>
-                                        </li>
+                                        </li> -->
                                         <li>
-                                            <div class="dropdown-divider"></div>
+                                            <!-- <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">My Profile</a>
                                             <a class="dropdown-item" href="#">My Balance</a>
                                             <a class="dropdown-item" href="#">Inbox</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Account Setting</a>
-                                            <div class="dropdown-divider"></div>
-                                            <a class="dropdown-item" href="#">Logout</a>
+                                            <div class="dropdown-divider"></div> -->
+                                            <a class="dropdown-item" id="logout_btn">Logout</a>
                                         </li>
                                     </div>
                                 </ul>
@@ -337,3 +343,35 @@
                 </nav>
                 <!-- End Navbar -->
             </div>
+            <!--Script js-->
+
+            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+
+            <script>
+            $(document).ready(function() {
+                $("#logout_btn").on("click", function(e) {
+                    swal({
+                        title: "Are you sure?",
+                        text: "You will be logged out!",
+                        icon: "warning",
+                        buttons: {
+                            confirm: {
+                                text: "Yes, logout",
+                                className: "btn btn-success",
+                            },
+                            cancel: {
+                                visible: true,
+                                className: "btn btn-danger",
+                            },
+                        },
+                    }).then((willLogout) => {
+                        if (willLogout) {
+                            window.location.href = "<?= base_url('admin/logout'); ?>";
+                        } else {
+                            swal.close();
+                        }
+                    });
+                });
+            });
+            </script>

@@ -13,6 +13,9 @@ class Dashboard extends BaseController
 	}
 	public function index()
 	{
+		 if (!$this->session->get('user_id')) {
+            return redirect()->to('admin'); 
+        }
 	        $template = view('admin/common/header');
             $template.= view('admin/common/sidemenu');
 			$template.= view('admin/dashboard');

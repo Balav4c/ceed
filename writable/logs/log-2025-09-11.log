@@ -31,3 +31,143 @@ in APPPATH\Views\admin\common\header.php on line 12.
  8 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
  9 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
 10 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:29:44 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:30:53 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:32:22 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:32:38 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:33:53 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:34:00 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:34:12 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:34:25 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 22.
+ 1 APPPATH\Controllers\admin\Login.php(22): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 22)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:38:13 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 23.
+ 1 APPPATH\Controllers\admin\Login.php(23): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 23)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 17:59:22 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 26.
+ 1 APPPATH\Controllers\admin\Login.php(26): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 26)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 18:10:49 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 26.
+ 1 APPPATH\Controllers\admin\Login.php(26): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 26)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 18:11:08 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 26.
+ 1 APPPATH\Controllers\admin\Login.php(26): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 26)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 18:13:10 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 26.
+ 1 APPPATH\Controllers\admin\Login.php(26): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 26)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
+CRITICAL - 2025-09-11 18:13:19 --> ErrorException: Undefined property: stdClass::$id
+[Method: POST, Route: admin/login]
+in APPPATH\Controllers\admin\Login.php on line 26.
+ 1 APPPATH\Controllers\admin\Login.php(26): CodeIgniter\Debug\Exceptions->errorHandler(2, 'Undefined property: stdClass::$id', 'C:\\xampp\\htdocs\\ceed\\app\\Controllers\\admin\\Login.php', 26)
+ 2 SYSTEMPATH\CodeIgniter.php(933): App\Controllers\admin\Login->login()
+ 3 SYSTEMPATH\CodeIgniter.php(507): CodeIgniter\CodeIgniter->runController(Object(App\Controllers\admin\Login))
+ 4 SYSTEMPATH\CodeIgniter.php(354): CodeIgniter\CodeIgniter->handleRequest(null, Object(Config\Cache), false)
+ 5 SYSTEMPATH\Boot.php(363): CodeIgniter\CodeIgniter->run()
+ 6 SYSTEMPATH\Boot.php(68): CodeIgniter\Boot::runCodeIgniter(Object(CodeIgniter\CodeIgniter))
+ 7 FCPATH\index.php(59): CodeIgniter\Boot::bootWeb(Object(Config\Paths))
