@@ -33,121 +33,51 @@ class User extends BaseController
 			return $template;
 	} 
     
-    // public function createUser()
-    // {
     
-    //     $userModel = new ManageUser_Model();
-    //     $validation = \Config\Services::validation();
-    //     $validation->setRules([
-    //         'name'     => 'required|min_length[3]',
-    //         'email'    => 'required|valid_email|is_unique[user.email]',
-    //         'password' => 'required|min_length[6]',
-    //     ]);
-
-    //     if (!$validation->withRequest($this->request)->run()) {
-    //         return $this->response->setJSON([
-    //             'status'  => 'error',
-    //             'message' => $validation->getErrors() 
-    //         ]);
-    //     }
-
-    //     $userModel->save([
-    //         'name'       => $this->request->getPost('name'),
-    //         'email'      => $this->request->getPost('email'),
-    //         'password'   => password_hash($this->request->getPost('password'), PASSWORD_DEFAULT),
-    //         'status'     => 1,
-    //         'created_on' => date('Y-m-d H:i:s')
-    //     ]);
-
-    //     return $this->response->setJSON([
-    //         'status'  => 'success',
-    //         'message' => 'User Added Successfully.'
-    //     ]);
-    // }
 public function saveUser() {
     $user_id = $this->request->getPost('user_id');
     $name = $this->request->getPost('name');
     $email = $this->request->getPost('email');
     $password = $this->request->getPost('password');
+    $role_id = $this->request->getPost('role_id'); // add role
 
-    if ($name && $email && $password) {
+    if ($name && $email && $password && $role_id) {
         $data = [
-            'name' => $name,
-            'email' => $email,
-            'password' => password_hash($password, PASSWORD_DEFAULT),
-            'status' => 1,
-            'created_on' => date("Y-m-d H:i:s"),
+            'name'       => $name,
+            'email'      => $email,
+            'password'   => password_hash($password, PASSWORD_DEFAULT),
+            'role_id'    => $role_id,
+            'status'     => 1,
+            'created_at' => date("Y-m-d H:i:s"),
+            'updated_at' => date("Y-m-d H:i:s"),
         ];
 
         if (empty($user_id)) {
-            $CreateUser = $this->userModel->userInsert($data);
+            $this->userModel->userInsert($data);
             return $this->response->setJSON([
                 "status" => 1,
-                "msg" => "User Created Successfully.",
+                "msg"    => "User Created Successfully.",
                 "redirect" => base_url('admin/manage_user')
             ]);
         } else {
-            $data['modified_on'] = date("Y-m-d H:i:s");
-            $modifyUser = $this->userModel->updateUser($user_id, $data);
+            $data['updated_at'] = date("Y-m-d H:i:s");
+            $this->userModel->updateUser($user_id, $data);
             return $this->response->setJSON([
                 "status" => 1,
-                "msg" => "User Updated Successfully.",
+                "msg"    => "User Updated Successfully.",
                 "redirect" => base_url('admin/manage_user')
             ]);
         }
     } else {
         return $this->response->setJSON([
-            'status' => 'error',
+            'status'  => 0,
             'message' => 'All fields are required.'
         ]);
     }
 }
 
-//     public function store()
-// {
-//         $request = $this->request;
-//         $roleModel = new RoleModel();
-//         $roleMenuModel = new RoleMenuModel();
- 
-//         $role_id   = $request->getPost('role_id');
-//         $role_name = $request->getPost('role_name');
-//         $menus     = $request->getPost('menus');
-//         if (empty($role_name)) {
-//             return $this->response->setJSON([
-//                 'status'  => 'error',
-//                 'message' => 'Role Name is required'
-//             ]);
-//         }
- 
-//         if ($role_id) {
-//             $roleModel->update($role_id, ['role_name' => $role_name]);
-//         } else {
-//             $role_id = $roleModel->insert(['role_name' => $role_name], true);
-//         }
- 
-//         if (!$role_id) {
-//             return $this->response->setJSON([
-//                 'status'  => 'error',
-//                 'message' => 'Failed to save role (check DB structure)'
-//             ]);
-//         }
- 
-//         $roleMenuModel->where('role_id', $role_id)->delete();
-//        if (!empty($menus)) {
-//         $data = [];
-//         foreach ($menus as $menuName) {
-//             $data[] = [
-//                 'role_id'   => $role_id,
-//                 'menu_name' => $menuName,
-//                 'access'    => 1  
-//             ];
-//         }
-//             $roleMenuModel->insertBatch($data);
-//         }
- 
-//         return $this->response->setJSON(['status' => 'success']);
- 
-// }
+
+
 //     public function userlistajax()
 // {
 //     header('Content-Type: application/json');

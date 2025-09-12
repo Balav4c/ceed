@@ -5,15 +5,17 @@
 $('#saveUserBtn').click(function(e) {
     e.preventDefault();
     var url = baseUrl + "admin/save/user";
- 
+
     $.post(url, $('#userForm').serialize(), function(response) {
+        $('#messageBox').removeClass('d-none'); // make visible
+
         if (response.status == 1) {
             $('#messageBox')
                 .removeClass('alert-danger')
                 .addClass('alert-success')
-                .text(response.msg || 'Category Created Successfully!')
+                .text(response.msg)
                 .show();
- 
+
             setTimeout(function() {
                 window.location.href = baseUrl + "admin/manage_user/";
             }, 1500);
@@ -21,15 +23,16 @@ $('#saveUserBtn').click(function(e) {
             $('#messageBox')
                 .removeClass('alert-success')
                 .addClass('alert-danger')
-                .text(response.message || 'Please Fill all the Data')
+                .text(response.message)
                 .show();
         }
- 
+
         setTimeout(function() {
-            $('#messageBox').empty().hide();
+            $('#messageBox').fadeOut();
         }, 2000);
     }, 'json');
 });
+
 
     });
     // $(document).ready(function () {
