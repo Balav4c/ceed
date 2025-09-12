@@ -1,12 +1,7 @@
 <div class="container">
     <div class="page-inner">
-        <div class="row">
-<div class="container mt-6">
-  <div class="page-inner">
-    <div class="row justify-content-center">
-      <div class="col-md-8">
-
-        <div class="card shadow-lg">
+        <div class="card">
+           
           <div class="card-header">
             <h3 class="mb-0">Add New User</h3>
           </div>
@@ -44,8 +39,6 @@
 
       </div>
     </div>
+
   </div>
-</div>
-</div>
-  </div>
-</div>
+
