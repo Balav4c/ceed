@@ -1,7 +1,7 @@
 <?php
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
-use App\Models\admin\UserModel;
+use App\Models\Admin\UserModel;
 
 
 class User extends BaseController 
@@ -35,116 +35,146 @@ class User extends BaseController
     
     
 public function saveUser() {
-    $user_id = $this->request->getPost('user_id');
-    $name = $this->request->getPost('name');
-    $email = $this->request->getPost('email');
+    $user_id  = $this->request->getPost('user_id');
+    $name     = $this->request->getPost('name');
+    $email    = $this->request->getPost('email');
     $password = $this->request->getPost('password');
-    $role_id = $this->request->getPost('role_id'); // add role
+    $role_id  = $this->request->getPost('role_id'); // add role
 
-    if ($name && $email && $password && $role_id) {
-        $data = [
-            'name'       => $name,
-            'email'      => $email,
-            'password'   => password_hash($password, PASSWORD_DEFAULT),
-            'role_id'    => $role_id,
-            'status'     => 1,
-            'created_at' => date("Y-m-d H:i:s"),
-            'updated_at' => date("Y-m-d H:i:s"),
-        ];
-
-        if (empty($user_id)) {
-            $this->userModel->userInsert($data);
-            return $this->response->setJSON([
-                "status" => 1,
-                "msg"    => "User Created Successfully.",
-                "redirect" => base_url('admin/manage_user')
-            ]);
-        } else {
-            $data['updated_at'] = date("Y-m-d H:i:s");
-            $this->userModel->updateUser($user_id, $data);
-            return $this->response->setJSON([
-                "status" => 1,
-                "msg"    => "User Updated Successfully.",
-                "redirect" => base_url('admin/manage_user')
-            ]);
-        }
-    } else {
+    // Basic field validation
+    if (!$name || !$email || !$password || !$role_id) {
         return $this->response->setJSON([
             'status'  => 0,
             'message' => 'All fields are required.'
         ]);
     }
+
+    // Email must be Gmail
+    if (!preg_match("/^[a-zA-Z0-9._%+-]+@gmail\.com$/", $email)) {
+        return $this->response->setJSON([
+            'status'  => 0,
+            'message' => 'Email must be a valid Gmail address (e.g. user@gmail.com).'
+        ]);
+    }
+
+    // Password validation: at least 6 chars, allow special characters
+    if (strlen($password) < 6) {
+        return $this->response->setJSON([
+            'status'  => 0,
+            'message' => 'Password must be at least 6 characters long.'
+        ]);
+    }
+
+    // OPTIONAL: Require at least one special character
+    if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
+        return $this->response->setJSON([
+            'status'  => 0,
+            'message' => 'Password must contain at least one special character.'
+        ]);
+    }
+
+    $data = [
+        'name'       => $name,
+        'email'      => $email,
+        'password'   => password_hash($password, PASSWORD_DEFAULT),
+        'role_id'    => $role_id,
+        'status'     => 1,
+        'created_at' => date("Y-m-d H:i:s"),
+        'updated_at' => date("Y-m-d H:i:s"),
+    ];
+
+    if (empty($user_id)) {
+        $this->userModel->userInsert($data);
+        return $this->response->setJSON([
+            "status" => 1,
+            "msg"    => "User Created Successfully.",
+            "redirect" => base_url('admin/manage_user')
+        ]);
+    } else {
+        $data['updated_at'] = date("Y-m-d H:i:s");
+        $this->userModel->updateUser($user_id, $data);
+        return $this->response->setJSON([
+            "status" => 1,
+            "msg"    => "User Updated Successfully.",
+            "redirect" => base_url('admin/manage_user')
+        ]);
+    }
+}
+public function add()
+{
+    $roleModel = new RoleModel();
+    $roles = $roleModel->where('status', 1)->findAll(); // only active roles
+
+    return view('admin/add_user', [
+        'roles' => $roles
+    ]);
 }
 
 
 
-//     public function userlistajax()
-// {
-//     header('Content-Type: application/json');
+ public function userlistajax()
+{
+    $draw      = $this->request->getPost('draw') ?? 1;
+    $start     = $this->request->getPost('start') ?? 0;
+    $length    = $this->request->getPost('length') ?? 10;
+    $searchVal = $this->request->getPost('search')['value'] ?? '';
 
-//     $draw = $_POST['draw'] ?? 1;
-//     $fromstart = $_POST['start'] ?? 0;
-//     $tolimit = $_POST['length'] ?? 10;
-//     $search = $_POST['search']['value'] ?? '';
-//     $condition = "1=1";
+    $condition = "1=1";
+    if (!empty($searchVal)) {
+        $searchVal     = trim(preg_replace('/\s+/', ' ', $searchVal));
+        $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
 
-//     // Search filter
-//     if (!empty($search)) {
-//         $noSpaceSearch = str_replace(' ', '', strtolower($search));
-//         $condition .= " AND (
-//             REPLACE(LOWER(name), ' ', '') LIKE '%{$noSpaceSearch}%' OR
-//             REPLACE(LOWER(email), ' ', '') LIKE '%{$noSpaceSearch}%'
-//         )";
-//     }
+        $condition .= " AND ( 
+            REPLACE(LOWER(u.name), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
+            OR REPLACE(LOWER(u.email), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
+        )";
+    }
 
-//     // Sorting
-//     $columns = ['slno', 'name', 'email', 'user_roles', 'action', 'user_id'];
-//     $orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
-//     $orderDir = $_POST['order'][0]['dir'] ?? 'desc';
-//     $orderBy = $columns[$orderColumnIndex] ?? 'user_id';
-//     $allowedOrderColumns = ['name', 'email', 'user_id'];
-//     if (!in_array($orderBy, $allowedOrderColumns)) {
-//         $orderBy = 'user_id';
-//     }
+    // Match DataTables column indexes
+    $columns = ['slno', 'name', 'email', 'role_name', 'action', 'user_id'];
+    $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
+    $orderDir = $this->request->getPost('order')[0]['dir'] ?? 'desc';
+    $orderBy = $columns[$orderColumnIndex] ?? 'user_id';
 
-//     $slno = $fromstart + 1;
+    $builder = $this->db->table('user u')
+        ->select('u.user_id, u.name, u.email, r.role_name')
+        ->join('roles r', 'r.role_id = u.role_id', 'left')
+        ->where($condition, null, false);
 
-//     // Get filtered users with limit
-//     $users = $this->ManageUser_Model->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
-//     $result = [];
+    if ($orderBy === 'role_name') {
+        $builder->orderBy("r.role_name", $orderDir);
+    } elseif ($orderBy !== 'slno' && $orderBy !== 'action') {
+        $builder->orderBy("u.$orderBy", $orderDir);
+    }
 
-//     foreach ($users as $user) {
-//         // Fetch user roles
-//         $roles = $this->Role_Model
-//             ->select('role_name')
-//             ->join('roles', 'roles.role_id = user.role_id', 'left')
-//             ->where('user.user_id', $user->user_id)
-//             ->findAll();
+    $builder->limit($length, $start);
+    $users = $builder->get()->getResult();
 
-//         $roleList = array_column($roles, 'role_name');
+    $result = [];
+    $slno = $start + 1;
+    foreach ($users as $user) {
+        $result[] = [
+            'slno'      => $slno++,
+            'user_id'   => $user->user_id,
+            'name'      => $user->name,
+            'email'     => $user->email,
+            'role_name' => $user->role_name ?? 'No Role'
+        ];
+    }
 
-//         $result[] = [
-//             'slno'       => $slno++,
-//             'user_id'    => $user->user_id,
-//             'name'       => $user->name,
-//             'email'      => $user->email,
-//             'user_roles' => $roleList,
-//             'action'     => '<button class="btn btn-sm btn-primary">Edit</button> 
-//                              <button class="btn btn-sm btn-danger">Delete</button>'
-//         ];
-//     }
+    // counts
+    $totalCount = $this->db->table('user')->countAllResults();
+    $filteredCount = $this->db->table('user u')
+        ->join('roles r', 'r.role_id = u.role_id', 'left')
+        ->where($condition, null, false)
+        ->countAllResults();
 
-//     // Counts
-//     $totalCount = $this->ManageUser_Model->getAllUserCount();
-//     $filteredCountObj = $this->ManageUser_Model->getFilterUserCount($condition);
-//     $filteredCount = $filteredCountObj->filRecords ?? 0;
-
-//     echo json_encode([
-//         "draw" => intval($draw),
-//         "recordsTotal" => $totalCount,
-//         "recordsFiltered" => $filteredCount,
-//         "data" => $result
-//     ]);
-// }
+    return $this->response->setJSON([
+        "draw"            => intval($draw),
+        "recordsTotal"    => intval($totalCount),
+        "recordsFiltered" => intval($filteredCount),
+        "data"            => $result
+    ]);
+}
 
 }

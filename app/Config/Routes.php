@@ -18,10 +18,9 @@ $routes->get('admin/logout', 'admin\Login::logout');
 
 $routes->get('admin/manage_user' , 'admin\User::index');
 $routes->get('admin/adduser', 'admin\User::addUser'); 
+$routes->post('admin/manage_user/userlistajax', 'admin\User::userlistajax');
 
 
-// Save user (AJAX POST)
-// $routes->post('admin/manage_user/save', 'admin\Manage_User::createUser');
 $routes->post('admin/save/user', 'admin\User::saveUser');
 
 $routes->get('admin/manage_role' , 'admin\Manage_Role::index');

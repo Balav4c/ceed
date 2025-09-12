@@ -7,8 +7,7 @@ $('#saveUserBtn').click(function(e) {
     var url = baseUrl + "admin/save/user";
 
     $.post(url, $('#userForm').serialize(), function(response) {
-        $('#messageBox').removeClass('d-none'); // make visible
-
+        $('#messageBox').removeClass('d-none'); 
         if (response.status == 1) {
             $('#messageBox')
                 .removeClass('alert-danger')
@@ -35,67 +34,86 @@ $('#saveUserBtn').click(function(e) {
 
 
     });
-    // $(document).ready(function () {
-    //     const alertBox = $(".alert"); 
-    // $('#user_form').submit(function (e) {
-    //     e.preventDefault();
-    //     // let name = $('#user_form [name="name"]').val().trim();
-    //     // let email = $('#user_form [name="email"]').val().trim();
-    //     // let password = $('#user_form [name="password"]').val().trim();
-    //     // // let role_id = $('#user_form [name="role_id"]').val();
+let table = "";
+const alertBox = $('.alert');
 
-    //     // if (!name || !email || !password ) {
-    //     //     alertBox.removeClass().addClass('alert alert-warning text-center position-fixed')
-    //     //         .text('All fields are required').fadeIn();
-    //     //     setTimeout(() => alertBox.fadeOut(), 3000);
-    //     //     return;
-    //     // }
+table = $('#userTable').DataTable({
+    ajax: {
+        url: "<?= base_url('admin/manage_user/userlistajax') ?>",
+        type: "POST",
+        dataSrc: "data"
+    },
+    ordering: true,  
+    searching: true,
+    paging: true,
+    processing: true,
+    serverSide: true,
+    dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6'f>>" +
+         "<'row'<'col-sm-12'tr>>" +
+         "<'row mt-3'<'col-sm-5'i><'col-sm-7'p>>",
 
-    //     const formData = $(this).serialize();
+    drawCallback: function () {
+        let info = $('.dataTables_info');
+        info.text(info.text().replace(/\(filtered.*\)/, '').trim());
+    },
 
-    //     $.ajax({
-    //           url: "<?= base_url('admin/save') ?>", 
-    //         type: "POST",
-    //         data: formData,
-    //         dataType: "json",
-    //         success: function (res) {
-    //             if (res.status === 'success') {
-    //                 alertBox.removeClass().addClass('alert alert-success text-center position-fixed')
-    //                     .text('User Added Successfully').fadeIn();
-    //                 setTimeout(() => alertBox.fadeOut(), 2000);
-    //                 $('#user_form')[0].reset();
-    //                 table.ajax.reload(null, false); // reload DataTable
-    //             } else {
-    //                 alertBox.removeClass().addClass('alert alert-warning text-center position-fixed')
-    //                     .text(res.message || 'Save Failed').fadeIn();
-    //                 setTimeout(() => alertBox.fadeOut(), 3000);
-    //             }
-    //         },
-    //         error: function () {
-    //             alertBox.removeClass().addClass('alert alert-danger text-center position-fixed')
-    //                 .text('Error Occurred While Saving User').fadeIn();
-    //             setTimeout(() => alertBox.fadeOut(), 3000);
-    //         }
-    //     });
+    columns: [
+        { data: "slno" },
+        {
+            data: "name",
+            render: function (data) {
+                if (!data || typeof data !== 'string') return '';
+                return data.replace(/\b\w/g, c => c.toUpperCase());
+            }
+        },
+        { data: "email" },
+        {
+            data: "role_name",  
+            render: function (data) {
+                return data ? data : "No Role";
+            }
+        },
+        {
+            data: "user_id",
+            render: function (id) {
+                return `
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="<?= base_url('admin/adduser/edit/') ?>${id}" 
+                           title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="javascript:void(0);" 
+                           class="delete-all" data-id="${id}" 
+                           title="Delete" style="color: #dc3545;">
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                `;
+            }
+        },
+        { data: "user_id", visible: false }
+    ],
 
-    //     // $.ajax({
-    //     //     url: url,
-    //     //     type: 'POST',
-    //     //     data: form.serialize(),
-    //     //     dataType: 'json',
-    //     //     success: function(res) {
-    //     //         if (res.status === 'success') {
-    //     //             alert('Role saved successfully!');
-    //     //             window.location.href = "<?= base_url('admin/manage_user/createUser') ?>";
-    //     //         } else {
-    //     //             alert('Error: ' + res.message);
-    //     //         }
-    //     //     },
-    //     //     error: function(xhr, status, error) {
-    //     //         console.log(xhr.responseText);
-    //     //         alert('Something went wrong! Check console for details.');
-    //     //     }
-    //     // });
-    // });
-    // });
+    order: [[5, 'desc']], 
+    columnDefs: [
+        { searchable: false, orderable: false, targets: [0, 4] }
+    ],
+    language: {
+        infoFiltered: "",
+    }
+});
+
+table.on('order.dt search.dt draw.dt', function () {
+    table.column(0, { search: 'applied', order: 'applied' })
+        .nodes()
+        .each(function (cell, i) {
+            var pageInfo = table.page.info();
+            cell.innerHTML = pageInfo.start + i + 1;
+        });
+});
+
+
+
+    
+    
 </script>
