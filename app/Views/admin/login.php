@@ -77,43 +77,44 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/bootstrap.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-    $('#loginCheck').click(function(e) {
-        e.preventDefault();
-        var response = grecaptcha.getResponse();
-        if (response.length === 0) {
-            $('#errorDiv')
-                .html('<div class="alert alert-danger">Please complete the reCAPTCHA.</div>');
-            return;
+   $('#loginCheck').click(function(e) {
+    e.preventDefault();
+
+    let email = $('#email').val().trim();
+    let password = $('#password').val().trim();
+    let errorMessage = '';
+
+    if (email === '' && password === '') {
+        errorMessage = "Please enter email and password.";
+    } else if (email === '') {
+        errorMessage = "Please enter your email.";
+    } else if (password === '') {
+        errorMessage = "Please enter your password.";
+    }
+
+    if (errorMessage !== '') {
+        $('#errorDiv').html('<div class="alert alert-danger">' + errorMessage + '</div>');
+        return;
+    }
+
+    // ✅ Check reCAPTCHA only after fields are valid
+    var response = grecaptcha.getResponse();
+    if (response.length === 0) {
+        $('#errorDiv').html('<div class="alert alert-danger">Please complete the reCAPTCHA.</div>');
+        return;
+    }
+
+    var url = "<?php echo base_url('admin/login'); ?>";
+
+    $.post(url, $('#loginForm').serialize(), function(data) {
+        if (data.status == 'success') {
+            window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
+        } else {
+            $('#errorDiv').html('<div class="alert alert-danger">' + data.message + '</div>');
         }
+    }, 'json');
+});
 
-        let email = $('#email').val().trim();
-        let password = $('#password').val().trim();
-        let errorMessage = '';
-
-        if (email === '' && password === '') {
-            errorMessage = "Please enter email and password.";
-        } else if (email === '') {
-            errorMessage = "Please enter your email.";
-        } else if (password === '') {
-            errorMessage = "Please enter your password.";
-        }
-
-        if (errorMessage !== '') {
-
-            $('#errorDiv').html('<div class="alert alert-danger">' + errorMessage + '</div>');
-            return;
-        }
-
-        var url = "<?php echo base_url('admin/login'); ?>";
-
-        $.post(url, $('#loginForm').serialize(), function(data) {
-            if (data.status == 'success') {
-                window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
-            } else {
-                $('#errorDiv').html('<div class="alert alert-danger">' + data.message + '</div>');
-            }
-        }, 'json');
-    });
 
     //Password Show and hide
     $(document).on('click', '#togglePassword', function() {
