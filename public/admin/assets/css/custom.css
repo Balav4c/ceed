@@ -76,6 +76,16 @@ border-collapse: collapse !important;
           background-color: #dfe0e1;
 
 }
+.logo-header {
+    display: flex;
+    justify-content: center; /* centers logo horizontally */
+    align-items: center;     /* centers logo vertically */
+}
+.logo-header .logo img {
+    display: block;
+    margin: 0 auto;
+}
+
 #roleTable td {
   text-align: left !important;
 }

@@ -16,19 +16,19 @@
              </ul> -->
          </nav>
          <div class="copyright">
-             2025, made with <i class="fa fa-heart heart text-danger"></i> by
-             <a href="http://www.themekita.com">SmartLounge</a>
+             2025, crafted by
+             <a href="https://smartlounge.online/" target="_blank">Smartlounge</a>
          </div>
          <div>
              
-             <a target="_blank" href="https://themewagon.com/"></a>.
+             <!-- <a target="_blank" href="https://themewagon.com/"></a>. -->
          </div>
      </div>
  </footer>
  </div>
 
  <!-- Custom template | don't include it in your project! -->
- <div class="custom-template">
+ <!-- <div class="custom-template">
      <div class="title">Settings</div>
      <div class="custom-content">
          <div class="switcher">
@@ -87,7 +87,7 @@
      <div class="custom-toggle">
          <i class="icon-settings"></i>
      </div>
- </div>
+ </div> -->
  <!-- End Custom template -->
  </div>
  <!--   Core JS Files   -->
