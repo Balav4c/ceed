@@ -29,5 +29,9 @@ $routes->post('admin/manage_role/store', 'admin\Manage_Role::store');
 $routes->post('admin/manage_role/rolelistajax', 'admin\Manage_Role::rolelistajax');
 $routes->get('admin/add_role/edit/(:num)', 'admin\Manage_Role::edit/$1');
 $routes->post('admin/manage_role/update/(:num)', 'admin\Manage_Role::update/$1');
+$routes->post('admin/manage_role/delete', 'Admin\Manage_Role::delete');
+$routes->post('admin/manage_role/toggleStatus', 'Admin\Manage_Role::toggleStatus');
+
+
 
 

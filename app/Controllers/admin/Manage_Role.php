@@ -52,7 +52,10 @@ class Manage_Role extends BaseController
         if ($role_id) {
             $roleModel->update($role_id, ['role_name' => $role_name]);
         } else {
-            $role_id = $roleModel->insert(['role_name' => $role_name], true);
+            $role_id = $roleModel->insert([
+                'role_name' => $role_name,
+                'status' => 1
+            ], true);
         }
 
         if (!$role_id) {
@@ -80,71 +83,101 @@ class Manage_Role extends BaseController
     }
     public function rolelistajax()
     {
-        try {
-            $draw = $this->request->getPost('draw') ?? 1;
-            $start = $this->request->getPost('start') ?? 0;
-            $length = $this->request->getPost('length') ?? 10;
-            $searchVal = $this->request->getPost('search')['value'] ?? '';
-
-            $condition = "1=1";
-            if (!empty($searchVal)) {
-                $searchVal = trim(preg_replace('/\s+/', ' ', $searchVal));
-                $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
-                $condition .= " AND REPLACE(LOWER(role_name), ' ', '') LIKE '%" . $this->roleModel->db->escapeLikeString($noSpaceSearch) . "%'";
-            }
-
-            $columns = ['role_name', 'created_at', 'updated_at', 'role_id'];
-            $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
-            $orderDir = $this->request->getPost('order')[0]['dir'] ?? 'desc';
-            $orderBy = $columns[$orderColumnIndex] ?? 'role_id';
-            if (!in_array($orderBy, $columns))
-                $orderBy = 'role_id';
-
-            $roles = $this->roleModel->getAllFilteredRecords($condition, $start, $length, $orderBy, $orderDir);
-
-            $result = [];
-            $slno = $start + 1;
-
-            foreach ($roles as $role) {
-                $permissions = $this->roleMenuModel
-                    ->select('menu_name')
-                    ->where('role_id', $role->role_id)
-                    ->where('access', 1)
-                    ->findAll();
-
-                $menuList = array_column($permissions, 'menu_name');
-
-                $result[] = [
-                    'slno' => $slno++,
-                    'role_id' => $role->role_id,
-                    'role_name' => $role->role_name,
-                    'created_at' => $role->created_at,
-                    'updated_at' => $role->updated_at,
-                    'permissions' => $menuList
-                ];
-            }
-
-            $totalCount = $this->roleModel->getAllRoleCount();
-            $filteredCountObj = $this->roleModel->getFilterRoleCount($condition);
-            $filteredCount = $filteredCountObj->filRecords ?? 0;
-
-            return $this->response->setJSON([
-                "draw" => intval($draw),
-                "recordsTotal" => intval($totalCount),
-                "recordsFiltered" => intval($filteredCount),
-                "data" => $result
-            ]);
-
-        } catch (\Exception $e) {
-            return $this->response->setJSON([
-                'draw' => intval($this->request->getPost('draw') ?? 1),
-                'recordsTotal' => 0,
-                'recordsFiltered' => 0,
-                'data' => [],
-                'error' => $e->getMessage()
-            ]);
+        $draw = $_POST['draw'] ?? 1;
+        $fromstart = $_POST['start'] ?? 0;
+        $tolimit = $_POST['length'] ?? 10;
+        $search = $_POST['search']['value'];
+        $condition = "1=1";
+        if (!empty($search)) {
+            $search = trim(preg_replace('/\s+/', ' ', $search));
+            $noSpaceSearch = str_replace(' ', '', strtolower($search));
+            $condition .= " AND REPLACE(LOWER(role_name), ' ', '') LIKE '%" .
+                $this->roleModel->db->escapeLikeString($noSpaceSearch) . "%'";
         }
+
+        // Columns for sorting
+        $columns = ['role_name', 'status', 'role_id'];
+        $orderColumnIndex = $_POST['order'][0]['column'] ?? 0;
+        $orderDir = $_POST['order'][0]['dir'] ?? 'desc';
+        $orderBy = $columns[$orderColumnIndex] ?? 'role_id';
+        $allowedOrderColumns = ['role_name', 'role_id'];
+        if (!in_array($orderBy, $columns)) {
+            $orderBy = 'role_id';
+        }
+
+        // Fetch roles
+        $totalRec = $this->roleModel->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
+        $result = [];
+
+        $result = [];
+        $slno = $fromstart + 1;
+
+        foreach ($totalRec as $role) {
+            $permissions = $this->roleMenuModel
+                ->where('role_id', $role->role_id)
+                ->where('access', 1)
+                ->findAll();
+
+            $menuList = array_column($permissions, 'menu_name');
+            $displayMenus = [];
+            foreach ($menuList as $menu) {
+                $displayMenus[] = ucwords(str_replace('_', ' ', $menu));
+            }
+
+            $result[] = [
+                'slno' => $slno++,
+                'role_id' => $role->role_id,
+                'role_name' => $role->role_name,
+                'status' => $role->status,
+                'permissions' => $displayMenus
+            ];
+        }
+
+        // Counts
+        $totalRec = $this->roleModel->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
+        $totalCount = $this->roleModel->getAllRoleCount();
+        $filteredCountObj = $this->roleModel->getFilterRoleCount($condition);
+        $filteredCount = $filteredCountObj->filRecords ?? 0;
+
+
+        echo json_encode([
+            "draw" => intval($draw),
+            "recordsTotal" => $totalCount,
+            "recordsFiltered" => $filteredCount,
+            "data" => $result
+        ]);
     }
+
+    public function toggleStatus()
+    {
+        if ($this->request->isAJAX()) {
+            $role_id = $this->request->getPost('role_id');
+            $status = $this->request->getPost('status');
+
+            if (!$role_id || !in_array($status, ['1', '2'])) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Invalid status value'
+                ]);
+            }
+
+            $updated = $this->roleModel->update($role_id, ['status' => $status]);
+
+            if ($updated) {
+                return $this->response->setJSON(['status' => 'success']);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Update failed'
+                ]);
+            }
+        }
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Invalid request'
+        ]);
+    }
+
     public function edit($id)
     {
         $role = $this->roleModel->find($id);
@@ -162,41 +195,55 @@ class Manage_Role extends BaseController
 
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
-        $template .= view('admin/add_role',$data);  
+        $template .= view('admin/add_role', $data);
         $template .= view('admin/common/footer');
         $template .= view('admin/page_scripts/rolesjs');
 
         return $template;
     }
-   public function update($id)
-{
-    $roleName = $this->request->getPost('role_name');
-    $menus = $this->request->getPost('menus'); // this is an array
-    
-    // update role name
-    $this->roleModel->update($id, [
-        'role_name' => $roleName
-    ]);
+    public function update($id)
+    {
+        $roleName = $this->request->getPost('role_name');
+        $menus = $this->request->getPost('menus');
 
-    // clear old permissions
-    $this->roleMenuModel->where('role_id', $id)->delete();
+        $this->roleModel->update($id, [
+            'role_name' => $roleName
+        ]);
 
-    // insert new permissions
-    if (!empty($menus)) {
-        foreach ($menus as $menu) {
-            $this->roleMenuModel->insert([
-                'role_id' => $id,
-                'menu_name' => $menu,
-                'access' => 1
-            ]);
+        $this->roleMenuModel->where('role_id', $id)->delete();
+
+        if (!empty($menus)) {
+            foreach ($menus as $menu) {
+                $this->roleMenuModel->insert([
+                    'role_id' => $id,
+                    'menu_name' => $menu,
+                    'access' => 1
+                ]);
+            }
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Role updated successfully!'
+        ]);
+    }
+    public function delete($id)
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
+        }
+
+        $updated = $this->roleModel->update($id, ['status' => 9]);
+
+        if ($updated) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Role deleted successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
         }
     }
 
-    return $this->response->setJSON([
-        'status' => 'success',
-        'message' => 'Role updated successfully!'
-    ]);
-}
+
+
 
 
 }

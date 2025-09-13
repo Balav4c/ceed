@@ -34,11 +34,13 @@
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/plugins.min.css" />
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/kaiadmin.min.css" />
+        <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/custom.css" />
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/demo.css" />
     <!-- DataTables CSS -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/jquery.dataTables.min.css">
+
+  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
 
 <!-- Bootstrap 5 integration (optional) -->
 <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
@@ -359,7 +361,7 @@
             </div>
             <!--Script js-->
 
-            <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+            <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 
             <script>

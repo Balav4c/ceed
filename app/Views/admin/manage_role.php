@@ -1,3 +1,4 @@
+<!-- <div class="alert d-none text-center position-fixed" role="alert"></div> -->
 <div class="container">
     <div class="page-inner">
         <div class="card">
@@ -8,22 +9,21 @@
                         <a href="<?= base_url('admin/add_role') ?>" class="btn btn-secondary">Add New Role</a>
                     </div>
                 </div>
-                <div class="table-responsive">
-                    <table class="table table-bordered" id="roleTable" style="width:100%">
+                <!-- <div class="table-responsive"> -->
+                    <table class="table table-hover" id="roleTable" >
                         <thead>
                             <tr>
-                                <th>Sl No</th>
+                                <th style="width:12%;">Sl No</th>
                                 <th>Role Name</th>
                                 <th>Permissions</th>
-                                <th style="width: 110px;">Created Date</th>
-                                <th  style="width: 110px;">Updated Date</th>
-                                <th style="width: 160px;">Action</th>
+                                <th style="width:15%;">Status</th>
+                                <th style="width:13%;">Action</th>
                                 <th class="d-none">ID</th>
                             </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
-                </div>
+                <!-- </div> -->
         
         </div>
     </div>
