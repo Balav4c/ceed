@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CEED</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-    <link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/kaiadmin/favicon.ico"
+    <link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png"
         type="image/x-icon" />
 
     <!-- Fonts and icons -->
@@ -83,7 +83,7 @@
                 <!-- Navbar Header -->
                 <nav class="navbar navbar-header navbar-header-transparent navbar-expand-lg border-bottom">
                     <div class="container-fluid">
-                        <nav
+                        <!-- <nav
                             class="navbar navbar-header-left navbar-expand-lg navbar-form nav-search p-0 d-none d-lg-flex">
                             <div class="input-group">
                                 <div class="input-group-prepend">
@@ -93,10 +93,10 @@
                                 </div>
                                 <input type="text" placeholder="Search ..." class="form-control" />
                             </div>
-                        </nav>
+                        </nav> -->
 
                         <ul class="navbar-nav topbar-nav ms-md-auto align-items-center">
-                            <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
+                            <!-- <li class="nav-item topbar-icon dropdown hidden-caret d-flex d-lg-none">
                                 <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button"
                                     aria-expanded="false" aria-haspopup="true">
                                     <i class="fa fa-search"></i>
@@ -108,8 +108,8 @@
                                         </div>
                                     </form>
                                 </ul>
-                            </li>
-                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                            </li> -->
+                            <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
                                 <a class="nav-link dropdown-toggle" href="#" id="messageDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-envelope"></i>
@@ -180,8 +180,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                            </li> -->
+                            <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
                                 <a class="nav-link dropdown-toggle" href="#" id="notifDropdown" role="button"
                                     data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fa fa-bell"></i>
@@ -246,8 +246,8 @@
                                         </a>
                                     </li>
                                 </ul>
-                            </li>
-                            <li class="nav-item topbar-icon dropdown hidden-caret">
+                            </li> -->
+                            <!-- <li class="nav-item topbar-icon dropdown hidden-caret">
                                 <a class="nav-link" data-bs-toggle="dropdown" href="#" aria-expanded="false">
                                     <i class="fas fa-layer-group"></i>
                                 </a>
@@ -311,7 +311,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </li>
+                            </li> -->
 
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
@@ -325,9 +325,9 @@
                                         <span class="fw-bold"> <?= session()->get('user_name'); ?></span>
                                     </span>
                                 </a>
-                                <ul class="dropdown-menu dropdown-user animated fadeIn">
+                                <!-- <ul class="dropdown-menu dropdown-user animated fadeIn">
                                     <div class="dropdown-user-scroll scrollbar-outer">
-                                        <!-- <li>
+                                        <li>
                                             <div class="user-box">
                                                 <div class="avatar-lg">
                                                     <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg" alt="image profile"
@@ -340,19 +340,19 @@
                                                         Profile</a>
                                                 </div>
                                             </div>
-                                        </li> -->
+                                        </li>
                                         <li>
-                                            <!-- <div class="dropdown-divider"></div>
+                                            <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">My Profile</a>
                                             <a class="dropdown-item" href="#">My Balance</a>
                                             <a class="dropdown-item" href="#">Inbox</a>
                                             <div class="dropdown-divider"></div>
                                             <a class="dropdown-item" href="#">Account Setting</a>
-                                            <div class="dropdown-divider"></div> -->
-                                            <a class="dropdown-item" id="logout_btn">Logout</a>
+                                            <div class="dropdown-divider"></div>
+                                             <a class="dropdown-item" id="logout_btn">Logout</a>
                                         </li>
                                     </div>
-                                </ul>
+                                </ul> -->
                             </li>
                         </ul>
                     </div>
@@ -364,30 +364,4 @@
             <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
 
 
-            <script>
-            $(document).ready(function() {
-                $("#logout_btn").on("click", function(e) {
-                    swal({
-                        title: "Are you sure?",
-                        text: "You will be logged out!",
-                        icon: "warning",
-                        buttons: {
-                            confirm: {
-                                text: "Yes, logout",
-                                className: "btn btn-success",
-                            },
-                            cancel: {
-                                visible: true,
-                                className: "btn btn-danger",
-                            },
-                        },
-                    }).then((willLogout) => {
-                        if (willLogout) {
-                            window.location.href = "<?= base_url('admin/logout'); ?>";
-                        } else {
-                            swal.close();
-                        }
-                    });
-                });
-            });
-            </script>
+          
