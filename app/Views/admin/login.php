@@ -25,7 +25,8 @@
             <!-- Left Side -->
             <div
                 class="col-lg-6 col-md-6 d-flex flex-column justify-content-center align-items-center text-center left-side-card">
-                <p class="logo">CEED</p>
+                <!-- <p class="logo">CEED</p> -->
+                 <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png" alt="CEED Logo" class="mb-4" style="width: 150px;">
                 <h2>Welcome to CEED Admin</h2>
                 <p>Manage all your data in one place with our secure and professional admin panel.</p>
 
