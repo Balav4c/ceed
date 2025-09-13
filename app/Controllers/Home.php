@@ -6,6 +6,12 @@ class Home extends BaseController
 {
     public function index(): string
     {
-        return view('welcome_message');
+      
+            // Load views
+    $template  = view('common/header');
+    $template .= view('buddybloom');
+    $template .= view('common/footer');
+
+    return $template;
     }
 }

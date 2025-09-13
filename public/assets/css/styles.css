@@ -1,0 +1,332 @@
+@font-face {
+	font-family: ceedfont;
+	src: url('../fonts/Unbounded-VariableFont_wght.ttf');
+}
+body {
+	background-color:#F4F6F8 !important;
+	font-family:ceedfont !important;
+}
+header {
+	background-color:#FDF5EA;
+	padding:10px;
+	background-image:url('../img/header-bg.png');
+	background-position: 70px 20px;
+	background-size:90%;
+	background-repeat:no-repeat;
+	padding-bottom:30px;
+	margin:10px;
+}
+section {
+	padding-top:50px;
+	padding-bottom:30px;
+}
+img {
+	width:100%;
+}
+.text-right {
+	text-align:right !important;
+}
+.text-left {
+	text-align:left !important;
+}
+.main-menu-box {
+	background-color:#A96B1F;
+	border-radius:10px;
+	width:100%;
+	padding:10px;
+	margin-top:10px;
+}
+.menu-lg {
+	display:block;
+}
+.menu-resp {
+	display:none;
+}
+.logo img {
+	width:100%;
+}
+.btn-demo {
+	border:#FDF5EA 2px solid !important;
+	border-radius:15px !important;
+	color:#FFF !important;
+	background-color:#EE962C !important;
+	font-weight:400!important;
+}
+.btn-login {
+	border:#FDF5EA 1px solid !important;
+	border-radius:15px !important;
+	color:#FFF !important;
+	background-color:#A96B1F !important;
+}
+.btn-holder {
+	line-height: 45px;
+}
+.head-title {
+	margin-top:50px !important;
+}
+.head-title h1 {
+	font-weight:400;
+}
+.palesky {
+	color:#7F8795;
+}
+.orange {
+	color:#A96B1F;
+}
+header p {
+	font-size:14px;
+	font-weight:200 !important;
+}
+.puzzle {
+	width:300px;
+	margin-left:auto;
+	margin-right:auto;
+	margin-top:50px;
+}
+.puzzle img {
+	width:100%;
+}
+.jix-mideset {
+    height: 147px;
+    width: 147px;
+    position: absolute;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: -300px;
+}
+.jix-play {
+	height: 147px;
+    width: 147px;
+    position: absolute;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: -300px;
+	margin-left: 155px;
+}
+.jix-learning {
+	height: 147px;
+    width: 147px;
+    position: absolute;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: -145px;
+	margin-left: 155px;
+}
+.jix-thinking {
+	height: 147px;
+    width: 147px;
+    position: absolute;
+    border-radius: 15px;
+    cursor: pointer;
+    margin-top: -145px;
+}
+.buddy-bloom img {
+	width:100%;
+}
+.cardbox {
+	padding:10px;
+	border:#EAEAEA 1px solid;
+	border-radius:5px;
+	background-color:#FFF;
+	height:130px;
+}
+.clear-cardbox {
+	margin-bottom:70px;
+	margin-top:80%;
+}
+.cardbox img {
+	width:100%;
+}
+.cardbox h4 {
+	font-size:18px;
+}
+.cardbox p {
+	font-size:14px;
+	font-weight:300;
+}
+.deepdive {
+	background-image: linear-gradient(45deg,#379BA3, #4771C9);
+}
+.ct-bt {
+	padding:10px 15px;
+	border-radius:30px;
+	border:#FADEBE 2px solid;
+	background-color:#FDF5EA;
+	color:#D98928;
+}
+.deepdive h2 {
+	font-weight:400;
+	margin:45px 0px 25px 0px;
+}
+.deepdive h2, .deepdive p {
+	color:#FFF;
+	font-weight:300;
+}
+.pendulam-lg {
+	display:block;
+}
+.pendulam-mb {
+	display:none !important;
+}
+.pendulam-blue {
+	background-image:url('../img/blue-pendulam.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	margin:18px;
+}
+.pendulam-yellow {
+	background-image:url('../img/yellow-pendulam.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	margin:18px;
+}
+.pendulam-wt-box {
+	padding:10px 15px;
+	background-color:#FFF;
+	color:#000;
+	border-radius:10px;
+	font-size:12px;
+}
+.long-rt-arrow img {
+	width:93%;
+}
+.circle-txt {
+    font-size: 12px;
+    color: #FFF;
+    height: 100px;
+    margin-top: 155px;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+.medal-block {
+	padding: 10px 50px !important;
+}
+.medal-txt {
+	line-height:35px;
+	color:#FFF;
+}
+
+@media screen and (max-width:990px) {
+	header {
+		background-color: #FDF5EA !important;
+		padding: 10px;
+		background-image: url('../img/header-bg.png') !important;
+		background-position: 100% 100% !important;
+		background-size: cover !important;
+		background-repeat: no-repeat !important;
+		padding-bottom: 40px !important;
+	}
+	header .container-lg {
+		padding: 0px !important;
+	}
+	.main-menu-box {
+		background-color: #A96B1F;
+		margin-top: 15px !important;
+		border-radius: 10px;
+		width: 100%;
+		padding: 5px !important;
+	}
+	.menu-lg {
+		display:none;
+	}
+	.menu-resp {
+		display:block;
+		line-height:70px;
+	}
+	.menu-resp a {
+		color:#FFF;
+		text-decoration:none;
+		font-size:14px;
+	}
+	.clear-cardbox {
+		margin-bottom: 30px !important;
+		margin-top: 10px;
+	}
+	.buddy-bloom {
+		margin-top:30px !important;
+	}
+	.deepdive {
+		float:left !important;
+		width:100%;
+	}
+	.pendulam-lg {
+		display:none !important;
+	}
+	.pendulam-mb {
+		display:block !important;
+		padding: 0px 15px;
+        width: 430px;
+        margin-left: auto !important;
+        margin-right: auto !important;
+	}
+	.blue-circle {
+		background-image:url('../img/blue-circle.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		height: 125px;
+		width: 125px !important;
+		float:left;
+	}
+	.yellow-circle {
+		background-image:url('../img/yellow-circle.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		height: 125px;
+		width: 125px !important;
+		float:left;
+	}
+	.blanker {
+		height: 125px;
+		width: 110px !important;
+		float:left;
+	}
+	.rt-arrow {
+		float:left;
+		width: 125px;
+		background-image:url('../img/right-arrow.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		height:125px;
+	}
+	.circle-txt {
+		font-size: 12px;
+		color: #FFF;
+		height: 122px !important;
+		margin-top: 0px !important;
+		align-items: center;
+		display: flex;
+		justify-content: center;
+	}
+	.down-arrow {
+		float:left;
+		width: 100%;
+		background-image:url('../img/down-arrow.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		height:125px;
+		background-position:center;
+	}
+	.pendulam-mb .medal-block {
+		margin-top:20px;
+	}
+	.pendulam-mb .medal-block img {
+		width:50px;
+	}
+	.pendulam-mb .medal-block .medal-txt {
+		font-size: 20px !important;
+	}
+	.down-angle-arrow {
+		float:left;
+		width: 100%;
+		background-image:url('../img/down-angle-arrow.png');
+		background-size:contain;
+		background-repeat:no-repeat;
+		height:125px;
+		background-position:center;
+	}
+}
