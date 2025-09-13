@@ -1,7 +1,7 @@
 <div class="container">
     <div class="page-inner">
         <div class="card">
-            <!-- <div class="alert d-none text-center position-fixed" role="alert"></div> -->
+            <div class="alert d-none text-center position-fixed" role="alert"></div>
             <div class="card-header d-flex justify-content-between align-items-center">
                <h3 class="mb-0"><?= isset($role['role_id']) ? 'Edit Role' : 'Add New Role and Permissions' ?></h3>
             </div>
@@ -26,7 +26,7 @@
                                 <?php
                                     $menus = ['Dashboard', 'Manage User', 'Manage Role'];
                                     foreach ($menus as $menu) : 
-                                        $menuKey = strtolower(str_replace(' ', '_', $menu));
+                                        $menuKey = ucwords(str_replace('_', ' ', $menu));
                                             $isChecked = (isset($access[$menuKey]) && $access[$menuKey] == 1) ? 'checked' : '';
                                         ?>
                                         <div class="col-md-4">
