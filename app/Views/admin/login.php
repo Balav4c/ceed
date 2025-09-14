@@ -77,7 +77,8 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/bootstrap.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-   $('#loginCheck').click(function(e) {
+
+$('#loginCheck').click(function (e) {
     e.preventDefault();
 
     let email = $('#email').val().trim();
@@ -97,22 +98,30 @@
         return;
     }
 
-    // ✅ Check reCAPTCHA only after fields are valid
     var response = grecaptcha.getResponse();
     if (response.length === 0) {
         $('#errorDiv').html('<div class="alert alert-danger">Please complete the reCAPTCHA.</div>');
         return;
     }
 
+   
+    let $btn = $('#loginCheck');
+    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span> Authenticating, please wait…');
+
     var url = "<?php echo base_url('admin/login'); ?>";
 
-    $.post(url, $('#loginForm').serialize(), function(data) {
+    $.post(url, $('#loginForm').serialize(), function (data) {
         if (data.status == 'success') {
             window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
         } else {
             $('#errorDiv').html('<div class="alert alert-danger">' + data.message + '</div>');
+            
+            $btn.prop('disabled', false).html('Log in');
         }
-    }, 'json');
+    }, 'json').fail(function () {
+        $('#errorDiv').html('<div class="alert alert-danger">Something went wrong. Please try again.</div>');
+        $btn.prop('disabled', false).html('Log in');
+    });
 });
 
 
