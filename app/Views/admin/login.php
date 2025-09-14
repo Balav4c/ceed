@@ -5,8 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CEED</title>
-    <link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png"
-        type="image/x-icon" />
+    <link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png" type="image/x-icon" />
     <!-- CSS Files -->
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/bootstrap.min.css" />
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/plugins.min.css" />
@@ -26,7 +25,8 @@
             <div
                 class="col-lg-6 col-md-6 d-flex flex-column justify-content-center align-items-center text-center left-side-card">
                 <!-- <p class="logo">CEED</p> -->
-                 <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png" alt="CEED Logo" class="mb-4" style="width: 150px;">
+                <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png" alt="CEED Logo" class="mb-4"
+                    style="width: 150px;">
                 <h2>Welcome to CEED Admin</h2>
                 <p>Manage all your data in one place with our secure and professional admin panel.</p>
 
@@ -77,52 +77,68 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/core/bootstrap.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
+    $('#loginCheck').click(function(e) {
+        e.preventDefault();
 
-$('#loginCheck').click(function (e) {
-    e.preventDefault();
+        let email = $('#email').val().trim();
+        let password = $('#password').val().trim();
+        let errorMessage = '';
 
-    let email = $('#email').val().trim();
-    let password = $('#password').val().trim();
-    let errorMessage = '';
-
-    if (email === '' && password === '') {
-        errorMessage = "Please enter email and password.";
-    } else if (email === '') {
-        errorMessage = "Please enter your email.";
-    } else if (password === '') {
-        errorMessage = "Please enter your password.";
-    }
-
-    if (errorMessage !== '') {
-        $('#errorDiv').html('<div class="alert alert-danger">' + errorMessage + '</div>');
-        return;
-    }
-
-    var response = grecaptcha.getResponse();
-    if (response.length === 0) {
-        $('#errorDiv').html('<div class="alert alert-danger">Please complete the reCAPTCHA.</div>');
-        return;
-    }
-
-   
-    let $btn = $('#loginCheck');
-    $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2"></span> Authenticating, please wait…');
-
-    var url = "<?php echo base_url('admin/login'); ?>";
-
-    $.post(url, $('#loginForm').serialize(), function (data) {
-        if (data.status == 'success') {
-            window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
-        } else {
-            $('#errorDiv').html('<div class="alert alert-danger">' + data.message + '</div>');
-            
-            $btn.prop('disabled', false).html('Log in');
+        if (email === '' && password === '') {
+            errorMessage = "Please enter email and password.";
+        } else if (email === '') {
+            errorMessage = "Please enter your email.";
+        } else if (password === '') {
+            errorMessage = "Please enter your password.";
         }
-    }, 'json').fail(function () {
-        $('#errorDiv').html('<div class="alert alert-danger">Something went wrong. Please try again.</div>');
-        $btn.prop('disabled', false).html('Log in');
+
+        if (errorMessage !== '') {
+            showAlert(errorMessage, 'danger');
+            return;
+        }
+
+        var response = grecaptcha.getResponse();
+        if (response.length === 0) {
+            showAlert("Please complete the reCAPTCHA.", 'danger');
+            return;
+        }
+
+        let $btn = $('#loginCheck');
+        $btn.prop('disabled', true).html(
+            '<span class="spinner-border spinner-border-sm me-2"></span> Authenticating, please wait…');
+
+        var url = "<?php echo base_url('admin/login'); ?>";
+
+        $.post(url, $('#loginForm').serialize(), function(data) {
+            if (data.status == 'success') {
+                window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
+            } else {
+                showAlert(data.message, 'danger');
+                $btn.prop('disabled', false).html('Log in');
+            }
+        }, 'json').fail(function() {
+            showAlert("Something went wrong. Please try again.", 'danger');
+            $btn.prop('disabled', false).html('Log in');
+        });
     });
-});
+
+
+    //Alert show function
+    function showAlert(message, type = 'danger') {
+        let $alertBox = $('#errorDiv');
+        $alertBox
+            .hide()
+            .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
+            .fadeIn();
+
+
+        setTimeout(() => {
+            $('#alertbox').fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+
 
 
     //Password Show and hide

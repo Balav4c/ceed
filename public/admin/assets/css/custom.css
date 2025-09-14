@@ -47,6 +47,10 @@
     opacity: 1 !important; 
     cursor: not-allowed;
 }
+#alertbox {
+    transition: opacity 0.5s ease-in-out;
+}
+
 
 
 .dataTables_filter {
