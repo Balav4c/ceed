@@ -33,6 +33,25 @@
     background: #1a2035;
     color: white
 }
+#loginCheck:active {
+    background: #1a2035;
+    color:white;
+}
+#loginCheck:hover {
+    background: #1a2035;
+    color:white;
+}
+#loginCheck:disabled {
+    background: #1a2035 !important;
+    color: #fff !important;
+    opacity: 1 !important; 
+    cursor: not-allowed;
+}
+#alertbox {
+    transition: opacity 0.5s ease-in-out;
+}
+
+
 
 .dataTables_filter {
     text-align: right !important;
