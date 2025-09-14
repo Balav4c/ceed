@@ -14,6 +14,11 @@ class RoleModel extends Model
     protected $createdField = 'created_at';
     protected $updatedField = 'updated_at';
 
+    public function getAllRoles()
+    {
+        return $this->where('status', 1)->findAll(); // Only active roles
+    }
+
     public function getAllRoleCount()
     {
         return $this->db->table($this->table)->countAllResults();

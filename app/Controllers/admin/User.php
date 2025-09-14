@@ -100,13 +100,22 @@ public function saveUser() {
         ]);
     }
 }
-public function add()
+public function deleteUser()
 {
-    $roleModel = new RoleModel();
-    $roles = $roleModel->where('status', 1)->findAll(); // only active roles
+    $user_id = $this->request->getPost('user_id');
+    if (!$user_id) {
+        return $this->response->setJSON([
+            'status' => 0,
+            'message' => 'User ID is required.'
+        ]);
+    }
 
-    return view('admin/add_user', [
-        'roles' => $roles
+    // Soft delete: set status to 9
+    $this->userModel->updateUser($user_id, ['status' => 9, 'updated_at' => date("Y-m-d H:i:s")]);
+
+    return $this->response->setJSON([
+        'status' => 1,
+        'message' => 'User deleted successfully.'
     ]);
 }
 
@@ -119,37 +128,28 @@ public function add()
     $length    = $this->request->getPost('length') ?? 10;
     $searchVal = $this->request->getPost('search')['value'] ?? '';
 
-    $condition = "1=1";
+    $condition = "u.status != 9";
+
     if (!empty($searchVal)) {
         $searchVal     = trim(preg_replace('/\s+/', ' ', $searchVal));
         $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
 
-        $condition .= " AND ( 
+        $condition .= " AND (
             REPLACE(LOWER(u.name), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
             OR REPLACE(LOWER(u.email), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
         )";
     }
 
-    // Match DataTables column indexes
+    // Map DataTables column indexes to DB columns
     $columns = ['slno', 'name', 'email', 'role_name', 'action', 'user_id'];
     $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
     $orderDir = $this->request->getPost('order')[0]['dir'] ?? 'desc';
     $orderBy = $columns[$orderColumnIndex] ?? 'user_id';
 
-    $builder = $this->db->table('user u')
-        ->select('u.user_id, u.name, u.email, r.role_name')
-        ->join('roles r', 'r.role_id = u.role_id', 'left')
-        ->where($condition, null, false);
+    // Fetch paginated users
+    $users = $this->userModel->getAllFilteredRecords($condition, $start, $length, $orderBy, $orderDir);
 
-    if ($orderBy === 'role_name') {
-        $builder->orderBy("r.role_name", $orderDir);
-    } elseif ($orderBy !== 'slno' && $orderBy !== 'action') {
-        $builder->orderBy("u.$orderBy", $orderDir);
-    }
-
-    $builder->limit($length, $start);
-    $users = $builder->get()->getResult();
-
+    // Format result
     $result = [];
     $slno = $start + 1;
     foreach ($users as $user) {
@@ -162,12 +162,9 @@ public function add()
         ];
     }
 
-    // counts
-    $totalCount = $this->db->table('user')->countAllResults();
-    $filteredCount = $this->db->table('user u')
-        ->join('roles r', 'r.role_id = u.role_id', 'left')
-        ->where($condition, null, false)
-        ->countAllResults();
+    // Counts
+    $totalCount    = $this->userModel->getAllUserCount();
+    $filteredCount = $this->userModel->getFilterUserCount($condition);
 
     return $this->response->setJSON([
         "draw"            => intval($draw),
@@ -176,5 +173,6 @@ public function add()
         "data"            => $result
     ]);
 }
+
 
 }
