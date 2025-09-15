@@ -1,8 +1,8 @@
 <?php
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
-use App\Models\Admin\UserModel;
-
+use App\Models\admin\UserModel;
+use App\Models\admin\RoleModel; 
 
 class User extends BaseController 
 {
@@ -12,6 +12,7 @@ class User extends BaseController
 		$this->session = \Config\Services::session();
 		$this->input = \Config\Services::request();
          $this->userModel = new UserModel();
+         $this->roleModel = new RoleModel(); 
 
 	}
 	public function index()
@@ -25,9 +26,10 @@ class User extends BaseController
 	}
     public function addUser()
 	{
+         $data['roles'] = $this->roleModel->where('status !=', 9)->findAll();
 	        $template = view('admin/common/header');
             $template.= view('admin/common/sidemenu');
-			$template.= view('admin/adduser');
+			$template.= view('admin/adduser', $data);
             $template.= view('admin/common/footer');
             $template.= view('admin/page_scripts/userjs');
 			return $template;
