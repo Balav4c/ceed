@@ -25,24 +25,35 @@ class User extends BaseController
 	}
     public function addUser()
 	{
+            $data['roles'] = $this->userModel->getAllRoles();
 	        $template = view('admin/common/header');
             $template.= view('admin/common/sidemenu');
-			$template.= view('admin/adduser');
+			$template .= view('admin/adduser');
             $template.= view('admin/common/footer');
             $template.= view('admin/page_scripts/userjs');
 			return $template;
 	} 
-    
-    
+    public function editUser($id)
+    {
+        $data['user']  = $this->userModel->find($id);
+    $data['roles'] = $this->userModel->getAllRoles(); // ✅ fetch roles
+
+    $template  = view('admin/common/header');
+    $template .= view('admin/common/sidemenu');
+    $template .= view('admin/adduser', $data);  
+    $template .= view('admin/common/footer');
+    $template .= view('admin/page_scripts/userjs');
+    return $template;
+}
 public function saveUser() {
     $user_id  = $this->request->getPost('user_id');
     $name     = $this->request->getPost('name');
     $email    = $this->request->getPost('email');
     $password = $this->request->getPost('password');
-    $role_id  = $this->request->getPost('role_id'); // add role
+    $role_id  = $this->request->getPost('role_id'); // add role|| !$role_id
 
     // Basic field validation
-    if (!$name || !$email || !$password || !$role_id) {
+    if (!$name || !$email || !$password ) {
         return $this->response->setJSON([
             'status'  => 0,
             'message' => 'All fields are required.'
@@ -80,7 +91,6 @@ public function saveUser() {
         'role_id'    => $role_id,
         'status'     => 1,
         'created_at' => date("Y-m-d H:i:s"),
-        'updated_at' => date("Y-m-d H:i:s"),
     ];
 
     if (empty($user_id)) {
@@ -94,7 +104,7 @@ public function saveUser() {
         $data['updated_at'] = date("Y-m-d H:i:s");
         $this->userModel->updateUser($user_id, $data);
         return $this->response->setJSON([
-            "status" => 1,
+            'success' => true,
             "msg"    => "User Updated Successfully.",
             "redirect" => base_url('admin/manage_user')
         ]);
@@ -105,21 +115,17 @@ public function deleteUser()
     $user_id = $this->request->getPost('user_id');
     if (!$user_id) {
         return $this->response->setJSON([
-            'status' => 0,
+            'success' => false,
             'message' => 'User ID is required.'
         ]);
     }
-
-    // Soft delete: set status to 9
     $this->userModel->updateUser($user_id, ['status' => 9, 'updated_at' => date("Y-m-d H:i:s")]);
 
     return $this->response->setJSON([
-        'status' => 1,
+        'success' => true,
         'message' => 'User deleted successfully.'
     ]);
 }
-
-
 
  public function userlistajax()
 {
@@ -127,9 +133,7 @@ public function deleteUser()
     $start     = $this->request->getPost('start') ?? 0;
     $length    = $this->request->getPost('length') ?? 10;
     $searchVal = $this->request->getPost('search')['value'] ?? '';
-
     $condition = "u.status != 9";
-
     if (!empty($searchVal)) {
         $searchVal     = trim(preg_replace('/\s+/', ' ', $searchVal));
         $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
@@ -137,33 +141,34 @@ public function deleteUser()
         $condition .= " AND (
             REPLACE(LOWER(u.name), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
             OR REPLACE(LOWER(u.email), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
+            OR REPLACE(LOWER(r.role_name), ' ', '') LIKE '%" . $this->db->escapeLikeString($noSpaceSearch) . "%'
         )";
     }
+    $columns = [
+        0 => 'u.user_id',   // slno (we ignore in ordering)
+        1 => 'u.name',
+        2 => 'u.email',
+        3 => 'r.role_name',
+        4 => 'u.user_id'    // action
+    ];
 
-    // Map DataTables column indexes to DB columns
-    $columns = ['slno', 'name', 'email', 'role_name', 'action', 'user_id'];
     $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
     $orderDir = $this->request->getPost('order')[0]['dir'] ?? 'desc';
-    $orderBy = $columns[$orderColumnIndex] ?? 'user_id';
-
-    // Fetch paginated users
+    $orderBy = $columns[$orderColumnIndex] ?? 'u.user_id';
     $users = $this->userModel->getAllFilteredRecords($condition, $start, $length, $orderBy, $orderDir);
 
-    // Format result
     $result = [];
     $slno = $start + 1;
     foreach ($users as $user) {
         $result[] = [
-            'slno'      => $slno++,
-            'user_id'   => $user->user_id,
-            'name'      => $user->name,
-            'email'     => $user->email,
-            'role_name' => $user->role_name ?? 'No Role'
-        ];
+    'slno'      => $slno++,
+    'email'     => $user->email,
+    'name'      => $user->name,
+    'role_name' => $user->role_name ?? 'No Role',
+    'user_id'   => $user->user_id
+];
     }
-
-    // Counts
-    $totalCount    = $this->userModel->getAllUserCount();
+    $totalCount    = $this->userModel->getAllUserCount(['status !=' => 9]);
     $filteredCount = $this->userModel->getFilterUserCount($condition);
 
     return $this->response->setJSON([
@@ -173,6 +178,4 @@ public function deleteUser()
         "data"            => $result
     ]);
 }
-
-
 }

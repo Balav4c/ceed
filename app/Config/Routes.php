@@ -20,7 +20,7 @@ $routes->get('admin/manage_user' , 'admin\User::index');
 $routes->get('admin/adduser', 'admin\User::addUser'); 
 $routes->post('admin/manage_user/userlistajax', 'admin\User::userlistajax');
 $routes->get('admin/adduser/edit/(:num)', 'admin\User::editUser/$1');
-$routes->post('admin/manage_user/deleteUser', 'admin\User::deleteUser');
+$routes->post('admin/adduser/delete', 'admin\User::deleteUser');
 
 
 $routes->post('admin/save/user', 'admin\User::saveUser');
