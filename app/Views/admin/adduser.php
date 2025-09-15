@@ -23,15 +23,20 @@
                     </div>
                     </div>
                     <div class="row">
-                    <div class="col-md-6 mt-4" >
+                    <div class="col-md-6 mt-4">
                         <label class="form-label">User Role</label>
                         <select name="role_id" class="form-control" required>
                             <option value="">-- Select Role --</option>
-                            <option value="1">Admin</option>
-                            <option value="2">Editor</option>
-                            <option value="3">User</option>
+                            <?php if (!empty($roles)): ?>
+                                <?php foreach ($roles as $role): ?>
+                                    <option value="<?= $role->role_id ?>"
+                                        <?= (isset($user) && $user->role_id == $role->role_id) ? 'selected' : '' ?>>
+                                        <?= esc($role->role_name) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            <?php endif; ?>
                         </select>
-                    </div> 
+                    </div>
                     
                     <div class="col-md-6 mt-4">
                         <label class="form-label">Password</label>
