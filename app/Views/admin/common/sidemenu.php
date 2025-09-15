@@ -108,7 +108,7 @@
               </li> -->
                   <li class="nav-item">
                       <a class="nav-link" href="<?= base_url('admin/manage_user') ?>">
-                          <i class="fas fa-th-list"></i>
+                          <i class="bi bi-person-fill"></i>
                           <p>Manage User</p>
                           <!-- <span class="caret"></span> -->
                       </a>

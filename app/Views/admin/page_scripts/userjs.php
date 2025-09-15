@@ -2,71 +2,75 @@
 $(document).ready(function () {
     var baseUrl = "<?= base_url() ?>";
 
+    // Handle form submission
     $('#saveUserBtn').click(function(e) {
         e.preventDefault();
         var url = baseUrl + "admin/save/user";
 
+        // Clear previous messages
+        var messageBox = $('#messageBox');
+        messageBox.removeClass('alert-success alert-danger').addClass('d-none').text('');
+
         $.post(url, $('#userForm').serialize(), function(response) {
-            $('#messageBox').removeClass('d-none'); 
+            messageBox.removeClass('d-none');
+            
             if (response.status == 1) {
-                $('#messageBox')
+                messageBox
                     .removeClass('alert-danger')
                     .addClass('alert-success')
-                    .text(response.msg)
+                    .text(response.message)
                     .show();
 
+                // Redirect after 1.5s
                 setTimeout(function() {
-                    window.location.href = baseUrl + "admin/manage_user/";
+                    window.location.href = response.redirect;
                 }, 1500);
             } else {
-                $('#messageBox')
+                messageBox
                     .removeClass('alert-success')
                     .addClass('alert-danger')
                     .text(response.message)
                     .show();
             }
 
+            // Fade out alert after 2s
             setTimeout(function() {
-                $('#messageBox').fadeOut();
+                messageBox.fadeOut();
             }, 2000);
         }, 'json');
     });
 
-    let table = "";
-    const alertBox = $('.alert');
-
-    table = $('#userTable').DataTable({
+    // Initialize DataTable
+    var table = $('#userTable').DataTable({
         ajax: {
             url: "<?= base_url('admin/manage_user/userlistajax') ?>",
             type: "POST",
             dataSrc: "data"
         },
-        ordering: true,  
+        serverSide: true,
+        processing: true,
+        ordering: true,
         searching: true,
         paging: true,
-        processing: true,
-        serverSide: true,
         dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
              "<'row'<'col-sm-12'tr>>" +
              "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
-
         drawCallback: function () {
-            let info = $('.dataTables_info');
-            info.text(info.text().replace(/\(filtered.*\)/, '').trim());
+            $('.dataTables_info').text(function(_, txt) {
+                return txt.replace(/\(filtered.*\)/, '').trim();
+            });
         },
-
         columns: [
             { data: "slno" },
             {
                 data: "name",
                 render: function (data) {
-                    if (!data || typeof data !== 'string') return '';
-                    return data.replace(/\b\w/g, c => c.toUpperCase());
+                    return data ? data.replace(/\b\w/g, c => c.toUpperCase()) : '';
                 }
             },
             { data: "email" },
             {
-                data: "role_name",  
+                data: "role_name",
                 render: function (data) {
                     return data ? data : "No Role";
                 }
@@ -91,16 +95,14 @@ $(document).ready(function () {
             },
             { data: "user_id", visible: false }
         ],
-
-        order: [[5, 'desc']], 
+        order: [[5, 'desc']],
         columnDefs: [
             { searchable: false, orderable: false, targets: [0, 4] }
         ],
-        language: {
-            infoFiltered: "",
-        }
+        language: { infoFiltered: "" }
     });
 
+    // Re-index serial numbers on draw, search, or order
     table.on('order.dt search.dt draw.dt', function () {
         table.column(0, { search: 'applied', order: 'applied' })
             .nodes()
@@ -109,7 +111,8 @@ $(document).ready(function () {
                 cell.innerHTML = pageInfo.start + i + 1;
             });
     });
-   
+
+    // Delete user
     $('#userTable').on('click', '.delete-all', function () {
         const userId = $(this).data('id');
         const row = $(this).closest('tr');
@@ -123,25 +126,22 @@ $(document).ready(function () {
                 dataType: 'json',
                 success: function (response) {
                     $('#confirmDeleteModal').modal('hide');
-                    if (response.success) {
-                        alertBox.removeClass('d-none alert-danger')
-                                .addClass('alert-success')
-                                .text(response.message)
-                                .show();
+                    var alertBox = $('.alert');
+                    alertBox.removeClass('alert-success alert-danger').removeClass('d-none');
 
-                        //  Refresh DataTable properly
+                    if (response.success) {
+                        alertBox.addClass('alert-success').text(response.message).show();
                         table.row(row).remove().draw(false);
                     } else {
-                        alertBox.removeClass('d-none alert-success')
-                                .addClass('alert-danger')
-                                .text(response.message)
-                                .show();
+                        alertBox.addClass('alert-danger').text(response.message).show();
                     }
+
                     setTimeout(() => alertBox.fadeOut(), 2000);
                 },
                 error: function () {
                     $('#confirmDeleteModal').modal('hide');
-                    alertBox.removeClass('d-none alert-success')
+                    var alertBox = $('.alert');
+                    alertBox.removeClass('alert-success alert-danger').removeClass('d-none')
                             .addClass('alert-danger')
                             .text('Something went wrong!')
                             .show();
