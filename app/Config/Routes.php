@@ -19,7 +19,7 @@ $routes->get('admin/logout', 'admin\Login::logout');
 $routes->get('admin/manage_user' , 'admin\User::index');
 $routes->get('admin/adduser', 'admin\User::addUser'); 
 $routes->post('admin/manage_user/userlistajax', 'admin\User::userlistajax');
-$routes->get('admin/adduser/edit/(:num)', 'admin\User::editUser/$1');
+$routes->get('admin/adduser/edit/(:num)', 'admin\User::edit/$1');
 $routes->post('admin/adduser/delete', 'admin\User::deleteUser');
 
 
