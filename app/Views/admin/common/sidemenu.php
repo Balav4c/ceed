@@ -106,19 +106,20 @@
                   </ul>
                 </div>
               </li> -->
-                  <li class="nav-item">
-                      <a class="nav-link" href="<?= base_url('admin/manage_user') ?>">
-                          <i class="bi bi-person-fill"></i>
-                          <p>Manage User</p>
-                          <!-- <span class="caret"></span> -->
-                      </a>
-                  </li>
-                  <li class="nav-item">
+                 <li class="nav-item">
                       <a class="nav-link" href="<?= base_url('admin/manage_role') ?>">
                           <i class="fas fa-th-list"></i>
                           <p>Manage Role</p>
                       </a>
                   </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="<?= base_url('admin/manage_user') ?>">
+                          <i class="bi bi-person-fill"></i>
+                          <p>Manage Admin User</p>
+                          <!-- <span class="caret"></span> -->
+                      </a>
+                  </li>
+                 
                   <li class="nav-item">
                       <a class="nav-link" id="logout_btn" style="cursor:pointer;">
                           <i class="fas fa-sign-out-alt"></i>

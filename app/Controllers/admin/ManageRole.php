@@ -13,7 +13,10 @@ class ManageRole extends BaseController
         $this->roleMenuModel = new RoleMenuModel();
         $this->session = \Config\Services::session();
         $this->input = \Config\Services::request();
-
+         if (!$this->session->has('user_id')) {
+            header('Location: ' . base_url('admin'));
+            exit();
+        }
     }
     public function index()
     {
@@ -39,7 +42,17 @@ class ManageRole extends BaseController
     $role_id = $request->getPost('role_id');
     $role_name = $request->getPost('role_name');
     $menus = $request->getPost('menus');
+    $normalized_role_name = trim(preg_replace('/\s+/', ' ', strtolower($role_name)));
 
+    $duplicate = $this->roleModel
+        ->where('REPLACE(LOWER(TRIM(role_name)), " ", "") =', str_replace(' ', '', $normalized_role_name))
+       
+        ->first();
+
+    if ($duplicate) {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Role Already Exists.']);
+    }
+    
     if (empty($role_name)) {
         return $this->response->setJSON([
             'status' => 'error',
@@ -67,7 +80,6 @@ class ManageRole extends BaseController
         ]);
     }
 
-    // Update role menus
     $this->roleMenuModel->where('role_id', $role_id)->delete();
     if (!empty($menus)) {
         $data = [];
@@ -253,10 +265,6 @@ class ManageRole extends BaseController
         return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
     }
 }
-
-
-
-
 
 
 }
