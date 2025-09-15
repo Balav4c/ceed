@@ -33,54 +33,60 @@ class ManageRole extends BaseController
         $template .= view('admin/page_scripts/rolesjs');
         return $template;
     }
-    public function store()
-    {
-        $request = $this->request;
-        $roleModel = new RoleModel();
-        $roleMenuModel = new RoleMenuModel();
+   public function store()
+{
+    $request = $this->request;
+    $role_id = $request->getPost('role_id');
+    $role_name = $request->getPost('role_name');
+    $menus = $request->getPost('menus');
 
-        $role_id = $request->getPost('role_id');
-        $role_name = $request->getPost('role_name');
-        $menus = $request->getPost('menus');
-        if (empty($role_name)) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Role Name is required'
-            ]);
-        }
-
-        if ($role_id) {
-            $roleModel->update($role_id, ['role_name' => $role_name]);
-        } else {
-            $role_id = $roleModel->insert([
-                'role_name' => $role_name,
-                'status' => 1
-            ], true);
-        }
-
-        if (!$role_id) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Failed to save role (check DB structure)'
-            ]);
-        }
-
-        $roleMenuModel->where('role_id', $role_id)->delete();
-        if (!empty($menus)) {
-            $data = [];
-            foreach ($menus as $menuName) {
-                $data[] = [
-                    'role_id' => $role_id,
-                    'menu_name' => $menuName,
-                    'access' => 1
-                ];
-            }
-            $roleMenuModel->insertBatch($data);
-        }
-
-        return $this->response->setJSON(['status' => 'success']);
-
+    if (empty($role_name)) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Role Name Is Required'
+        ]);
     }
+
+    if ($role_id) {
+    
+        $updated = $this->roleModel->update($role_id, ['role_name' => $role_name]);
+        $message = $updated ? 'Role Updated Successfully!' : 'Failed To Update Role';
+    } else {
+       
+        $role_id = $this->roleModel->insert([
+            'role_name' => $role_name,
+            'status' => 1
+        ], true);
+        $message = $role_id ? 'Role Added Successfully!' : 'Failed To Add Role';
+    }
+
+    if (!$role_id) {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Database operation failed'
+        ]);
+    }
+
+    // Update role menus
+    $this->roleMenuModel->where('role_id', $role_id)->delete();
+    if (!empty($menus)) {
+        $data = [];
+        foreach ($menus as $menuName) {
+            $data[] = [
+                'role_id' => $role_id,
+                'menu_name' => $menuName,
+                'access' => 1
+            ];
+        }
+        $this->roleMenuModel->insertBatch($data);
+    }
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'message' => $message
+    ]);
+}
+
     public function rolelistajax()
     {
         $draw = $_POST['draw'] ?? 1;
@@ -164,11 +170,11 @@ class ManageRole extends BaseController
             $updated = $this->roleModel->update($role_id, ['status' => $status]);
 
             if ($updated) {
-                return $this->response->setJSON(['status' => 'success']);
+                return $this->response->setJSON(['status' => 'success','message' =>'Status Updated Successfully!']);
             } else {
                 return $this->response->setJSON([
                     'status' => 'error',
-                    'message' => 'Update failed'
+                    'message' => 'Update Failed'
                 ]);
             }
         }
@@ -224,7 +230,7 @@ class ManageRole extends BaseController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Role updated successfully!'
+            'message' => 'Role Updated Successfully!'
         ]);
     }
    public function delete()

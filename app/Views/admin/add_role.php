@@ -5,7 +5,7 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                <h3 class="mb-0"><?= isset($role['role_id']) ? 'Edit Role' : 'Add New Role and Permissions' ?></h3>
             </div>
-            <div id="messageBox" class="alert d-none text-center" role="alert"></div>
+            <div id="messageBox" class="alert d-none text-center"  role="alert"></div>
             <div class="card-body">
                 <form id="roleForm" action="<?= base_url('admin/manage_role/store') ?>" class="p-3">
                     <input type="hidden" name="role_id" id="role_id" value="<?= isset($role['role_id']) ? esc($role['role_id']) : '' ?>">

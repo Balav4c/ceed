@@ -316,10 +316,9 @@
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
                                     aria-expanded="false">
-                                    <div class="avatar-sm">
-                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg"
-                                            alt="..." class="avatar-img rounded-circle" />
-                                    </div>
+                                    
+                                        <i class="bi bi-person-fill"></i>
+                                    
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
                                         <span class="fw-bold"> <?= session()->get('user_name'); ?></span>
