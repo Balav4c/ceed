@@ -14,7 +14,7 @@
         <hr>
  
     <!-- <div class="table-responsive"> -->
-        <table class="table " id="userTable">
+        <table class="table table-hover" id="userTable">
             <thead class="table-light">
                 <tr>
                     <th>Sl No</th>

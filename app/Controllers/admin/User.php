@@ -26,10 +26,10 @@ class User extends BaseController
     }
      public function addUser()
     {
-         $data['roles'] = $this->roleModel->where('status !=', 9)->findAll();
+        $data['roles'] = $this->userModel->getAllRoles();
             $template = view('admin/common/header');
             $template.= view('admin/common/sidemenu');
-            $template.= view('admin/adduser', $data);
+            $template.= view('admin/adduser',$data);
             $template.= view('admin/common/footer');
             $template.= view('admin/page_scripts/userjs');
             return $template;
