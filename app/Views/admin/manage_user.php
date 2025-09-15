@@ -13,7 +13,7 @@
         </div>
         <hr>
     <!-- Responsive table wrapper -->
-    <div class="table-responsive">
+    <!-- <div class="table-responsive"> -->
         <table class="table " id="userTable">
             <thead class="table-light">
                 <tr>
@@ -26,7 +26,7 @@
             </thead>
             <tbody></tbody>
         </table>
-    </div>
+    <!-- </div> -->
 </div>
 </div>
 

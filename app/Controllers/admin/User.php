@@ -34,10 +34,10 @@ class User extends BaseController
             $template.= view('admin/page_scripts/userjs');
             return $template;
     }
-    public function editUser($id)
+    public function edit($id)
     {
-        $data['user']  = $this->userModel->find($id);
-    $data['roles'] = $this->userModel->getAllRoles(); // ✅ fetch roles
+        $data['userData']  = $this->userModel->find($id);
+    $data['roles'] = $this->userModel->getAllRoles(); 
 
     $template  = view('admin/common/header');
     $template .= view('admin/common/sidemenu');
@@ -102,10 +102,10 @@ public function saveUser() {
             "redirect" => base_url('admin/manage_user')
         ]);
     } else {
-        $data['updated_at'] = date("Y-m-d H:i:s");
+        
         $this->userModel->updateUser($user_id, $data);
-        return $this->response->setJSON([
-            'success' => true,
+       return $this->response->setJSON([
+            "status" => 1,
             "msg"    => "User Updated Successfully.",
             "redirect" => base_url('admin/manage_user')
         ]);

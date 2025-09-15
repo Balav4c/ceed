@@ -109,12 +109,7 @@ $(document).ready(function () {
                 cell.innerHTML = pageInfo.start + i + 1;
             });
     });
-    $(document).on('click', '.editUser', function () {
-        var id = $(this).data('id');
-        window.location.href = base_url + "admin/adduser/edit/" + id;
-    });
-
-    //  Delete user (INSIDE ready so it can access "table")
+   
     $('#userTable').on('click', '.delete-all', function () {
         const userId = $(this).data('id');
         const row = $(this).closest('tr');
