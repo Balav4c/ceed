@@ -13,10 +13,10 @@ class User extends BaseController
         $this->input = \Config\Services::request();
         $this->userModel = new UserModel();
         $this->roleModel = new RoleModel();
-        // if (!$this->session->has('user_id')) {
-        //     header('Location: ' . base_url('admin'));
-        //     exit();
-        // }
+        if (!$this->session->has('user_id')) {
+            header('Location: ' . base_url('admin'));
+            exit();
+        }
     }
     public function index()
     {
