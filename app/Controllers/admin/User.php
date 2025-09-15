@@ -52,91 +52,109 @@ class User extends BaseController
         return $template;
 }
     public function saveUser() {
-        $user_id  = $this->request->getPost('user_id');
-        $name     = $this->request->getPost('name');
-        $email    = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
-        $role_id  = $this->request->getPost('role_id');
+    $user_id  = $this->request->getPost('user_id');
+    $name     = $this->request->getPost('name');
+    $email    = $this->request->getPost('email');
+    $password = $this->request->getPost('password');
+    $new_password = $this->request->getPost('new_password');
+    $confirm_password = $this->request->getPost('confirm_password');
+    $role_id  = $this->request->getPost('role_id');
 
-        // Basic validations
-        if (!$name || !$email || !$password || !$role_id ) {
+    if (empty($name) || empty($email) || empty($role_id)) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'All fields are required.'
+        ]);
+    }
+
+    if (!preg_match("/^[a-zA-Z0-9._%+-]+@gmail\.com$/", $email)) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Email must be a valid Gmail address.'
+        ]);
+    }
+    if (empty($user_id) && empty($password)) {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Password is required for creating a new user.'
+        ]);
+    }
+    $finalPassword = null;
+    if (!empty($password) || !empty($new_password)) {
+        $passToValidate = !empty($password) ? $password : $new_password;
+
+        if (strlen($passToValidate) < 7) {
             return $this->response->setJSON([
-                'status'  => 0,
-                'message' => 'All fields are required.'
+                'success' => false,
+                'message' => 'Password must be at least 7 characters long.'
             ]);
         }
-        if (!preg_match("/^[a-zA-Z0-9._%+-]+@gmail\.com$/", $email)) {
+        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $passToValidate)) {
             return $this->response->setJSON([
-                'status'  => 0,
-                'message' => 'Email must be a valid Gmail address (e.g. user@gmail.com).'
-            ]);
-        }
-        if (strlen($password) < 6) {
-            return $this->response->setJSON([
-                'status'  => 0,
-                'message' => 'Password must be at least 6 characters long.'
-            ]);
-        }
-        if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $password)) {
-            return $this->response->setJSON([
-                'status'  => 0,
+                'success' => false,
                 'message' => 'Password must contain at least one special character.'
             ]);
         }
-        $existingUser = $this->userModel
-            ->where('email', $email)
-            ->where('status !=', 9) 
-            ->first();
-
-        if (empty($user_id)) {
-            if ($existingUser) {
-                return $this->response->setJSON([
-                    'status'  => 0,
-                    'message' => 'Email already exists. Please use another email.'
-                ]);
-            }
-            $data = [
-                'name'       => $name,
-                'email'      => $email,
-                'role_id'    => $role_id,
-                'status'     => 1,
-                'created_at' => date("Y-m-d H:i:s")
-            ];
-            $data['password'] = password_hash($password, PASSWORD_DEFAULT);
-            $this->userModel->userInsert($data);
+        if (!empty($new_password) && $new_password !== $confirm_password) {
             return $this->response->setJSON([
-                'status'   => 1,
-                'message'  => 'User created successfully.',
-                'redirect' => base_url('admin/manage_user')
-            ]);
-        } else {
-            if ($existingUser && $existingUser['user_id'] != $user_id) {
-                return $this->response->setJSON([
-                    'status'  => 0,
-                    'message' => 'Email already in use by another account.'
-                ]);
-            }
-
-            $data = [
-                'name'       => $name,
-                'email'      => $email,
-                'role_id'    => $role_id,
-                'updated_at' => date("Y-m-d H:i:s")
-            ];
-
-            if ($password) {
-                $data['password'] = password_hash($password, PASSWORD_DEFAULT);
-            }
-
-            $this->userModel->updateUser($user_id, $data);
-
-            return $this->response->setJSON([
-                'status'   => 1,
-                'message'  => 'User updated successfully.',
-                'redirect' => base_url('admin/manage_user')
+                'success' => false,
+                'message' => 'New password and confirm password do not match.'
             ]);
         }
+        $finalPassword = password_hash($passToValidate, PASSWORD_DEFAULT);
     }
+    $existingUser = $this->userModel
+        ->where('email', $email)
+        ->where('status !=', 9)
+        ->first();
+
+    if (empty($user_id)) {
+        if ($existingUser) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Email already exists. Please use another email.'
+            ]);
+        }
+        $data = [
+            'name'       => $name,
+            'email'      => $email,
+            'role_id'    => $role_id,
+            'password'   => $finalPassword,
+            'status'     => 1,
+            'created_at' => date("Y-m-d H:i:s")
+        ];
+        $this->userModel->userInsert($data);
+        return $this->response->setJSON([
+            'success'  => true,
+            'message'  => 'User created successfully.',
+            'redirect' => base_url('admin/manage_user')
+        ]);
+    } 
+    else {
+        if ($existingUser && $existingUser['user_id'] != $user_id) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Email already in use by another account.'
+            ]);
+        }
+        $data = [
+            'name'       => $name,
+            'email'      => $email,
+            'role_id'    => $role_id,
+            'updated_at' => date("Y-m-d H:i:s")
+        ];
+        if ($finalPassword) {
+            $data['password'] = $finalPassword;
+        }
+        $this->userModel->updateUser($user_id, $data);
+        return $this->response->setJSON([
+            'success'  => true,
+            'message'  => 'User updated successfully.',
+            'redirect' => base_url('admin/manage_user')
+        ]);
+    }
+}
+
     public function deleteUser()
 {
     $user_id = $this->request->getPost('user_id');
