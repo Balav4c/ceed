@@ -127,6 +127,20 @@ border-collapse: collapse !important;
     color: green;       /* tick color */
     font-weight: bold;
 }
+.alert{
+  position: fixed !important; 
+  top: 20px !important;
+  left:50% !important; 
+  transform:translateX(-50%) !important; 
+  z-index: 1050 !important; 
+  min-width: 300px !important;
+}
+.alert-success {
+    border: 2px solid green;
+}
+.alert-danger{
+  border:2px solid rgba(196, 37, 37, 0.726)
+}
 /***Responsive Styles ***/
 @media (max-width: 767px) {
   .left-side-card {
