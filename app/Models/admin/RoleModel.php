@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Models\Admin;
+namespace App\Models\admin;
 
 use CodeIgniter\Model;
 
@@ -16,7 +16,7 @@ class RoleModel extends Model
 
     public function getAllRoles()
 {
-    return $this->where('status !=', 9)->findAll(); // Show only active/inactive, not deleted
+    return $this->where('status !=', 9)->findAll(); 
 }
 
    public function getAllRoleCount()
