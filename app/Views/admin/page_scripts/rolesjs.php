@@ -124,30 +124,25 @@
             var form = $(this);
             var url = form.attr('action');
 
-            $.post(url, $('#roleForm').serialize(), function(response) {
-            $('#messageBox').removeClass('d-none'); 
-            if (response.status == 1) {
-                $('#messageBox')
-                    .removeClass('alert-danger')
-                    .addClass('alert-success')
-                    .text(response.msg)
-                    .show();
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: form.serialize(),
+                dataType: 'json',
 
-                setTimeout(function() {
-                    window.location.href = baseUrl + "admin/manage_role/";
-                }, 1500);
-            } else {
-                $('#messageBox')
-                    .removeClass('alert-success')
-                    .addClass('alert-danger')
-                    .text(response.message)
-                    .show();
-            }
-
-            setTimeout(function() {
-                $('#messageBox').fadeOut();
-            }, 2000);
-        }, 'json');
+                success: function (res) {
+                    if (res.status === 'success') {
+                        alert('Role saved successfully!');
+                        window.location.href = "<?= base_url('admin/manage_role') ?>";
+                    } else {
+                        alert('Error: ' + res.message);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText);
+                    alert('Something went wrong! Check console for details.');
+                }
+            });
         });
 
         
