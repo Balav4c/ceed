@@ -25,14 +25,14 @@ $routes->post('admin/manage_user/deleteUser', 'admin\User::deleteUser');
 
 $routes->post('admin/save/user', 'admin\User::saveUser');
 
-$routes->get('admin/manage_role' , 'admin\Manage_Role::index');
-$routes->get('admin/add_role' , 'admin\Manage_Role::addrole');
-$routes->post('admin/manage_role/store', 'admin\Manage_Role::store');
-$routes->post('admin/manage_role/rolelistajax', 'admin\Manage_Role::rolelistajax');
-$routes->get('admin/add_role/edit/(:num)', 'admin\Manage_Role::edit/$1');
-$routes->post('admin/manage_role/update/(:num)', 'admin\Manage_Role::update/$1');
-$routes->post('admin/manage_role/delete', 'Admin\Manage_Role::delete');
-$routes->post('admin/manage_role/toggleStatus', 'Admin\Manage_Role::toggleStatus');
+$routes->get('admin/manage_role' , 'admin\ManageRole::index');
+$routes->get('admin/add_role' , 'admin\ManageRole::addrole');
+$routes->post('admin/manage_role/store', 'admin\ManageRole::store');
+$routes->post('admin/manage_role/rolelistajax', 'admin\ManageRole::rolelistajax');
+$routes->get('admin/add_role/edit/(:num)', 'admin\ManageRole::edit/$1');
+$routes->post('admin/manage_role/update/(:num)', 'admin\ManageRole::update/$1');
+$routes->post('admin/manage_role/delete', 'admin\ManageRole::delete');
+$routes->post('admin/manage_role/toggleStatus', 'admin\ManageRole::toggleStatus');
 
 
 
