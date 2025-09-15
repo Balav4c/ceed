@@ -35,18 +35,20 @@ class UserModel extends Model {
         ->where('u.status !=', 9);
  
     if (!empty($searchVal)) {
-    $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
+        $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
  
-    $builder->groupStart();
-    $builder->where("LOWER(u.name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
-    $builder->orWhere("LOWER(u.email) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
-    $builder->orWhere("LOWER(r.role_name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+        $builder->groupStart();
+        $builder->where("LOWER(u.name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+        $builder->orWhere("LOWER(u.email) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+        $builder->orWhere("LOWER(r.role_name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
  
-    $builder->orWhere("REPLACE(LOWER(u.name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->orWhere("REPLACE(LOWER(u.email), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->orWhere("REPLACE(LOWER(r.role_name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->groupEnd();
-    }
+        $builder->orWhere("REPLACE(LOWER(u.name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(u.email), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(r.role_name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(CONCAT(u.name, ' ', u.email, ' ', r.role_name)), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->groupEnd();
+        }
+ 
     $builder->orderBy($orderBy, $orderDir);
     return $builder->limit($length, $start)->get()->getResult();
     }
@@ -58,17 +60,20 @@ class UserModel extends Model {
         ->where('u.status !=', 9);
  
     if (!empty($searchVal)) {
-    $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
+        $noSpaceSearch = str_replace(' ', '', strtolower($searchVal));
  
-    $builder->groupStart();
-    $builder->where("LOWER(u.name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
-    $builder->orWhere("LOWER(u.email) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
-    $builder->orWhere("LOWER(r.role_name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
-    $builder->orWhere("REPLACE(LOWER(u.name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->orWhere("REPLACE(LOWER(u.email), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->orWhere("REPLACE(LOWER(r.role_name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
-    $builder->groupEnd();
-    }
+        $builder->groupStart();
+        $builder->where("LOWER(u.name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+        $builder->orWhere("LOWER(u.email) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+        $builder->orWhere("LOWER(r.role_name) LIKE '%".$this->db->escapeLikeString(strtolower($searchVal))."%'", null, false);
+ 
+        $builder->orWhere("REPLACE(LOWER(u.name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(u.email), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(r.role_name), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->orWhere("REPLACE(LOWER(CONCAT(u.name, ' ', u.email, ' ', r.role_name)), ' ', '') LIKE '%".$this->db->escapeLikeString($noSpaceSearch)."%' ", null, false);
+        $builder->groupEnd();
+        }
+ 
         return $builder->countAllResults();
     }
  
