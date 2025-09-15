@@ -24,13 +24,16 @@ class User extends BaseController
              $template.= view('admin/page_scripts/userjs');
 			return $template;
 	}
-    public function addUser()
-	{
-
+     public function addUser()
+    {
+         $data['roles'] = $this->roleModel->where('status !=', 9)->findAll();
+            $template = view('admin/common/header');
+            $template.= view('admin/common/sidemenu');
+            $template.= view('admin/adduser', $data);
             $template.= view('admin/common/footer');
             $template.= view('admin/page_scripts/userjs');
-			return $template;
-	} 
+            return $template;
+    }
     public function editUser($id)
     {
         $data['user']  = $this->userModel->find($id);
