@@ -1,15 +1,27 @@
 <script>
 $(document).ready(function () {
     var baseUrl = "<?= base_url() ?>";
+    if ($('#userForm').data('edit') === true) {  
+        $('#saveUserBtn').prop('disabled', true); 
+    }
+    $('#userForm input, #userForm select, #userForm textarea').on('input change', function () {
+        $('#saveUserBtn').prop('disabled', false);
+    });
+
+    // --- Save Button Click ---
     $('#saveUserBtn').click(function(e) {
         e.preventDefault();
+
+        var $btn = $(this); 
+        $btn.prop('disabled', true).text('Saving...'); 
+
         var url = baseUrl + "admin/save/user";
         var messageBox = $('#messageBox');
         messageBox.removeClass('alert-success alert-danger').addClass('d-none').text('');
 
         $.post(url, $('#userForm').serialize(), function(response) {
             messageBox.removeClass('d-none');
-            
+
             if (response.success) { 
                 messageBox
                     .removeClass('alert-danger')
@@ -32,7 +44,10 @@ $(document).ready(function () {
             setTimeout(function() {
                 messageBox.fadeOut();
             }, 2000);
-        }, 'json');
+        }, 'json')
+        .always(function() {
+            $btn.prop('disabled', false).text('Save User');
+        });
     });
      var table = $('#userTable').DataTable({
         ajax: {
@@ -54,7 +69,7 @@ $(document).ready(function () {
             });
         },
         columns: [
-            { data: "slno" },
+             { data: "slno", className: "text-start" }, 
             {
                 data: "name",
                 render: function (data) {
@@ -66,6 +81,19 @@ $(document).ready(function () {
                 data: "role_name",
                 render: function (data) {
                     return data ? data : "No Role";
+                }
+            },
+            {
+                data: "status",
+                render: function (data, type, row) {
+                    let checked = data == 1 ? 'checked' : '';
+                    return `
+                        <div class="form-check form-switch">
+                            <input class="form-check-input toggle-status" type="checkbox" 
+                            data-id="${row.role_id}" ${checked}>
+                                
+                        </div>
+                    `;
                 }
             },
             {
@@ -147,13 +175,54 @@ $(document).ready(function () {
 //     });
 
  });
+ // toggle switch
+    $('#userTable').on('change', '.toggle-status', function () {
+    let userId = $(this).data('id');
+    let newStatus = $(this).is(':checked') ? 1 : 2;
+
+    $.ajax({
+        url: "<?= base_url('admin/manage_user/toggleStatus') ?>",
+        type: "POST",
+        data: {
+            user_id: userId,
+            status: newStatus,
+            "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+        },
+        dataType: "json",
+        success: function(response) {
+            let $msg = $('#messageBox');
+            $msg.removeClass('d-none alert-success alert-danger');
+
+            if (response.status === 'success') {
+                $msg.addClass('alert-success').text(response.message).show();
+                setTimeout(function() {
+                    $msg.fadeOut();
+                    if (typeof table !== 'undefined') {
+                        table.ajax.reload(null, false);
+                    }
+                }, 1500);
+            } else {
+                $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
+                setTimeout(function() { $msg.fadeOut(); }, 2000);
+            }
+        },
+        error: function(xhr, status, error) {
+            console.error(xhr.responseText); 
+            let $msg = $('#messageBox');
+            $msg.removeClass('d-none alert-success').addClass('alert-danger')
+                .text('Error Updating Status').show();
+            setTimeout(function() { $msg.fadeOut(); }, 2000);
+        }
+    });
+});
+
  $(document).on("click", ".delete-all", function (e) {
         e.preventDefault();
         let userId = $(this).data("id");
  
         swal({
             title: "Are You Sure?",
-            text: "You Want To Delete This Role!",
+            text: "You Want To Delete This User!",
             icon: "warning",
             buttons: {
                 cancel: {
@@ -171,10 +240,10 @@ $(document).ready(function () {
                 $.ajax({
                     url: "<?= base_url('admin/manage_user/delete'); ?>",
                     type: "POST",
-                    data: { id: userId },
+                    data: { user_id: userId },
                     dataType: "json",
                     success: function (response) {
-                        if (response.status === "success") {
+                        if (response.success) {
                             swal("Deleted!", response.message, {
                                 icon: "success",
                                 buttons: {
@@ -193,7 +262,7 @@ $(document).ready(function () {
                     },
                 });
             } else {
-                swal("Your role is safe!", {
+                swal("Your data is safe!", {
                     buttons: {
                         confirm: {
                             className: "btn btn-success",

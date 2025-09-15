@@ -63,20 +63,20 @@ class User extends BaseController
     if (empty($name) || empty($email) || empty($role_id)) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'All fields are required.'
+            'message' => 'All Fields Are Required.'
         ]);
     }
 
     if (!preg_match("/^[a-zA-Z0-9._%+-]+@gmail\.com$/", $email)) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'Email must be a valid Gmail address.'
+            'message' => 'Email Must Be A Valid Gmail Address.'
         ]);
     }
     if (empty($user_id) && empty($password)) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'Password is required for creating a new user.'
+            'message' => 'Password Is Required For Creating A New User.'
         ]);
     }
     $finalPassword = null;
@@ -86,19 +86,19 @@ class User extends BaseController
         if (strlen($passToValidate) < 7) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Password must be at least 7 characters long.'
+                'message' => 'Password Must Be At Least 7 Characters Long.'
             ]);
         }
         if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $passToValidate)) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Password must contain at least one special character.'
+                'message' => 'Password Must Contain At Least One Special Character.'
             ]);
         }
         if (!empty($new_password) && $new_password !== $confirm_password) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'New password and confirm password do not match.'
+                'message' => 'New Password And Confirm Password Do Not Match.'
             ]);
         }
         $finalPassword = password_hash($passToValidate, PASSWORD_DEFAULT);
@@ -112,7 +112,7 @@ class User extends BaseController
         if ($existingUser) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Email already exists. Please use another email.'
+                'message' => 'Email Already Exists. Please Use Another Email.'
             ]);
         }
         $data = [
@@ -126,7 +126,7 @@ class User extends BaseController
         $this->userModel->userInsert($data);
         return $this->response->setJSON([
             'success'  => true,
-            'message'  => 'User created successfully.',
+            'message'  => 'User Created Successfully.',
             'redirect' => base_url('admin/manage_user')
         ]);
     } 
@@ -134,7 +134,7 @@ class User extends BaseController
         if ($existingUser && $existingUser['user_id'] != $user_id) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Email already in use by another account.'
+                'message' => 'Email Already In Use By Another Account.'
             ]);
         }
         $data = [
@@ -149,7 +149,7 @@ class User extends BaseController
         $this->userModel->updateUser($user_id, $data);
         return $this->response->setJSON([
             'success'  => true,
-            'message'  => 'User updated successfully.',
+            'message'  => 'User Updated Successfully.',
             'redirect' => base_url('admin/manage_user')
         ]);
     }
@@ -161,20 +161,21 @@ class User extends BaseController
     if (!$user_id) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'User ID is required.'
+            'message' => 'User ID Is Required.'
         ]);
     }
 
-    $this->userModel->updateUser($user_id, [
+    $this->userModel->update($user_id, [
         'status'     => 9,
         'updated_at' => date("Y-m-d H:i:s")
     ]);
 
     return $this->response->setJSON([
-        'success' => true,
-        'message' => 'User deleted successfully.'
+        'success'  =>true,
+        'message' => 'User Deleted Successfully.'
     ]);
 }
+
 
     public function userlistajax()
     {
@@ -217,4 +218,39 @@ class User extends BaseController
         ]);
     
     }
+    public function toggleStatus()
+{
+    if ($this->request->isAJAX()) {
+        $user_id = $this->request->getPost('user_id');
+        $status  = $this->request->getPost('status');
+
+        if (!$user_id || !in_array((string)$status, ['1','2'])) {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Invalid Status Value'
+            ]);
+        }
+
+        // Make sure UserModel is loaded in constructor
+        $updated = $this->userModel->update($user_id, ['status' => $status]);
+
+        if ($updated) {
+            return $this->response->setJSON([
+                'status'  => 'success',
+                'message' => 'Status Updated Successfully!'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'status'  => 'error',
+                'message' => 'Update Failed'
+            ]);
+        }
+    }
+
+    return $this->response->setJSON([
+        'status'  => 'error',
+        'message' => 'Invalid request'
+    ]);
+}
+
 }

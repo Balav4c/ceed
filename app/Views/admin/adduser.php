@@ -8,7 +8,7 @@
             <div id="messageBox" class="alert d-none text-center" role="alert"></div>
  
             <div class="card-body">
-                <form id="userForm" method="post">
+                <form id="userForm" method="post" data-edit="true">
                     <?php if (isset($userData['user_id'])): ?>
                         <input type="hidden" name="user_id" value="<?= esc($userData['user_id']) ?>">
                     <?php endif; ?>
@@ -75,8 +75,8 @@
                     </div>
  
                     <div class="col-12 d-flex justify-content-end gap-2 mt-5">
-                        <button type="submit" id="saveUserBtn" class="btn btn-success">Save User</button>
                         <a href="<?= base_url('admin/manage_user') ?>" class="btn btn-secondary">Cancel</a>
+                        <button type="submit" id="saveUserBtn" class="btn btn-primary">Save User</button>
                     </div>
                 </form>
             </div>
