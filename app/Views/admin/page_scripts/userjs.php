@@ -1,30 +1,27 @@
 <script>
 $(document).ready(function () {
     var baseUrl = "<?= base_url() ?>";
-
-    // Handle form submission
     $('#saveUserBtn').click(function(e) {
         e.preventDefault();
         var url = baseUrl + "admin/save/user";
-
-        // Clear previous messages
         var messageBox = $('#messageBox');
         messageBox.removeClass('alert-success alert-danger').addClass('d-none').text('');
 
         $.post(url, $('#userForm').serialize(), function(response) {
             messageBox.removeClass('d-none');
             
-            if (response.status == 1) {
+            if (response.success) { 
                 messageBox
                     .removeClass('alert-danger')
                     .addClass('alert-success')
                     .text(response.message)
                     .show();
 
-                // Redirect after 1.5s
-                setTimeout(function() {
-                    window.location.href = response.redirect;
-                }, 1500);
+                if (response.redirect) {
+                    setTimeout(function() {
+                        window.location.href = response.redirect;
+                    }, 1500);
+                }
             } else {
                 messageBox
                     .removeClass('alert-success')
@@ -32,16 +29,12 @@ $(document).ready(function () {
                     .text(response.message)
                     .show();
             }
-
-            // Fade out alert after 2s
             setTimeout(function() {
                 messageBox.fadeOut();
             }, 2000);
         }, 'json');
     });
-
-    // Initialize DataTable
-    var table = $('#userTable').DataTable({
+     var table = $('#userTable').DataTable({
         ajax: {
             url: "<?= base_url('admin/manage_user/userlistajax') ?>",
             type: "POST",
@@ -80,12 +73,12 @@ $(document).ready(function () {
                 render: function (id) {
                     return `
                         <div class="d-flex align-items-center gap-3">
-                            <a href="<?= base_url('admin/adduser/edit/') ?>${id}" 
+                            <a href="<?= base_url('admin/adduser/edit/') ?>${id}"
                                title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                                 <i class="bi bi-pencil-fill"></i>
                             </a>
-                            <a href="javascript:void(0);" 
-                               class="delete-all" data-id="${id}" 
+                            <a href="javascript:void(0);"
+                               class="delete-all" data-id="${id}"
                                title="Delete" style="color: #dc3545;">
                                 <i class="bi bi-trash-fill"></i>
                             </a>
@@ -101,54 +94,113 @@ $(document).ready(function () {
         ],
         language: { infoFiltered: "" }
     });
+ 
 
-    // Re-index serial numbers on draw, search, or order
-    table.on('order.dt search.dt draw.dt', function () {
-        table.column(0, { search: 'applied', order: 'applied' })
-            .nodes()
-            .each(function (cell, i) {
-                var pageInfo = table.page.info();
-                cell.innerHTML = pageInfo.start + i + 1;
-            });
+    $(document).on("click", ".toggle-password", function () {
+        let input = $($(this).data("target"));
+        if (input.attr("type") === "password") {
+            input.attr("type", "text"); 
+            $(this).removeClass("bi-eye-slash").addClass("bi-eye");
+        } else {
+            input.attr("type", "password"); 
+            $(this).removeClass("bi-eye").addClass("bi-eye-slash");
+        }
     });
 
     // Delete user
-    $('#userTable').on('click', '.delete-all', function () {
-        const userId = $(this).data('id');
-        const row = $(this).closest('tr');
-        $('#confirmDeleteModal').modal('show');
+//     $('#userTable').on('click', '.delete-all', function () {
+//         const userId = $(this).data('id');
+//         const row = $(this).closest('tr');
+//         $('#confirmDeleteModal').modal('show');
 
-        $('#confirm-delete-btn').off('click').on('click', function () {
-            $.ajax({
-                url: "<?= base_url('admin/adduser/delete') ?>",
-                type: "POST",
-                data: { user_id: userId },
-                dataType: 'json',
-                success: function (response) {
-                    $('#confirmDeleteModal').modal('hide');
-                    var alertBox = $('.alert');
-                    alertBox.removeClass('alert-success alert-danger').removeClass('d-none');
+//         $('#confirm-delete-btn').off('click').on('click', function () {
+//             $.ajax({
+//                 url: "<?= base_url('admin/adduser/delete') ?>",
+//                 type: "POST",
+//                 data: { user_id: userId },
+//                 dataType: 'json',
+//                 success: function (response) {
+//                     $('#confirmDeleteModal').modal('hide');
+//                     var alertBox = $('.alert');
+//                     alertBox.removeClass('alert-success alert-danger').removeClass('d-none');
 
-                    if (response.success) {
-                        alertBox.addClass('alert-success').text(response.message).show();
-                        table.row(row).remove().draw(false);
-                    } else {
-                        alertBox.addClass('alert-danger').text(response.message).show();
-                    }
+//                     if (response.success) { 
+//                         alertBox.addClass('alert-success').text(response.message).show();
+//                         table.row(row).remove().draw(false);
+//                     } else {
+//                         alertBox.addClass('alert-danger').text(response.message).show();
+//                     }
 
-                    setTimeout(() => alertBox.fadeOut(), 2000);
+//                     setTimeout(() => alertBox.fadeOut(), 2000);
+//                 },
+//                 error: function () {
+//                     $('#confirmDeleteModal').modal('hide');
+//                     var alertBox = $('.alert');
+//                     alertBox.removeClass('alert-success alert-danger').removeClass('d-none')
+//                             .addClass('alert-danger')
+//                             .text('Something went wrong!')
+//                             .show();
+//                     setTimeout(() => alertBox.fadeOut(), 2000);
+//                 }
+//             });
+//         });
+//     });
+
+ });
+ $(document).on("click", ".delete-all", function (e) {
+        e.preventDefault();
+        let userId = $(this).data("id");
+ 
+        swal({
+            title: "Are You Sure?",
+            text: "You Want To Delete This Role!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: "Cancel",
+                    className: "btn btn-danger",
                 },
-                error: function () {
-                    $('#confirmDeleteModal').modal('hide');
-                    var alertBox = $('.alert');
-                    alertBox.removeClass('alert-success alert-danger').removeClass('d-none')
-                            .addClass('alert-danger')
-                            .text('Something went wrong!')
-                            .show();
-                    setTimeout(() => alertBox.fadeOut(), 2000);
-                }
-            });
+                confirm: {
+                    text: "Delete",
+                    className: "btn btn-success",
+                },
+            },
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "<?= base_url('admin/manage_user/delete'); ?>",
+                    type: "POST",
+                    data: { id: userId },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === "success") {
+                            swal("Deleted!", response.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            });
+                            $('#userTable').DataTable().ajax.reload();
+                        } else {
+                            swal("Error!", response.message, "error");
+                        }
+                    },
+                    error: function () {
+                        swal("Error!", "Something went wrong. Try again.", "error");
+                    },
+                });
+            } else {
+                swal("Your role is safe!", {
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-success",
+                        },
+                    },
+                });
+            }
         });
     });
-});
 </script>
