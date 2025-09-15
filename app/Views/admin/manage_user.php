@@ -12,7 +12,7 @@
             </div>
         </div>
         <hr>
-    <!-- Responsive table wrapper -->
+ 
     <!-- <div class="table-responsive"> -->
         <table class="table " id="userTable">
             <thead class="table-light">
@@ -29,8 +29,6 @@
     <!-- </div> -->
 </div>
 </div>
-
-<!-- Delete Confirmation Modal -->
 <div class="modal fade" id="confirmDeleteModal" tabindex="-1">
   <div class="modal-dialog">
     <div class="modal-content">
@@ -49,6 +47,4 @@
 </div>
 
 </div>
-        </div>
-    </div>
-</div>
+

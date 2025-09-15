@@ -1,8 +1,8 @@
 <?php
-namespace App\Controllers\Admin;
+namespace App\Controllers\admin;
 use App\Controllers\BaseController;
-use App\Models\Admin\RoleModel;
-use App\Models\Admin\RoleMenuModel;
+use App\Models\admin\RoleModel;
+use App\Models\admin\RoleMenuModel;
 
 class ManageRole extends BaseController
 {
