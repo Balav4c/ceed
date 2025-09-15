@@ -227,20 +227,27 @@ class ManageRole extends BaseController
             'message' => 'Role updated successfully!'
         ]);
     }
-    public function delete($id)
-    {
-        if (!$this->request->isAJAX()) {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
-        }
-
-        $updated = $this->roleModel->update($id, ['status' => 9]);
-
-        if ($updated) {
-            return $this->response->setJSON(['status' => 'success', 'message' => 'Role deleted successfully.']);
-        } else {
-            return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
-        }
+   public function delete()
+{
+    if (!$this->request->isAJAX()) {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
     }
+
+    $id = $this->request->getPost('id'); // get role_id from AJAX
+
+    if (!$id) {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Missing role ID']);
+    }
+
+    $updated = $this->roleModel->update($id, ['status' => 9]);
+
+    if ($updated) {
+        return $this->response->setJSON(['status' => 'success', 'message' => 'Role deleted successfully.']);
+    } else {
+        return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
+    }
+}
+
 
 
 

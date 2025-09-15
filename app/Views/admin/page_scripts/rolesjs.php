@@ -266,40 +266,61 @@
     // delete pop up 
 
     $(document).on("click", ".delete-all", function (e) {
-        swal({
-            title: "Are You Sure?",
-            text: "You Want To Delete This Role!",
-            type: "warning",
-            buttons: {
-                cancel: {
-                    visible: true,
-                    text: "Cancel",
-                    className: "btn btn-danger",
-                },
-                confirm: {
-                    text: "Delete",
-                    className: "btn btn-success",
-                },
+    e.preventDefault();
+    let roleId = $(this).data("id"); // get role_id from data-id
+
+    swal({
+        title: "Are You Sure?",
+        text: "You Want To Delete This Role!",
+        icon: "warning",
+        buttons: {
+            cancel: {
+                visible: true,
+                text: "Cancel",
+                className: "btn btn-danger",
             },
-        }).then((willDelete) => {
-            if (willDelete) {
-                swal("Poof! Role  Has Been Deleted Successfully!", {
-                    icon: "success",
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
+            confirm: {
+                text: "Delete",
+                className: "btn btn-success",
+            },
+        },
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url: "<?= base_url('admin/manage_role/delete'); ?>",
+                type: "POST",
+                data: { id: roleId },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status === "success") {
+                        swal("Deleted!", response.message, {
+                            icon: "success",
+                            buttons: {
+                                confirm: {
+                                    className: "btn btn-success",
+                                },
+                            },
+                        });
+                        // 🔹 Refresh your DataTable to hide deleted row
+                        $('#roleTable').DataTable().ajax.reload();
+                    } else {
+                        swal("Error!", response.message, "error");
+                    }
+                },
+                error: function () {
+                    swal("Error!", "Something went wrong. Try again.", "error");
+                },
+            });
+        } else {
+            swal("Your role is safe!", {
+                buttons: {
+                    confirm: {
+                        className: "btn btn-success",
                     },
-                });
-            } else {
-                swal("Your File Is Safe!", {
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                });
-            }
-        });
+                },
+            });
+        }
     });
+});
+
 </script>
