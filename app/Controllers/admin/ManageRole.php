@@ -1,10 +1,10 @@
 <?php
-namespace App\Controllers\admin;
+namespace App\Controllers\Admin;
 use App\Controllers\BaseController;
 use App\Models\Admin\RoleModel;
 use App\Models\Admin\RoleMenuModel;
 
-class Manage_Role extends BaseController
+class ManageRole extends BaseController
 {
 
     public function __construct()

@@ -79,6 +79,25 @@ border-collapse: collapse !important;
 #roleTable td {
   text-align: left !important;
 }
+
+#roleTable td ul {
+    list-style: none;   /* remove default bullets */
+    padding-left: 0;
+}
+
+#roleTable td ul li {
+    position: relative;
+    padding-left: 24px;
+    margin-bottom: 3px;
+}
+
+#roleTable td ul li::before {
+    content: "✔";       /* tick symbol */
+    position: absolute;
+    left: 0;
+    color: green;       /* tick color */
+    font-weight: bold;
+}
 /***Responsive Styles ***/
 @media (max-width: 767px) {
   .left-side-card {
