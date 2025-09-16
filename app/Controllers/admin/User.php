@@ -70,7 +70,7 @@ class User extends BaseController
     if (!preg_match("/^[a-zA-Z0-9._%+-]+@gmail\.com$/", $email)) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'Email Must Be A Valid Gmail Address.'
+            'message' => 'Please Enter A Valid Email Address.'
         ]);
     }
     if (empty($user_id) && empty($password)) {
