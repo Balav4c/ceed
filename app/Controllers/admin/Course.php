@@ -6,7 +6,7 @@ use App\Controllers\BaseController;
 use App\Models\admin\CourseModel;
 use App\Models\admin\CourseModuleModel;
 
-class ManageCourse extends BaseController
+class Course extends BaseController
 {
     protected $courseModel;
     protected $moduleModel;
@@ -19,7 +19,11 @@ class ManageCourse extends BaseController
 
     public function index()
     {
-        return view('admin/manage_course');
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/manage_course');
+        $template .= view('admin/common/footer');
+        return $template;
     }
 
     public function courseListAjax()
@@ -28,11 +32,17 @@ class ManageCourse extends BaseController
         return $this->response->setJSON(['data' => $courses]);
     }
 
-    public function form($id = null)
+    public function addCourse($id = null)
     {
         $data['course'] = $id ? $this->courseModel->find($id) : null;
         $data['modules'] = $id ? $this->moduleModel->where('course_id', $id)->findAll() : [];
-        return view('admin/add_course', $data);
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/add_course');
+        $template .= view('admin/common/footer');
+        // $template .= view('admin/page_scripts/rolesjs');
+        return $template;
+       
     }
 
     public function save()
@@ -53,7 +63,7 @@ class ManageCourse extends BaseController
         }
 
         // Save modules
-        $this->moduleModel->where('course_id', $courseId)->delete(); // reset modules
+        $this->moduleModel->where('course_id', $courseId)->delete(); 
         $moduleNames = $this->request->getPost('module_name');
         $durations   = $this->request->getPost('module_duration');
 

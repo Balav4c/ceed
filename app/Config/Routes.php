@@ -38,13 +38,14 @@ $routes->post('admin/manage_role/toggleStatus', 'admin\ManageRole::toggleStatus'
 
 
 // Manage Course Routes
-$routes->get('admin/manage_course', 'admin\ManageCourse::index');
-$routes->get('admin/add_course', 'admin\ManageCourse::form'); // Add course
-$routes->get('admin/add_course/edit/(:num)', 'admin\ManageCourse::form/$1'); // Edit course
-$routes->post('admin/manage_course/store', 'admin\ManageCourse::save'); // Save new
-$routes->post('admin/manage_course/update/(:num)', 'admin\ManageCourse::save/$1'); // Update existing
-$routes->post('admin/manage_course/courselistajax', 'admin\ManageCourse::courseListAjax'); // DataTable list
-$routes->post('admin/manage_course/delete', 'admin\ManageCourse::delete'); // Delete
+$routes->get('admin/manage_course', 'admin\Course::index'); // List page
+$routes->get('admin/add_course', 'admin\Course::addCourse'); // Add form
+$routes->get('admin/add_course/edit/(:num)', 'admin\Course::form/$1'); // Edit form
+$routes->post('admin/manage_course/store', 'admin\Course::store'); // Save new
+$routes->post('admin/manage_course/update/(:num)', 'admin\Course::update/$1'); // Update
+$routes->post('admin/manage_course/courselistajax', 'admin\Course::courseListAjax'); // DataTable ajax
+$routes->post('admin/manage_course/delete', 'admin\Course::delete'); // Delete
+
 
 
 
