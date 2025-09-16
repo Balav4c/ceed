@@ -8,98 +8,104 @@ $(document).ready(function () {
         $('#saveUserBtn').prop('disabled', false);
     });
     // --- Save Button Click ---
-    $(document).ready(function() {
+   $(document).ready(function() {
     var $form = $('#userForm');
     var $btn = $('#saveUserBtn');
-    var originalData = $form.serialize(); 
     var isEdit = $("input[name='user_id']").length > 0;
-    if (isEdit) {
-        $btn.prop('disabled', true);
-    }
-    $form.on('input change', function() {
-        var currentData = $form.serialize();
 
-        if (currentData !== originalData) {
-            $btn.prop('disabled', false); 
+    if (isEdit) $btn.prop('disabled', true);
+
+    function showMessage(message, type = 'danger') {
+        var messageBox = $('#messageBox');
+        messageBox.removeClass('d-none alert-success alert-danger')
+                  .addClass(type === 'success' ? 'alert-success' : 'alert-danger')
+                  .text(message)
+                  .show();
+        setTimeout(function() {
+            messageBox.fadeOut();
+        }, 2000);
+    }
+    var originalValues = {};
+    $form.find("input, select, textarea").each(function() {
+        if ($(this).is(':checkbox') || $(this).is(':radio')) {
+            originalValues[this.name] = $(this).prop('checked');
         } else {
-            $btn.prop('disabled', true); 
+            originalValues[this.name] = $(this).val();
         }
     });
-    $('#saveUserBtn').click(function(e) {
+    function toggleSaveButton() {
+        var changed = false;
+        $form.find("input, select, textarea").each(function() {
+            var name = this.name;
+            var currentValue;
+
+            if ($(this).is(':checkbox') || $(this).is(':radio')) {
+                currentValue = $(this).prop('checked');
+            } else {
+                currentValue = $(this).val();
+            }
+
+            if (currentValue != originalValues[name]) {
+                changed = true;
+                return false; 
+            }
+        });
+        $btn.prop('disabled', !changed);
+    }
+    $form.on('input change click', "input, select, textarea", toggleSaveButton);
+    $btn.click(function(e) {
         e.preventDefault();
-
-        $btn.prop('disabled', true).text('Saving...'); 
-
-        var url = baseUrl + "admin/save/user";
-        var messageBox = $('#messageBox');
-        messageBox.removeClass('alert-success alert-danger').addClass('d-none').text('');
-
+        var name = $("input[name='name']").val()?.trim();
+        var email = $("input[name='email']").val()?.trim();
+        var role = $("select[name='role_id']").val();
+        var password = $("input[name='password']").val();
+        var newPassword = $("input[name='new_password']").val();
+        var confirmPassword = $("input[name='confirm_password']").val();
+        if (!name || !email || !role) {
+            showMessage('All Fields Are Required');
+            return;
+        }
         if (!isEdit) {
-            var password = $('#password').val();
-            var confirmPassword = $('#confirm_password').val();
             if (!password || !confirmPassword) {
-                messageBox.removeClass('d-none alert-success')
-                    .addClass('alert-danger')
-                    .text('Password And Confirm Password Are Required')
-                    .show();
-                $btn.prop('disabled', false).text('Save User');
+                showMessage('Password And Confirm Password Are Required');
                 return;
             }
             if (password !== confirmPassword) {
-                messageBox.removeClass('d-none alert-success')
-                    .addClass('alert-danger')
-                    .text('Password And Confirm Password Do Not Match')
-                    .show();
-                $btn.prop('disabled', false).text('Save User');
+                showMessage('Password And Confirm Password Do Not Match');
                 return;
             }
-
             } else {
-                var newPassword = $('#new_password').val();
-                var confirmPassword = $('#confirm_password').val();
-
-                if (newPassword || confirmPassword) {
-                    if (newPassword !== confirmPassword) {
-                        messageBox.removeClass('d-none alert-success')
-                            .addClass('alert-danger')
-                            .text('New Password And Confirm Password Do Not Match')
-                            .show();
-                        $btn.prop('disabled', false).text('Save User');
-                        return;
-                    }
+                if ((newPassword || confirmPassword) && newPassword !== confirmPassword) {
+                    showMessage('New Password And Confirm Password Do Not Match');
+                    return;
                 }
             }
-            $.post(url, $form.serialize(), function(response) {
-                messageBox.removeClass('d-none');
-
-                if (response.success) { 
-                    messageBox.removeClass('alert-danger')
-                        .addClass('alert-success')
-                        .text(response.message)
-                        .show();
-
+            $btn.prop('disabled', true).text('Saving...');
+            $.post(baseUrl + "admin/save/user", $form.serialize(), function(response) {
+                if (response.success) {
+                    showMessage(response.message, 'success');
+                    $form.find("input, select, textarea").each(function() {
+                        if ($(this).is(':checkbox') || $(this).is(':radio')) {
+                            originalValues[this.name] = $(this).prop('checked');
+                        } else {
+                            originalValues[this.name] = $(this).val();
+                        }
+                    });
+                    toggleSaveButton(); 
                     if (response.redirect) {
-                        setTimeout(function() {
-                            window.location.href = response.redirect;
-                        }, 1500);
+                        setTimeout(() => window.location.href = response.redirect, 1500);
                     }
-                    originalData = $form.serialize();
-                    $btn.prop('disabled', true).text('Save User');
-
                 } else {
-                    messageBox.removeClass('alert-success')
-                        .addClass('alert-danger')
-                        .text(response.message)
-                        .show();
+                    showMessage(response.message);
                     $btn.prop('disabled', false).text('Save User');
                 }
-
-                setTimeout(function() {
-                    messageBox.fadeOut();
-                }, 2000);
-            }, 'json');
+            }, 'json').fail(function() {
+                showMessage('Server Error. Please try again.');
+                $btn.prop('disabled', false).text('Save User');
+            });
         });
     });
+
      var table = $('#userTable').DataTable({
         ajax: {
             url: "<?= base_url('admin/manage_user/userlistajax') ?>",
