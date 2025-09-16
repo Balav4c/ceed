@@ -7,46 +7,97 @@ $(document).ready(function () {
     $('#userForm input, #userForm select, #userForm textarea').on('input change', function () {
         $('#saveUserBtn').prop('disabled', false);
     });
-
     // --- Save Button Click ---
+    $(document).ready(function() {
+    var $form = $('#userForm');
+    var $btn = $('#saveUserBtn');
+    var originalData = $form.serialize(); 
+    var isEdit = $("input[name='user_id']").length > 0;
+    if (isEdit) {
+        $btn.prop('disabled', true);
+    }
+    $form.on('input change', function() {
+        var currentData = $form.serialize();
+
+        if (currentData !== originalData) {
+            $btn.prop('disabled', false); 
+        } else {
+            $btn.prop('disabled', true); 
+        }
+    });
     $('#saveUserBtn').click(function(e) {
         e.preventDefault();
 
-        var $btn = $(this); 
         $btn.prop('disabled', true).text('Saving...'); 
 
         var url = baseUrl + "admin/save/user";
         var messageBox = $('#messageBox');
         messageBox.removeClass('alert-success alert-danger').addClass('d-none').text('');
 
-        $.post(url, $('#userForm').serialize(), function(response) {
-            messageBox.removeClass('d-none');
-
-            if (response.success) { 
-                messageBox
-                    .removeClass('alert-danger')
-                    .addClass('alert-success')
-                    .text(response.message)
-                    .show();
-
-                if (response.redirect) {
-                    setTimeout(function() {
-                        window.location.href = response.redirect;
-                    }, 1500);
-                }
-            } else {
-                messageBox
-                    .removeClass('alert-success')
+        if (!isEdit) {
+            var password = $('#password').val();
+            var confirmPassword = $('#confirm_password').val();
+            if (!password || !confirmPassword) {
+                messageBox.removeClass('d-none alert-success')
                     .addClass('alert-danger')
-                    .text(response.message)
+                    .text('Password And Confirm Password Are Required')
                     .show();
+                $btn.prop('disabled', false).text('Save User');
+                return;
             }
-            setTimeout(function() {
-                messageBox.fadeOut();
-            }, 2000);
-        }, 'json')
-        .always(function() {
-            $btn.prop('disabled', false).text('Save User');
+            if (password !== confirmPassword) {
+                messageBox.removeClass('d-none alert-success')
+                    .addClass('alert-danger')
+                    .text('Password And Confirm Password Do Not Match')
+                    .show();
+                $btn.prop('disabled', false).text('Save User');
+                return;
+            }
+
+            } else {
+                var newPassword = $('#new_password').val();
+                var confirmPassword = $('#confirm_password').val();
+
+                if (newPassword || confirmPassword) {
+                    if (newPassword !== confirmPassword) {
+                        messageBox.removeClass('d-none alert-success')
+                            .addClass('alert-danger')
+                            .text('New Password And Confirm Password Do Not Match')
+                            .show();
+                        $btn.prop('disabled', false).text('Save User');
+                        return;
+                    }
+                }
+            }
+            $.post(url, $form.serialize(), function(response) {
+                messageBox.removeClass('d-none');
+
+                if (response.success) { 
+                    messageBox.removeClass('alert-danger')
+                        .addClass('alert-success')
+                        .text(response.message)
+                        .show();
+
+                    if (response.redirect) {
+                        setTimeout(function() {
+                            window.location.href = response.redirect;
+                        }, 1500);
+                    }
+                    originalData = $form.serialize();
+                    $btn.prop('disabled', true).text('Save User');
+
+                } else {
+                    messageBox.removeClass('alert-success')
+                        .addClass('alert-danger')
+                        .text(response.message)
+                        .show();
+                    $btn.prop('disabled', false).text('Save User');
+                }
+
+                setTimeout(function() {
+                    messageBox.fadeOut();
+                }, 2000);
+            }, 'json');
         });
     });
      var table = $('#userTable').DataTable({
@@ -83,15 +134,15 @@ $(document).ready(function () {
                     return data ? data : "No Role";
                 }
             },
-            {
+             {
                 data: "status",
                 render: function (data, type, row) {
                     let checked = data == 1 ? 'checked' : '';
                     return `
                         <div class="form-check form-switch">
-                            <input class="form-check-input toggle-status" type="checkbox" 
-                            data-id="${row.role_id}" ${checked}>
-                                
+                            <input class="form-check-input toggle-status" type="checkbox"
+                            data-id="${row.user_id}" ${checked}>
+                               
                         </div>
                     `;
                 }
@@ -135,51 +186,12 @@ $(document).ready(function () {
         }
     });
 
-    // Delete user
-//     $('#userTable').on('click', '.delete-all', function () {
-//         const userId = $(this).data('id');
-//         const row = $(this).closest('tr');
-//         $('#confirmDeleteModal').modal('show');
-
-//         $('#confirm-delete-btn').off('click').on('click', function () {
-//             $.ajax({
-//                 url: "<?= base_url('admin/adduser/delete') ?>",
-//                 type: "POST",
-//                 data: { user_id: userId },
-//                 dataType: 'json',
-//                 success: function (response) {
-//                     $('#confirmDeleteModal').modal('hide');
-//                     var alertBox = $('.alert');
-//                     alertBox.removeClass('alert-success alert-danger').removeClass('d-none');
-
-//                     if (response.success) { 
-//                         alertBox.addClass('alert-success').text(response.message).show();
-//                         table.row(row).remove().draw(false);
-//                     } else {
-//                         alertBox.addClass('alert-danger').text(response.message).show();
-//                     }
-
-//                     setTimeout(() => alertBox.fadeOut(), 2000);
-//                 },
-//                 error: function () {
-//                     $('#confirmDeleteModal').modal('hide');
-//                     var alertBox = $('.alert');
-//                     alertBox.removeClass('alert-success alert-danger').removeClass('d-none')
-//                             .addClass('alert-danger')
-//                             .text('Something went wrong!')
-//                             .show();
-//                     setTimeout(() => alertBox.fadeOut(), 2000);
-//                 }
-//             });
-//         });
-//     });
-
  });
  // toggle switch
     $('#userTable').on('change', '.toggle-status', function () {
     let userId = $(this).data('id');
     let newStatus = $(this).is(':checked') ? 1 : 2;
-
+ 
     $.ajax({
         url: "<?= base_url('admin/manage_user/toggleStatus') ?>",
         type: "POST",
@@ -189,25 +201,25 @@ $(document).ready(function () {
             "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
         },
         dataType: "json",
-        success: function(response) {
-            let $msg = $('#messageBox');
-            $msg.removeClass('d-none alert-success alert-danger');
-
-            if (response.status === 'success') {
-                $msg.addClass('alert-success').text(response.message).show();
-                setTimeout(function() {
-                    $msg.fadeOut();
-                    if (typeof table !== 'undefined') {
+            success: function(response) {
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success alert-danger');
+ 
+                if (response.status === 'success') {
+                    $msg.addClass('alert-success').text(response.message).show();
+                    setTimeout(function() {
+                        $msg.fadeOut();
                         table.ajax.reload(null, false);
-                    }
-                }, 1500);
-            } else {
-                $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
-                setTimeout(function() { $msg.fadeOut(); }, 2000);
-            }
-        },
+                    }, 1500);
+                } else {
+                    $msg.addClass('alert-danger').text(response.message || 'Failed to update status').show();
+                    setTimeout(function() {
+                        $msg.fadeOut();
+                    }, 2000);
+                }
+            },
         error: function(xhr, status, error) {
-            console.error(xhr.responseText); 
+            console.error(xhr.responseText);
             let $msg = $('#messageBox');
             $msg.removeClass('d-none alert-success').addClass('alert-danger')
                 .text('Error Updating Status').show();
@@ -215,6 +227,7 @@ $(document).ready(function () {
         }
     });
 });
+ 
 
  $(document).on("click", ".delete-all", function (e) {
         e.preventDefault();
@@ -258,7 +271,7 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
-                        swal("Error!", "Something went wrong. Try again.", "error");
+                        swal("Error!", "Something went wrong. Try again.", "Error");
                     },
                 });
             } else {

@@ -22,6 +22,7 @@ $routes->post('admin/manage_user/userlistajax', 'admin\User::userlistajax');
 $routes->get('admin/adduser/edit/(:num)', 'admin\User::edit/$1');
 $routes->post('admin/manage_user/delete', 'admin\User::deleteUser');
 $routes->post('admin/manage_user/toggleStatus', 'admin\User::toggleStatus');
+
 $routes->post('admin/save/user', 'admin\User::saveUser');
 
 

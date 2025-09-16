@@ -8,6 +8,7 @@
             <div id="messageBox" class="alert d-none text-center" role="alert"></div>
  
             <div class="card-body">
+                <div class="row">
                 <form id="userForm" method="post" data-edit="true">
                     <?php if (isset($userData['user_id'])): ?>
                         <input type="hidden" name="user_id" value="<?= esc($userData['user_id']) ?>">
@@ -43,12 +44,28 @@
                                 <?php endif; ?>
                             </select>
                         </div>
- 
-                        <?php if (!isset($userData['user_id'])): ?>
+                    </div>
+                    <?php if (!isset($userData['user_id'])): ?>
+                        <div class="row">
                             <div class="col-md-6 mt-4">
                                 <label class="form-label">Password <span class="text-danger">*</span></label>
-                                <input type="password" name="password" class="form-control" required>
+                                <div class="input-group">
+                                    <input type="password" id="password" name="password" class="form-control" required>
+                                    <span class="input-group-text">
+                                        <i class="bi bi-eye-slash toggle-password" data-target="#password"></i>
+                                    </span>
+                                </div>
                             </div>
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                <div class="input-group">
+                                    <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
+                                    <span class="input-group-text">
+                                        <i class="bi bi-eye-slash toggle-password" data-target="#confirm_password"></i>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
                         <?php else: ?>
                             <div class="row">
                                 <div class="col-md-6 mt-4">
@@ -79,7 +96,7 @@
                         <button type="submit" id="saveUserBtn" class="btn btn-primary">Save User</button>
                     </div>
                 </form>
-            </div>
+            </div></div>
         </div>
     </div>
 </div>
