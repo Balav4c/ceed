@@ -2,7 +2,7 @@
     <div class="page-inner">
         <div class="card">
             <div class="card-header">
-                <h3><?= isset($course) ? 'Edit Course' : 'Add Course' ?></h3>
+                <h3 class="mb-0"><?= isset($course['course_id']) ? 'Edit Course' : 'Add Course' ?></h3>
             </div>
             <div class="card-body">
                 <form id="courseForm">
@@ -44,11 +44,11 @@
                             <?php endif; ?>
                         </tbody>
                     </table>
-                    <button type="button" class="btn btn-sm btn-primary" id="addModule">+ Add Module</button>
+                    <button type="button" class="btn btn-sm btn-primary" id="addModule">Add Module</button>
 
                     <br><br>
                     <button type="submit" class="btn btn-success">Save</button>
-                    <a href="<?= base_url('admin/managecourse') ?>" class="btn btn-secondary">Back</a>
+                    <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-secondary">Back</a>
                 </form>
             </div>
         </div>
@@ -72,10 +72,10 @@ $(document).on('click', '.remove-module', function() {
 
 $('#courseForm').on('submit', function(e) {
     e.preventDefault();
-    $.post("<?= base_url('admin/managecourse/save') ?>", $(this).serialize(), function(res) {
+    $.post("<?= base_url('admin/manage_course/store') ?>",  $(this).serialize(), function(res) {
         alert(res.message);
         if (res.status === 'success') {
-            window.location.href = "<?= base_url('admin/managecourse') ?>";
+            window.location.href = "<?= base_url('admin/manage_course') ?>";
         }
     });
 });
