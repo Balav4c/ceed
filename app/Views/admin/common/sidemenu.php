@@ -32,7 +32,7 @@
                       <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
                           <i class="fas fa-home"></i>
                           <p>Dashboard</p>
-                          <span class="caret"></span>
+                          <!-- <span class="caret"></span> -->
                       </a>
                       <!-- <div class="collapse" id="dashboard">
                   <ul class="nav nav-collapse">
