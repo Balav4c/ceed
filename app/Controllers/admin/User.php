@@ -189,7 +189,8 @@ class User extends BaseController
             1 => 'u.name',
             2 => 'u.email',
             3 => 'r.role_name',
-            4 => 'u.user_id'  
+            4 => 'u.status',
+            5 => 'u.user_id'  
         ];
     
         $orderColumnIndex = $this->request->getPost('order')[0]['column'] ?? 0;
@@ -203,7 +204,8 @@ class User extends BaseController
             'slno'      => $slno++,
             'name'      => $user->name,
             'email'     => $user->email,
-            'role_name' => $user->role_name ?? 'No Role',
+            'role_name' => $user->role_name ?? 'N/A',
+            'status' => $user->status,
             'user_id'   => $user->user_id
             ];
         }
@@ -231,20 +233,16 @@ class User extends BaseController
             ]);
         }
 
-        // Make sure UserModel is loaded in constructor
         $updated = $this->userModel->update($user_id, ['status' => $status]);
 
         if ($updated) {
-            return $this->response->setJSON([
-                'status'  => 'success',
-                'message' => 'Status Updated Successfully!'
-            ]);
-        } else {
-            return $this->response->setJSON([
-                'status'  => 'error',
-                'message' => 'Update Failed'
-            ]);
-        }
+                return $this->response->setJSON(['status' => 'success','message' =>'Status Updated Successfully!']);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Update Failed'
+                ]);
+            }
     }
 
     return $this->response->setJSON([
