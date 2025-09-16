@@ -30,7 +30,7 @@ class UserModel extends Model {
     public function getAllFilteredRecords($searchVal, $start, $length, $orderBy = 'u.user_id', $orderDir = 'desc')
     {
     $builder = $this->db->table($this->table . ' u')
-        ->select('u.user_id, u.name, u.email, r.role_name')
+        ->select('u.user_id, u.name, u.email, u.status, r.role_name')
         ->join('roles r', 'r.role_id = u.role_id', 'left')
         ->where('u.status !=', 9);
  
