@@ -169,7 +169,7 @@ $(document).ready(function () {
         ],
         order: [[5, 'desc']],
         columnDefs: [
-            { searchable: false, orderable: false, targets: [0, 4] }
+            { searchable: false, orderable: false, targets: [0, 5] }
         ],
         language: { infoFiltered: "" }
     });
