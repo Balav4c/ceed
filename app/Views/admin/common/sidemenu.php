@@ -119,6 +119,13 @@
                           <!-- <span class="caret"></span> -->
                       </a>
                   </li>
+                  <li class="nav-item">
+                      <a class="nav-link" href="<?= base_url('admin/manage_course') ?>">
+                          <i class="bi bi-book"></i>
+                          <p>Manage Course</p>
+                          <!-- <span class="caret"></span> -->
+                      </a>
+                  </li>
                  
                   <li class="nav-item">
                       <a class="nav-link" id="logout_btn" style="cursor:pointer;">

@@ -43,26 +43,22 @@
                 type: "POST",
                 dataSrc: "data"
             },
-            sort: true,
+            serverSide: true,
+            processing: true,
+            ordering: true,
             searching: true,
             paging: true,
-            processing: true,
-            serverSide: true,
-            dom: "<'row  d-flex align-items-center '<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+            dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
                 "<'row'<'col-sm-12'tr>>" +
-                "<'row  d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
-
+                "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
             drawCallback: function () {
-                let info = $('.dataTables_info');
-                info.text(info.text().replace(/\(filtered.*\)/, '').trim());
+                $('.dataTables_info').text(function(_, txt) {
+                    return txt.replace(/\(filtered.*\)/, '').trim();
+                });
             },
             columns: [
                 {
-                    data: "slno",
-                    render: function (data) {
-                        return data;
-                    }
-                },
+                    data: "slno", className: "text-start" },
                 {
                     data: "role_name",
                     render: function (data, type, row) {
