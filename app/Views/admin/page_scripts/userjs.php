@@ -137,7 +137,7 @@ $(document).ready(function () {
             {
                 data: "role_name",
                 render: function (data) {
-                    return data ? data : "No Role";
+                   return data ? data.replace(/\b\w/g, c => c.toUpperCase()) : 'N/A';
                 }
             },
              {
@@ -173,7 +173,7 @@ $(document).ready(function () {
             },
             { data: "user_id", visible: false }
         ],
-        order: [[5, 'desc']],
+        order: [[6, 'desc']],
         columnDefs: [
             { searchable: false, orderable: false, targets: [0, 5] }
         ],

@@ -67,6 +67,10 @@
                                 </div>
                             </div>
                             <?php else: ?>
+                                <div class="col-md-12">
+                                    <p class="mb-0"><b>Enter a new password and confirm it only if you wish to change your current password.</b></p>
+                                </div>
+    
                                 <div class="row">
                                     <div class="col-md-6 mt-4">
                                         <label class="form-label">New Password</label>
