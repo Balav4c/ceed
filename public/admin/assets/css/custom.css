@@ -56,8 +56,6 @@
 .dataTables_filter {
     text-align: right !important;
 }
-
-/* Hide horizontal scrollbar */
 .dataTables_wrapper {
     overflow-x: hidden;
 }
@@ -68,33 +66,7 @@
 .dataTables_paginate {
     text-align: right !important;
 }
-/* .table-bordered,
-.table-bordered th, 
-.table-bordered td{
-  border: 0.1px solid #aaa !important;
-border-collapse: collapse !important;
-} */
-#roleTable, 
-#roleTable th, 
-#roleTable td {
-    border: 1px solid  #aaa !important; 
-    border-collapse: collapse !important; 
-    padding: 4px 30px !important;
-}
 
-#roleTable_wrapper {
-    position: relative;
-    clear: both;
-    padding: 30px !important;
-}
-#roleTable th {
-    min-width: 100px;
-    text-align: center !important;
-      padding: 7px 7px 7px 7px  !important;
-          vertical-align: middle;
-          background-color: #dfe0e1;
-
-}
 .logo-header {
     display: flex;
     justify-content: center; /* centers logo horizontally */
