@@ -29,6 +29,13 @@ img {
 .text-left {
 	text-align:left !important;
 }
+.btn {
+	font-size:14px !important;
+}
+.bi-list {
+	font-size: 30px;
+	color:#FFF;
+}
 .main-menu-box {
 	background-color:#A96B1F;
 	border-radius:10px;
@@ -44,6 +51,17 @@ img {
 }
 .logo img {
 	width:100%;
+}
+.menu-lg {
+	line-height:50px;
+	text-align:right;
+}
+.menu-lg a {
+	color:#FFF;
+	text-decoration:none;
+	font-size:14px;
+	text-transform:uppercase;
+	padding:10px;
 }
 .btn-demo {
 	border:#FDF5EA 2px solid !important;
@@ -210,7 +228,139 @@ header p {
 	line-height:35px;
 	color:#FFF;
 }
+.program-benefits .b-title {
+	font-size:16px !important;
+	font-weight:400;
+}
+.program-benefits .b-desc {
+	font-size:14px !important;
+	font-weight:300;
+}
+.benefit-points .row {
+	margin-bottom:15px !important;
+}
+.cherish-voice {
+	background-color:#FFFAF2;
+}
+.testimonial-block {
+	margin-top:50px;
+}
+.testimonial-block .row {
+	margin-bottom:50px;
+}
+.red-hd {
+	background-image:url('../img/red-ts.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding-top:60px;
+}
+.blue-hd-1 {
+	background-image:url('../img/blue-ts.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding-top: 98px;
 
+}
+.yellow-hd {
+	background-image:url('../img/yellow-ts.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding-top: 52px;
+}
+.blue-hd-2 {
+	background-image:url('../img/blue-ts-2.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding-top: 90px;
+}
+.orange-hd {
+	background-image:url('../img/orange-ts.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding: 78px 0px 0px 45px !important;
+}
+.seablue-hd {
+	background-image:url('../img/seablue-ts.png');
+	background-repeat:no-repeat;
+	background-position:center;
+	background-size:contain;
+	height:300px;
+	padding-top: 60px;
+}
+.tst-cnt {
+	width: 200px;
+    margin-left: auto;
+    margin-right: auto;
+	font-weight:300;
+	font-size:12px;
+	color:#FFF;
+}
+.red-hd .testby {
+	width: 220px;
+    margin-left: 80px;
+}
+.testimg {
+	padding-right:0px !important;
+}
+.testname {
+	font-size:12px;
+	color:#FFF;
+}
+.blue-hd-1 .testby {
+	width: 220px;
+    margin-left: 110px;
+}
+.yellow-hd .testby {
+	width: 220px;
+    margin-left: 60px;
+}
+.blue-hd-2 .testby {
+	width: 220px;
+    margin-left: 100px;
+}
+.orange-hd .testby {
+	width: 220px;
+    margin-left: 80px;
+}
+.seablue-hd .testby {
+	width: 220px;
+    margin-left: 60px;
+}
+.aboutceed {
+	background-color:#F2FBFB;
+}
+.orange-txt {
+	color:#EE962C;
+}
+.aboutceed .palesky {
+	font-weight:300;
+}
+footer {
+	background-color:#333944;
+}
+footer .social-ico {
+	width:30px;
+	margin-top:40px;
+}
+
+.social-group {
+	text-align:right;
+}
+.copyright-txt {
+	font-size:12px;
+	color:#FFF;
+	font-weight:300;
+}
 @media screen and (max-width:990px) {
 	header {
 		background-color: #FDF5EA !important;
@@ -243,6 +393,41 @@ header p {
 		text-decoration:none;
 		font-size:14px;
 	}
+	.resp-menu {
+		position: fixed;
+        height: 100vh;
+        width: 80%;
+        background-color: #fbfbfa;
+        display: none;
+        top: 0px;
+        left: 0px;
+		padding: 20px;
+	}
+	.resp-menu .resp-menu-item {
+		line-height:30px !important;
+		margin-top:10px;
+	}
+	.menu-header {
+		border-bottom: #a96b1f 1px solid;
+		padding-bottom:10px;
+        margin-bottom: 20px;
+	}
+	.menu-header img {
+		width:100px;
+	}
+	.menu-header span {
+		float:right;
+	}
+	.resp-menu-item {
+		width:100%;
+	}
+	.resp-menu .resp-menu-item a {
+		color:#000;
+		text-transform:uppercase;
+	}
+	.resp-menu-item i {
+		float:right;
+	}
 	.clear-cardbox {
 		margin-bottom: 30px !important;
 		margin-top: 10px;
@@ -250,17 +435,13 @@ header p {
 	.buddy-bloom {
 		margin-top:30px !important;
 	}
-	.deepdive {
-		float:left !important;
-		width:100%;
-	}
 	.pendulam-lg {
 		display:none !important;
 	}
 	.pendulam-mb {
 		display:block !important;
 		padding: 0px 15px;
-        width: 430px;
+        width: 385px;
         margin-left: auto !important;
         margin-right: auto !important;
 	}
@@ -268,35 +449,35 @@ header p {
 		background-image:url('../img/blue-circle.png');
 		background-size:contain;
 		background-repeat:no-repeat;
-		height: 125px;
-		width: 125px !important;
+		height: 110px;
+		width: 110px !important;
 		float:left;
 	}
 	.yellow-circle {
 		background-image:url('../img/yellow-circle.png');
 		background-size:contain;
 		background-repeat:no-repeat;
-		height: 125px;
-		width: 125px !important;
+		height: 110px;
+		width: 110px !important;
 		float:left;
 	}
 	.blanker {
-		height: 125px;
+		height: 110px;
 		width: 110px !important;
 		float:left;
 	}
 	.rt-arrow {
 		float:left;
-		width: 125px;
+		width: 100px;
 		background-image:url('../img/right-arrow.png');
 		background-size:contain;
 		background-repeat:no-repeat;
-		height:125px;
+		height:100px;
 	}
 	.circle-txt {
 		font-size: 12px;
 		color: #FFF;
-		height: 122px !important;
+		height: 110px !important;
 		margin-top: 0px !important;
 		align-items: center;
 		display: flex;
@@ -308,7 +489,7 @@ header p {
 		background-image:url('../img/down-arrow.png');
 		background-size:contain;
 		background-repeat:no-repeat;
-		height:125px;
+		height:110px;
 		background-position:center;
 	}
 	.pendulam-mb .medal-block {
@@ -326,7 +507,51 @@ header p {
 		background-image:url('../img/down-angle-arrow.png');
 		background-size:contain;
 		background-repeat:no-repeat;
-		height:125px;
+		height:110px;
 		background-position:center;
+	}
+	.program-benefits img {
+		margin-bottom:20px;
+	}
+	.tick-circle img {
+		width:30px !important;
+	}
+	.red-hd .testby {
+		width: 220px;
+		margin-left: 120px;
+	}
+	.blue-hd-1 .testby {
+		width: 220px;
+		margin-left: 140px;
+	}
+	.yellow-hd .testby {
+		width: 220px;
+		margin-left: 102px;
+	}
+	.blue-hd-2 .testby {
+		width: 220px;
+		margin-left: 140px;
+	}
+	.orange-hd .testby {
+		width: 220px;
+		margin-left: 122px;
+	}
+	.seablue-hd .testby {
+		width: 220px;
+		margin-left: 115px;
+	}
+	.brain img, .plant img, .joystick img {
+		width:30px;
+	}
+	.copyright-txt {
+		text-align:center !important;
+		margin-top: 10px !important;
+	}
+	.foot-logo {
+		padding-top: 30px;
+	}
+	footer .social-ico {
+		width: 30px;
+		margin-top: 35px;
 	}
 }
