@@ -106,33 +106,42 @@
                   </ul>
                 </div>
               </li> -->
-                 <li class="nav-item">
-                      <a class="nav-link" href="<?= base_url('admin/manage_role') ?>">
-                          <i class="fas fa-th-list"></i>
-                          <p>Manage Role</p>
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="<?= base_url('admin/manage_user') ?>">
-                          <i class="bi bi-person-fill"></i>
-                          <p>Manage Admin User</p>
-                          <!-- <span class="caret"></span> -->
-                      </a>
-                  </li>
-                  <li class="nav-item">
-                      <a class="nav-link" href="<?= base_url('admin/manage_course') ?>">
-                          <i class="bi bi-book"></i>
-                          <p>Manage Course</p>
-                          <!-- <span class="caret"></span> -->
-                      </a>
-                  </li>
-                 
-                  <li class="nav-item">
-                      <a class="nav-link" id="logout_btn" style="cursor:pointer;">
-                          <i class="fas fa-sign-out-alt"></i>
-                          <span>Logout</span>
-                      </a>
-                  </li>
+                 <?php 
+                  $uri = service('uri');
+                  $segment1 = $uri->getSegment(2); // e.g., "manage_role", "manage_user", etc.
+                ?>
+
+                <li class="nav-item">
+                    <a class="nav-link <?= ($segment1 == 'manage_role') ? 'active' : '' ?>" 
+                      href="<?= base_url('admin/manage_role') ?>">
+                        <i class="fas fa-th-list"></i>
+                        <p>Manage Role</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link <?= ($segment1 == 'manage_user') ? 'active' : '' ?>" 
+                      href="<?= base_url('admin/manage_user') ?>">
+                        <i class="bi bi-person-fill"></i>
+                        <p>Manage Admin User</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link <?= ($segment1 == 'manage_course') ? 'active' : '' ?>" 
+                      href="<?= base_url('admin/manage_course') ?>">
+                        <i class="bi bi-book"></i>
+                        <p>Manage Course</p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a class="nav-link" id="logout_btn" style="cursor:pointer;">
+                        <i class="fas fa-sign-out-alt"></i>
+                        <span>Logout</span>
+                    </a>
+                </li>
+
                   <!-- <li class="nav-item">
                 <a data-bs-toggle="collapse" href="#forms">
                   <i class="fas fa-pen-square"></i>

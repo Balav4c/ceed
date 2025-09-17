@@ -119,6 +119,11 @@
     background: white;
 
 }
+.nav-link.active {
+    background-color: #0d6efd; /* Bootstrap primary */
+    color: #fff !important;
+    font-weight: bold;
+}
 /* dashboard */
  .welcome-container {
         display: flex;
