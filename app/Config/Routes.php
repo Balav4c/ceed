@@ -5,7 +5,24 @@ use CodeIgniter\Router\RouteCollection;
 /**
  * @var RouteCollection $routes
  */
+
+
+//website Routes
 $routes->get('/', 'Home::index');
+$routes->get('login','Login::index');
+
+
+
+
+
+
+
+
+
+
+
+
+
 $routes->get('admin/dashboard', 'admin\Dashboard::index');
 $routes->get('admin', 'admin\Login::index');
 $routes->post('admin/login', 'admin\Login::login');
