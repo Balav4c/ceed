@@ -109,21 +109,23 @@
 
         var url = "<?php echo base_url('admin/login'); ?>";
 
-        $.post(url, $('#loginForm').serialize(), function(data) {
-            if (data.status == 'success') {
-                window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
+         $.post(url, $('#loginForm').serialize(), function(data) {
+        if (data.status == 'success') {
+            if (data.redirect) {
+                window.location.href = data.redirect;
             } else {
-                showAlert(data.message, 'danger');
-                $btn.prop('disabled', false).html('Log in');
+                window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
             }
-        }, 'json').fail(function() {
+        } else {
+            showAlert(data.message, 'danger');
+            $btn.prop('disabled', false).html('Log in');
+        }
+    }, 'json').fail(function() {
             showAlert("Something went wrong. Please try again.", 'danger');
             $btn.prop('disabled', false).html('Log in');
         });
     });
 
-
-    //Alert show function
     function showAlert(message, type = 'danger') {
         let $alertBox = $('#errorDiv');
         $alertBox
