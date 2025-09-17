@@ -26,6 +26,9 @@ $routes->get('logout', 'Login::logout');
 
 
 $routes->get('admin/dashboard', 'admin\Dashboard::index');
+$routes->get('user/dashboard', 'admin\UserDashboard::index');
+
+
 $routes->get('admin', 'admin\Login::index');
 $routes->post('admin/login', 'admin\Login::login');
 $routes->get('admin/logout', 'admin\Login::logout');
