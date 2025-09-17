@@ -95,3 +95,18 @@ body {
 #password{
 	border-right: none;
 }
+
+.alert{
+ 
+  background: white !important;
+  padding: 9px !important;
+}
+.alert-success {
+    border: 2px solid green;
+}
+.alert-danger{
+  border:2px solid rgba(196, 37, 37, 0.726)
+}
+#alertbox {
+    transition: opacity 0.5s ease-in-out;
+}

@@ -114,6 +114,11 @@
   border:2px solid rgba(196, 37, 37, 0.726)
 }
 
+.login-alert{
+    padding: 5px;
+    background: white;
+
+}
 /* dashboard */
  .welcome-container {
         display: flex;
