@@ -2,30 +2,17 @@
   $(document).ready(function() {
     const $saveBtn = $('#saveBtn');
     const $courseForm = $('#courseForm');
-
+    const base_url = "<?= base_url() ?>";
+    let initialFormData = $courseForm.serialize();
     $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-    $courseForm.on('input change', 'input, textarea', function() {
-        $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+    $courseForm.on('input change', 'input, textarea, select', function() {
+        let currentFormData = $courseForm.serialize();
+        if (currentFormData !== initialFormData) {
+            $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+        } else {
+            $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+        }
     });
-
-    $('#addModule').click(function() {
-        $('#moduleTable tbody').append(`
-            <tr class="module-row">
-                <td><input type="text" name="module_name[]" class="form-control" required></td>
-                <td><input type="text" name="module_duration[]" class="form-control"></td>
-                <td class="text-center">
-                    <span class="remove-module" title="Remove">
-                        <i class="fas fa-trash text-danger"></i>
-                    </span>
-                </td>
-            </tr>
-        `);
-    });
-
-    $(document).on('click', '.remove-module', function() {
-        $(this).closest('tr').remove();
-    });
-
     $('#courseForm').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -34,29 +21,27 @@
       
         $.post(url, $('#courseForm').serialize(), function(response) {
             $('#messageBox').removeClass('d-none alert-success alert-danger'); 
-
-             if (response.status === 'success' || response.status == 1) {
-                    $('#messageBox')
-                        .addClass('alert-success')
-                        .text(response.msg || response.message)
-                        .show();
-
-                        setTimeout(function () {
-                            window.location.href = "<?php echo base_url('admin/manage_course'); ?>";
-                        }, 1500);
-                         resetFormState();
-                } else {
-                    $('#messageBox')
-                        .addClass('alert-danger')
-                        .text(response.message || 'Something went wrong')
-                        .show();
-                        checkFormChanges();
-                }
+            if (response.status === 'success' || response.status == 1) {
+                $('#messageBox')
+                    .addClass('alert-success')
+                    .text(response.msg || response.message)
+                    .show();
+                    initialFormData = $courseForm.serialize();
+                    setTimeout(function () {
+                        window.location.href = base_url + '/admin/add_module/' + response.course_id;
+                    }, 1500);
+                    resetFormState();
+            } else {
+                $('#messageBox')
+                    .addClass('alert-danger')
+                    .text(response.message || 'Something went wrong')
+                    .show();
+                    checkFormChanges();
+            }
             setTimeout(function() {
                     $('#messageBox').fadeOut();
                 }, 2000);
-        }, 'json');
-       
+        }, 'json');   
     });
     let table = "";
     const alertBox = $('.alert');
@@ -80,7 +65,7 @@
             });
         },
         columns: [
-             {
+            {
                 data: "slno", className: "text-start" },
             { data: "name",
                 render: function (data, type, row) {
@@ -103,23 +88,23 @@
                     `;
                 }
             },
-              {
-                    data: "course_id",
-                    render: function (id) {
-                        return `
-                        <div class="d-flex align-items-center gap-3">
-                            <a href="<?= base_url('admin/manage_course/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
-                                <i class="bi bi-pencil-fill"></i>
-                            </a>
-                            <a href="javascript:void(0);" class="delete-all"  data-id="${id}" title="Delete" style="color: #dc3545;" >
-                                <i class="bi bi-trash-fill"></i>
-                            </a>
-                        </div>
-                    `;
-                    }
-                },
+            {
+                data: "course_id",
+                render: function (id) {
+                    return `
+                    <div class="d-flex align-items-center gap-3">
+                        <a href="<?= base_url('admin/manage_course/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                        <a href="javascript:void(0);" class="delete-all"  data-id="${id}" title="Delete" style="color: #dc3545;" >
+                            <i class="bi bi-trash-fill"></i>
+                        </a>
+                    </div>
+                `;
+                }
+            },
         ],
-       order: [[6, 'desc']],
+        order: [[6, 'desc']],
             columnDefs: [
                 { searchable: false, orderable: false, targets: [0,3, 5] }
             ],
