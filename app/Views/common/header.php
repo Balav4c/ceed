@@ -26,7 +26,7 @@
 									<a href="#">Contact</a>
 								</div>
 								<div class="col-4 text-right btn-holder">
-									<button class="btn btn-login">login</button>
+									<button class="btn btn-login" onclick="window.location.href='<?= base_url('login'); ?>'">login</button>
 									<button class="btn btn-demo">Request A Demo</button>
 								</div>
 							</div>	
