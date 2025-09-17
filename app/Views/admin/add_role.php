@@ -24,7 +24,7 @@
                             </div>
                             <div class="row">
                                 <?php
-                                    $menus = ['Dashboard', 'Manage User', 'Manage Role'];
+                                    $menus = ['Dashboard', 'Manage Role','Manage Admin User','Manage Course' ];
                                     foreach ($menus as $menu) : 
                                         $menuKey = ucwords(str_replace('_', ' ', $menu));
                                             $isChecked = (isset($access[$menuKey]) && $access[$menuKey] == 1) ? 'checked' : '';
