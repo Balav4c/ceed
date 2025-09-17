@@ -9,6 +9,21 @@ use CodeIgniter\Router\RouteCollection;
 
 //website Routes
 $routes->get('/', 'Home::index');
+$routes->get('login','Login::index');
+$routes->post('auth/login', 'Login::login');
+$routes->get('logout', 'Login::logout');
+
+
+
+
+
+
+
+
+
+
+
+
 
 $routes->get('admin/dashboard', 'admin\Dashboard::index');
 $routes->get('user/dashboard', 'admin\UserDashboard::index');

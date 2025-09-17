@@ -40,7 +40,7 @@
 									<i class="bi bi-list" onclick="openRestMenu();"></i>
 								</div>
 								<div class="col-2 text-right">
-									<a href="#">Login</a>
+									<a href="<?= base_url('login'); ?>">Login</a>
 								</div>
 								<div class="col-5 text-right">
 									<button class="btn btn-demo">Request A Demo</button>
