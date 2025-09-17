@@ -29,7 +29,7 @@ class Course extends BaseController
     public function addCourse($id = null)
     {
         $data['course'] = $id ? $this->courseModel->find($id) : null;
-        $data['modules'] = $id ? $this->moduleModel->where('course_id', $id)->findAll() : [];
+        // $data['modules'] = $id ? $this->moduleModel->where('course_id', $id)->findAll() : [];
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
         $template .= view('admin/add_course');
@@ -39,7 +39,7 @@ class Course extends BaseController
        
     }
 
-   public function save()
+  public function save()
 {
     $id = $this->request->getPost('course_id');
     $courseData = [
@@ -51,11 +51,14 @@ class Course extends BaseController
     if ($id) {
         $this->courseModel->update($id, $courseData);
         $courseId = $id;
+        $message = 'Course Updated Successfully!';
     } else {
         $courseData['status'] = 1;
         $this->courseModel->insert($courseData);
         $courseId = $this->courseModel->insertID();
+        $message = 'Course Saved Successfully!';
     }
+
     $this->moduleModel->where('course_id', $courseId)->delete();
     $moduleNames = $this->request->getPost('module_name');
     $durations   = $this->request->getPost('module_duration');
@@ -72,7 +75,10 @@ class Course extends BaseController
         }
     }
 
-    return $this->response->setJSON(['status' => 'success', 'message' => 'Course saved successfully']);
+    return $this->response->setJSON([
+        'status'  => 'success',
+        'message' => $message
+    ]);
 }
 
 public function courseListAjax()
@@ -211,11 +217,8 @@ public function update($id)
             }
         }
     }
+    return $this->response->setJSON(['status' => 'success', 'message' => 'Course Updated Successfully!']);
 
-    return $this->response->setJSON([
-        'status'  => 'success',
-        'message' => 'Course Updated Successfully!'
-    ]);
 }
 
 public function delete()
