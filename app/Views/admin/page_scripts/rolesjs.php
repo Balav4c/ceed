@@ -36,7 +36,7 @@
         });
 
         let table = "";
-        const alertBox = $('.alert');
+        // const alertBox = $('.alert');
         table = $('#roleTable').DataTable({
             ajax: {
                 url: "<?= base_url('admin/manage_role/rolelistajax') ?>",
