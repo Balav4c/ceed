@@ -11,7 +11,7 @@
                     <thead>
                         <tr>
                             <th>SI NO</th>
-                            <th>Name/Title</th>
+                            <th>Course Name</th>
                             <th>Description</th>
                             <th>Duration (weeks)</th>
                             <th>Status</th>

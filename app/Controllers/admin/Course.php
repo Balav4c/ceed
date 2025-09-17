@@ -46,8 +46,9 @@ class Course extends BaseController
         'name'          => $this->request->getPost('name'),
         'description'   => substr($this->request->getPost('description'), 0, 250),
         'duration_weeks'=> $this->request->getPost('duration_weeks'),
+        'status'         => 1
     ];
-
+    $courseId = $this->courseModel->insert($courseData);
     if ($id) {
         $this->courseModel->update($id, $courseData);
         $courseId = $id;
@@ -56,7 +57,7 @@ class Course extends BaseController
         $courseData['status'] = 1;
         $this->courseModel->insert($courseData);
         $courseId = $this->courseModel->insertID();
-        $message = 'Course Saved Successfully!';
+        $message = 'Course Saved Successfully! Now Add Modules.';
     }
 
     $this->moduleModel->where('course_id', $courseId)->delete();
@@ -77,14 +78,13 @@ class Course extends BaseController
 
     return $this->response->setJSON([
         'status'  => 'success',
-        'message' => $message
+        'message' => $message,
+        'course_id' => $courseId
     ]);
 }
 
 public function courseListAjax()
 {
-    ini_set('display_errors', 1);
-    error_reporting(E_ALL);
 
     $request = service('request');
 
