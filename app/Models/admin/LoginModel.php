@@ -9,29 +9,22 @@ class LoginModel extends Model
     protected $primaryKey = 'user_id';
 
     public function checkLoginUser($email, $password)
-    {
-        $user = $this->where('email', $email)->first();
+{
+    $user = $this->where('email', $email)->first();
 
-        if ($user) {
-            if (password_verify($password, $user['password'])) {
-                if (!isset($user['role_name']) && isset($user['role_id'])) {
-                    $role = $this->db->table('role_acces')
-                                     ->where('role_id', $user['role_id'])
-                                     ->get()
-                                     ->getRowArray();
-
-                    $user['role_name'] = $role['role_name'] ?? 'user';
-                }
-
-                return (object) [
-                    'user_id'   => $user['user_id'],
-                    'name'      => $user['name'],
-                    'email'     => $user['email'],
-                    'role_name' => $user['role_name'], 
-                ];
-            }
-        }
-
-        return false;
+    if (!$user) {
+        return false; 
     }
+    if (!password_verify($password, $user['password'])) {
+        return false; 
+    }
+    if ($user['role_id'] != 1) {
+        if ($user['status'] == 2) {
+            return 'suspended';
+        } elseif ($user['status'] == 9) {
+            return false; 
+        }
+    }
+    return (object) $user; 
+}
 }
