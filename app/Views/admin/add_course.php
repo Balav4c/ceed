@@ -26,49 +26,13 @@
 
                     <!-- <h5>Add Modules</h5> -->
                     <!-- <div class="table-responsive"> -->
-                    <table class="table table-bordered mt-4" id="moduleTable">
-                        <thead>
-                            <tr>
-                                <th>Module Name</th>
-                                <th>Duration</th> 
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="module-container">
-                            <?php if (isset($modules) && count($modules) > 0): ?>
-                                <?php foreach ($modules as $m): ?>
-                                    <tr class="module-row">
-                                        <td><input type="text" name="module_name[]" class="form-control"
-                                                value="<?= $m['module_name'] ?>"></td>
-                                        <td><input type="text" name="module_duration[]" class="form-control"
-                                                value="<?= $m['duration_weeks'] ?>"></td>
-                                        <td class="text-center">
-                                            <span class="remove-module-btn" title="Remove">
-                                                <i class="fas fa-trash text-danger"></i>
-                                            </span>
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <tr class="module-row">
-                                    <td><input type="text" name="module_name[]" class="form-control"
-                                            placeholder="Enter Module Name"></td>
-                                    <td><input type="text" name="module_duration[]" class="form-control"
-                                            placeholder="e.g. Week 1, Week 2-3"></td>
-                                    <td class="text-center">
-                                        <span class="remove-module-btn" title="Remove">
-                                            <i class="fas fa-trash text-danger"></i>
-                                        </span>
-                                    </td>
-                                </tr>
-                            <?php endif; ?>
-                        </tbody>
-                    </table>
-                    <button type="button" class="btn btn-outline-primary mb-34" id="addModule">Add Module</button>
+
+                    <!-- <button type="button" class="btn btn-outline-primary mb-34" id="addModule">Add Module</button> -->
                     <br><br>
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
+                        <a href="<?= base_url('admin/add_module') ?>" class="btn btn-primary">Add Module</a>
                     </div>
                 </form>
             </div>
