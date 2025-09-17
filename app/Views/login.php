@@ -120,7 +120,7 @@
     });
 });
 
-// ✅ Reusable Alert Function
+//Reusable Alert Function
 function showAlert(message, type = 'danger') {
     let $alertBox = $('#responseMessage'); // container div in your HTML
     $alertBox

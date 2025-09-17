@@ -47,7 +47,7 @@ class Login extends BaseController
 
     return $this->response->setJSON([
         "status"  => "error",
-        "message" => "Missing Email or Password"
+        "message" => "Email and Password are required"
     ]);
 }
 
