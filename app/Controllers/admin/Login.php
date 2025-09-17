@@ -46,49 +46,52 @@ class Login extends BaseController
 //     ]);
 // }
 public function login()
-    {
-        $email = $this->request->getPost('email');
-        $password = $this->request->getPost('password');
+{
+    $email = $this->request->getPost('email');
+    $password = $this->request->getPost('password');
 
-        if ($email && $password) {
-            $loginModel = new LoginModel();
-            $user = $loginModel->checkLoginUser($email, $password);
-
-            if ($user) {
-                $session = session();
-                $session->set([
-                    'user_id'    => $user->user_id,
-                    'user_name'  => $user->name,
-                    'user_email' => $user->email,
-                    'role_name'  => $user->role_name, 
-                ]);
-
-               if ($user->role_name === 'admin') {
-                    return $this->response->setJSON([
-                        "status"  => "success",
-                        "redirect" => base_url('admin/dashboard'),
-                        "message" => "Login Successful (Admin)"
-                    ]);
-                } else {
-                    return $this->response->setJSON([
-                        "status"  => "success",
-                        "redirect" => base_url('user/dashboard'),
-                        "message" => "Login Successful (User)"
-                    ]);
-                }
-            } else {
-                return $this->response->setJSON([
-                    "status"  => "error",
-                    "message" => "Invalid Email or Password"
-                ]);
-            }
-        }
-
+    if (!$email || !$password) {
         return $this->response->setJSON([
             "status"  => "error",
-            "message" => "Missing Email or Password"
+            "message" => "Missing Email Or Password"
         ]);
     }
+
+    $loginModel = new LoginModel();
+    $user = $loginModel->checkLoginUser($email, $password);
+
+    if ($user === false) {
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "Invalid Email Or Password"
+    ]);
+}
+
+if ($user === 'suspended') {
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "Your Account Has Been Suspended By Admin."
+    ]);
+}
+$session = session();
+$session->set([
+    'user_id'    => $user->user_id,
+    'user_name'  => $user->name,
+    'user_email' => $user->email,
+    'role_id'    => $user->role_id,
+]);
+
+$redirectUrl = ($user->role_id == 1)
+    ? base_url('admin/dashboard')
+    : base_url('user/dashboard');
+
+return $this->response->setJSON([
+    "status"   => "success",
+    "message"  => "Login successful",
+    "redirect" => $redirectUrl
+]);
+}
+
 public function logout()
 {
     $session = session();

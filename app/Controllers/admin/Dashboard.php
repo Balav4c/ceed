@@ -14,11 +14,11 @@ class Dashboard extends BaseController
 	public function index()
 {
     if (!$this->session->get('user_id')) {
-        return redirect()->to(base_url('admin'));
+        return redirect()->to(base_url('admin')); 
     }
 
-    if ($this->session->get('role_name') !== 'admin') {
-        return redirect()->to(base_url('user/dashboard'));
+    if ($this->session->get('role_id') != 1) {
+        return redirect()->to(base_url('user/dashboard')); 
     }
 
     $template  = view('admin/common/header');
@@ -27,5 +27,7 @@ class Dashboard extends BaseController
     $template .= view('admin/common/footer');
     return $template;
 }
+
+
 
 }

@@ -5,26 +5,26 @@ use App\Controllers\BaseController;
 
 class UserDashboard extends BaseController
 {
-  public function index()
-{
-    $session = session();
+    protected $session;
 
-    if (!$session->get('user_id')) {
-        return redirect()->to(base_url('admin')); 
+    public function __construct()
+    {
+        $this->session = session();
     }
 
-    if ($session->get('role_name') === 'admin') {
-        return redirect()->to(base_url('admin/dashboard'));
+    public function index()
+    {
+        if (!$this->session->get('user_id')) {
+            return redirect()->to(base_url('admin'));
+        }
+        if ($this->session->get('role_id') == 1) {
+            return redirect()->to(base_url('admin/dashboard'));
+        }
+        $template  = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/user_dashboard'); 
+        $template .= view('admin/common/footer');
+
+        return $template;
     }
-
-    $data['name'] = $session->get('user_name');
-
-    $template  = view('admin/common/header');
-    $template .= view('admin/common/sidemenu');   
-    $template .= view('admin/user_dashboard', $data);
-    $template .= view('admin/common/footer');
-
-    return $template;
-}
-
 }

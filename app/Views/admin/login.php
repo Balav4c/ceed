@@ -110,20 +110,17 @@
         var url = "<?php echo base_url('admin/login'); ?>";
 
          $.post(url, $('#loginForm').serialize(), function(data) {
-        if (data.status == 'success') {
-            if (data.redirect) {
+            if (data.status == 'success') {
                 window.location.href = data.redirect;
             } else {
-                window.location.href = "<?php echo base_url('admin/dashboard'); ?>";
+                showAlert(data.message, 'danger');
+                $btn.prop('disabled', false).html('Log in');
             }
-        } else {
-            showAlert(data.message, 'danger');
-            $btn.prop('disabled', false).html('Log in');
-        }
-    }, 'json').fail(function() {
+        }, 'json').fail(function(xhr) {
             showAlert("Something went wrong. Please try again.", 'danger');
             $btn.prop('disabled', false).html('Log in');
         });
+
     });
 
     function showAlert(message, type = 'danger') {
