@@ -40,7 +40,10 @@
                         Pick up right where you left off in your learning journey.
                     </p>
 
-                    <form class="mt-4">
+                    <div id="responseMessage"></div>
+
+
+                    <form id="loginForm" class="mt-4">
                         <div class="mb-3">
                             <label for="email" class="form-label fs-14">Email Address</label>
                             <input type="email" id="email" name="email" class="form-control fc-font"
@@ -89,6 +92,50 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/app.js"></script>
 
     <script>
+   $(document).ready(function() {
+    $("#loginForm").submit(function(e) {
+        e.preventDefault(); 
+    
+        $.ajax({
+            url: "<?= base_url('auth/login'); ?>",
+            type: "POST",
+            data: $(this).serialize(),
+            dataType: "json",
+            success: function(response) {
+                if (response.status === "success") {
+                    showAlert(response.message, 'success');
+
+                    // redirect to dashboard after 1 sec
+                    setTimeout(() => {
+                        window.location.href = "<?= base_url('/'); ?>";
+                    }, 1000);
+                } else {
+                    showAlert(response.message, 'danger');
+                }
+            },
+            error: function() {
+                showAlert("Something went wrong. Please try again.", 'danger');
+            }
+        });
+    });
+});
+
+// ✅ Reusable Alert Function
+function showAlert(message, type = 'danger') {
+    let $alertBox = $('#responseMessage'); // container div in your HTML
+    $alertBox
+        .hide()
+        .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
+        .fadeIn();
+
+    setTimeout(() => {
+        $('#alertbox').fadeOut(function() {
+            $(this).remove();
+        });
+    }, 3000);
+}
+
+
     //Password Show and hide
     $(document).on('click', '#togglePassword', function() {
         const passwordField = $('#password');
@@ -103,9 +150,6 @@
         }
     });
     </script>
-
-
-
 </body>
 
 </html>
