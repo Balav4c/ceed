@@ -10,6 +10,10 @@ class Home extends BaseController
             // Load views
     $template  = view('common/header');
     $template .= view('buddybloom');
+    $template .= view('deepdive');
+    $template .= view('program_benefits');
+    $template .= view('cherish_voice');
+    $template .= view('aboutceed');
     $template .= view('common/footer');
 
     return $template;
