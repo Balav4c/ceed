@@ -7,7 +7,7 @@
 
         <div class="row align-items-center">
           <div class="col-12 col-md-6">
-            <h3 class="mb-3 mb-md-0">Manage User</h3>
+            <h3 class="mb-3 mb-md-0">Manage Admin User</h3>
           </div>
           <div class="col-12 col-md-6 text-end">
             <a href="<?= base_url('admin/adduser') ?>" 
