@@ -4,77 +4,95 @@
   padding: 40px;
   height: 100%;
 }
+
 .left-side-card h2 {
   font-weight: 600;
   margin: 15px 0;
 }
+
 .left-side-card p {
   font-size: 15px;
   line-height: 1.6;
   max-width: 350px;
 }
+
 .left-side-card .illustration {
   margin-top: 20px;
   width: 70%;
   max-width: 200px;
 }
+
 .logo {
   font-size: 65px !important;
   font-weight: bold;
 }
+
 .login-card {
   border: none;
   border-radius: 10px;
 }
-.btn-bg{
-    background: #1a2035;
+
+.btn-bg {
+  background: #1a2035;
 }
+
 .btn:hover {
-    background: #1a2035;
-    color: white
+  background: #1a2035;
+  color: white
 }
+
 #loginCheck:active {
-    background: #1a2035;
-    color:white;
+  background: #1a2035;
+  color: white;
 }
+
 #loginCheck:hover {
-    background: #1a2035;
-    color:white;
+  background: #1a2035;
+  color: white;
 }
+
 #loginCheck:disabled {
-    background: #1a2035 !important;
-    color: #fff !important;
-    opacity: 1 !important; 
-    cursor: not-allowed;
+  background: #1a2035 !important;
+  color: #fff !important;
+  opacity: 1 !important;
+  cursor: not-allowed;
 }
+
 #alertbox {
-    transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
 
 
 
 .dataTables_filter {
-    text-align: right !important;
+  text-align: right !important;
 }
+
 .dataTables_wrapper {
-    overflow-x: hidden;
+  overflow-x: hidden;
 }
-.dt-search, .dt-length{
-  padding:2px 2px 17px !important;
-  
+
+.dt-search,
+.dt-length {
+  padding: 2px 2px 17px !important;
+
 }
+
 .dataTables_paginate {
-    text-align: right !important;
+  text-align: right !important;
 }
 
 .logo-header {
-    display: flex;
-    justify-content: center; /* centers logo horizontally */
-    align-items: center;     /* centers logo vertically */
+  display: flex;
+  justify-content: center;
+  /* centers logo horizontally */
+  align-items: center;
+  /* centers logo vertically */
 }
+
 .logo-header .logo img {
-    display: block;
-    margin: 0 auto;
+  display: block;
+  margin: 0 auto;
 }
 
 #roleTable td {
@@ -82,96 +100,196 @@
 }
 
 #roleTable td ul {
-    list-style: none;   /* remove default bullets */
-    padding-left: 0;
+  list-style: none;
+  /* remove default bullets */
+  padding-left: 0;
 }
 
 #roleTable td ul li {
-    position: relative;
-    padding-left: 24px;
-    margin-bottom: 3px;
+  position: relative;
+  padding-left: 24px;
+  margin-bottom: 3px;
 }
 
 #roleTable td ul li::before {
-    content: "✔";       /* tick symbol */
-    position: absolute;
-    left: 0;
-    color: green;       /* tick color */
-    font-weight: bold;
+  content: "✔";
+  /* tick symbol */
+  position: absolute;
+  left: 0;
+  color: green;
+  /* tick color */
+  font-weight: bold;
 }
-.alert{
-  position: fixed !important; 
+
+.alert {
+  position: fixed !important;
   top: 20px !important;
-  left:50% !important; 
-  transform:translateX(-50%) !important; 
-  z-index: 1050 !important; 
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  z-index: 1050 !important;
   min-width: 300px !important;
 }
+
 .alert-success {
-    border: 2px solid green;
-}
-.alert-danger{
-  border:2px solid rgba(196, 37, 37, 0.726)
+  border: 2px solid green;
 }
 
-.login-alert{
-    padding: 5px 14px;
-    background: white;
-    border: none;
-    color: red !important;
+.alert-danger {
+  border: 2px solid rgba(196, 37, 37, 0.726)
+}
+
+.login-alert {
+  padding: 5px 14px;
+  background: white;
+  border: none;
+  color: red !important;
 
 }
-.nav-link.active {
-    background-color: #03142e;
-    font-weight: bold !important;
+
+.width-word {
+  min-height: calc(100vh - 260px);
+  position: relative;
+  width: 100%;
 }
-.dt-type-numeric{
-  text-align: left;
-}
+
 /* dashboard */
- .welcome-container {
-        display: flex;
-        justify-content: center; /* Horizontal center */
-        align-items: flex-start; /* Align to top */
-        padding: 40px 20px; /* Top padding so it’s not glued to the edge */
-    }
-    .welcome-card {
-        background: linear-gradient(90deg, #7b2ff7, #f107a3);
-        color: #fff;
-        border-radius: 15px;
-        padding: 73px;
-        margin-top: 60px;
-        text-align: center;
-        max-width: 680px;
-        width: 100%;
-        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-    }
-    .welcome-card img {
-        width: 80px;
-        margin-bottom: 15px;
-    }
-    .welcome-card h2 {
-        font-weight: bold;
-        font-size: 28px;
-        margin-bottom: 10px;
-    }
-    .welcome-card p {
-        font-size: 16px;
-        margin: 0;
-    }
+.welcome-container {
+  display: flex;
+  justify-content: center;
+  /* Horizontal center */
+  align-items: flex-start;
+  /* Align to top */
+  padding: 40px 20px;
+  /* Top padding so it’s not glued to the edge */
+}
+
+.welcome-card {
+  background: linear-gradient(90deg, #7b2ff7, #f107a3);
+  color: #fff;
+  border-radius: 15px;
+  padding: 73px;
+  margin-top: 60px;
+  text-align: center;
+  max-width: 680px;
+  width: 100%;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.welcome-card img {
+  width: 80px;
+  margin-bottom: 15px;
+}
+
+.welcome-card h2 {
+  font-weight: bold;
+  font-size: 28px;
+  margin-bottom: 10px;
+}
+
+.welcome-card p {
+  font-size: 16px;
+  margin: 0;
+}
+
+/* file upload */
+.download {
+  padding: 1.25rem;
+  border: 0;
+  border-radius: 3px;
+  background-color: #4F46E5;
+  color: #fff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.download:hover {
+  color: #fff
+}
+
+#carbonads {
+  display: block;
+  overflow: hidden;
+  max-width: 728px;
+  position: relative;
+  font-size: 22px;
+  box-sizing: content-box
+}
+
+#carbonads>span {
+  display: block
+}
+
+#carbonads a {
+  color: #4F46E5;
+  text-decoration: none
+}
+
+#carbonads a:hover {
+  color: #4F46E5
+}
+
+.carbon-wrap {
+  display: flex;
+  align-items: center
+}
+
+.carbon-img {
+  display: block;
+  margin: 0;
+  line-height: 1
+}
+
+.carbon-img img {
+  display: block;
+  height: 90px;
+  width: auto
+}
+
+.carbon-text {
+  display: block;
+  padding: 0 1em;
+  line-height: 1.35;
+  text-align: left
+}
+
+.carbon-poweredby {
+  display: block;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  padding: 6px 10px;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  font-weight: 600;
+  font-size: 8px;
+  border-top-left-radius: 4px;
+  line-height: 1;
+  color: #aaa !important
+}
+
+@media only screen and (min-width:320px) and (max-width:759px) {
+  .carbon-text {
+    font-size: 14px
+  }
+}
+
 /***Responsive Styles ***/
 @media (max-width: 767px) {
   .left-side-card {
     padding: 20px;
     height: auto;
   }
+
   .logo {
     font-size: 45px !important;
   }
+
   .illustration {
     width: 60%;
     max-width: 150px;
   }
+
   .login-card {
     width: 90% !important;
   }

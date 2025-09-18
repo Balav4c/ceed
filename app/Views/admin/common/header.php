@@ -5,53 +5,56 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <title>CEED</title>
     <meta content="width=device-width, initial-scale=1.0, shrink-to-fit=no" name="viewport" />
-    <link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png"
-        type="image/x-icon" />
+    <link rel="icon" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/logo.png" type="image/x-icon" />
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/site.css">
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/richtext.min.css">
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/fileUpload.css">
 
     <!-- Fonts and icons -->
-    <script src="<?php echo base_url().ASSET_PATH; ?>admin/assets/js/plugin/webfont/webfont.min.js"></script>
+    <script src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/js/plugin/webfont/webfont.min.js"></script>
     <script>
-    WebFont.load({
-        google: {
-            families: ["Public Sans:300,400,500,600,700"]
-        },
-        custom: {
-            families: [
-                "Font Awesome 5 Solid",
-                "Font Awesome 5 Regular",
-                "Font Awesome 5 Brands",
-                "simple-line-icons",
-            ],
-            urls: ["<?php echo base_url().ASSET_PATH; ?>admin/assets/css/fonts.min.css"],
-        },
-        active: function() {
-            sessionStorage.fonts = true;
-        },
-    });
+        WebFont.load({
+            google: {
+                families: ["Public Sans:300,400,500,600,700"]
+            },
+            custom: {
+                families: [
+                    "Font Awesome 5 Solid",
+                    "Font Awesome 5 Regular",
+                    "Font Awesome 5 Brands",
+                    "simple-line-icons",
+                ],
+                urls: ["<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/fonts.min.css"],
+            },
+            active: function () {
+                sessionStorage.fonts = true;
+            },
+        });
     </script>
 
     <!-- CSS Files -->
-    <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/plugins.min.css" />
-    <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/kaiadmin.min.css" />
-        <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/custom.css" />
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/plugins.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/kaiadmin.min.css" />
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/custom.css" />
 
     <!-- CSS Just for demo purpose, don't include it in your project -->
-    <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/css/demo.css" />
+    <link rel="stylesheet" href="<?php echo base_url() . ASSET_PATH; ?>admin/assets/css/demo.css" />
     <!-- DataTables CSS -->
 
-  <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.3.2/css/dataTables.dataTables.min.css">
 
-<!-- Bootstrap 5 integration (optional) -->
-<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+    <!-- Bootstrap 5 integration (optional) -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<!-- jQuery -->
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
-<!-- DataTables JS -->
-<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
-<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- DataTables JS -->
+    <script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
 
 </head>
 
@@ -63,7 +66,7 @@
                     <!-- Logo Header -->
                     <div class="logo-header" data-background-color="dark">
                         <a href="index.html" class="logo">
-                            <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/kaiadmin/logo_light.svg"
+                            <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/kaiadmin/logo_light.svg"
                                 alt="navbar brand" class="navbar-brand" height="20" />
                         </a>
                         <div class="nav-toggle">
@@ -127,7 +130,7 @@
                                             <div class="notif-center">
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/jm_denis.jpg"
+                                                        <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/jm_denis.jpg"
                                                             alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
@@ -138,7 +141,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/chadengle.jpg"
+                                                        <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/chadengle.jpg"
                                                             alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
@@ -149,7 +152,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/mlane.jpg"
+                                                        <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/mlane.jpg"
                                                             alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
@@ -162,7 +165,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/talha.jpg"
+                                                        <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/talha.jpg"
                                                             alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
@@ -218,7 +221,7 @@
                                                 </a>
                                                 <a href="#">
                                                     <div class="notif-img">
-                                                        <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile2.jpg"
+                                                        <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/profile2.jpg"
                                                             alt="Img Profile" />
                                                     </div>
                                                     <div class="notif-content">
@@ -316,9 +319,9 @@
                             <li class="nav-item topbar-user dropdown hidden-caret">
                                 <a class="dropdown-toggle profile-pic" data-bs-toggle="dropdown" href="#"
                                     aria-expanded="false">
-                                    
-                                        <i class="bi bi-person-fill"></i>
-                                    
+
+                                    <i class="bi bi-person-fill"></i>
+
                                     <span class="profile-username">
                                         <span class="op-7">Hi,</span>
                                         <span class="fw-bold"> <?= session()->get('user_name'); ?></span>
@@ -329,7 +332,7 @@
                                         <li>
                                             <div class="user-box">
                                                 <div class="avatar-lg">
-                                                    <img src="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/profile.jpg" alt="image profile"
+                                                    <img src="<?php echo base_url() . ASSET_PATH; ?>admin/assets/img/profile.jpg" alt="image profile"
                                                         class="avatar-img rounded" />
                                                 </div>
                                                 <div class="u-text">
@@ -361,6 +364,3 @@
             <!--Script js-->
 
             <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> -->
-
-
-          

@@ -1,5 +1,6 @@
 <script>
   $(document).ready(function() {
+     $('.content').richText();
     const $saveBtn = $('#saveBtn');
     const $courseForm = $('#courseForm');
     const base_url = "<?= base_url() ?>";
