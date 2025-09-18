@@ -29,7 +29,7 @@ $routes->get('logout', 'Login::logout');
 
 
 $routes->get('admin/dashboard', 'admin\Dashboard::index');
-$routes->get('user/dashboard', 'admin\UserDashboard::index');
+$routes->get('admin/user_dashboard', 'admin\UserDashboard::index');
 
 
 $routes->get('admin', 'admin\Login::index');
