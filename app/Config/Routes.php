@@ -30,7 +30,7 @@ $routes->get('profile', 'UserProfile::index');
 
 
 $routes->get('admin/dashboard', 'admin\Dashboard::index');
-$routes->get('admin/user_dashboard', 'admin\UserDashboard::index');
+$routes->get('user/dashboard', 'admin\UserDashboard::index');
 
 
 $routes->get('admin', 'admin\Login::index');
@@ -77,7 +77,7 @@ $routes->post('admin/manage_course/toggleStatus', 'admin\Course::toggleStatus');
 
 // Open add_module with course_id
 $routes->get('admin/add_module/(:num)', 'admin\CourseModule::index/$1');
-$routes->get('admin/manage_module', 'admin\CourseModule::addModule');
+$routes->get('admin/add_module', 'admin\CourseModule::addModule');
 $routes->post('admin/save_module', 'admin\CourseModule::save');
 
 
