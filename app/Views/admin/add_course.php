@@ -1,7 +1,7 @@
 <div class="container">
     <div class="page-inner">
         <div class="card">
-            <div id="messageBox" class="alert d-none text-center"  role="alert"></div>
+            <div id="messageBox" class="alert d-none text-center" role="alert"></div>
             <div class="card-header">
                 <h3 class="mb-0"><?= isset($course['course_id']) ? 'Edit Course' : 'Add Course' ?></h3>
             </div>
@@ -11,17 +11,25 @@
 
                     <div class="mb-3">
                         <label>Name/Title</label>
-                        <input type="text" name="name" class="form-control" value="<?= $course['name'] ?? '' ?>" required>
+                        <input type="text" name="name" class="form-control" value="<?= $course['name'] ?? '' ?>"
+                            required>
                     </div>
 
-                    <div class="mb-3">
+                    <!-- <div class="mb-3">
                         <label>Description</label>
-                        <textarea name="description" class="form-control"><?= $course['description'] ?? '' ?></textarea>
+                        <textarea name="description" class="form-control" rows="4"><?= $course['description'] ?? '' ?></textarea>
+                    </div> -->
+                    <div class="page-wrapper box-content width-word">
+
+                        <label for="example">Description</label>
+                        <textarea class="content" id="example" name="example"></textarea>
+
                     </div>
 
                     <div class="mb-3">
                         <label>Total Duration (In Weeks)</label>
-                        <input type="number" name="duration_weeks" class="form-control" value="<?= $course['duration_weeks'] ?? '' ?>" required>
+                        <input type="number" name="duration_weeks" class="form-control"
+                            value="<?= $course['duration_weeks'] ?? '' ?>" required>
                     </div>
                     <br><br>
                     <div class="col-12 d-flex justify-content-end gap-2">
@@ -34,7 +42,3 @@
         </div>
     </div>
 </div>
-
-
-
-

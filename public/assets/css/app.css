@@ -1,3 +1,4 @@
+
 .drop-menu{
   color: #a96b1f !important;
     text-decoration: none;
@@ -17,3 +18,20 @@
 .btn-user{
   color: white !important;
 }
+/** Profile Page CSS **/
+.card-pad{
+padding: 20px;
+}
+.card-head{
+  font-size: 18px;
+  font-weight: 500;
+ }
+ .fs-14{
+  font-size: 14px;
+ }
+ .fs-16{
+  font-size: 16px;
+  font-weight: 400;
+  font-style: regular;
+ }
+/** Profile Page CSS  end**/
