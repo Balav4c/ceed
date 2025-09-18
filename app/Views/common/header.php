@@ -94,7 +94,11 @@
                     </div>
                 </div>
                
-         
+            </div>
+        </div>
+    </header>
+
+
 
     <!--Logout Modal -->
     <div class="modal fade" id="logoutModal" tabindex="-1" aria-labelledby="logoutModalLabel" aria-hidden="true">
@@ -117,30 +121,27 @@
 
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
-        <script>
+    <script>
+    $(document).ready(function() {
+        // When logout button is clicked, show the modal
+        $("#logout-btn").on("click", function(e) {
+            e.preventDefault();
+            $("#logoutModal").modal("show");
+        });
 
-        $(document).ready(function() {
-            // When logout button is clicked, show the modal
-            $("#logout-btn").on("click", function(e) {
-                e.preventDefault();
-                $("#logoutModal").modal("show");
-            });
-
-            // When "Yes, Logout" is clicked
-            $("#confirm-logout").on("click", function() {
-                $.ajax({
-                    url: "<?= base_url('logout'); ?>",
-                    type: "GET",
-                    success: function(response) {
-                        // Redirect to signin page after session destroyed
-                        window.location.href = "<?= base_url('signin'); ?>";
-                    },
-                    error: function() {
-                        alert("Something went wrong while logging out.");
-                    }
-                });
+        // When "Yes, Logout" is clicked
+        $("#confirm-logout").on("click", function() {
+            $.ajax({
+                url: "<?= base_url('logout'); ?>",
+                type: "GET",
+                success: function(response) {
+                    // Redirect to signin page after session destroyed
+                    window.location.href = "<?= base_url('signin'); ?>";
+                },
+                error: function() {
+                    alert("Something went wrong while logging out.");
+                }
             });
         });
-    
-
+    });
     </script>

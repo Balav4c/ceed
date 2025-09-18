@@ -13,9 +13,8 @@ class UserProfile extends BaseController
       
     //    return view('profile');
       $template  = view('common/header');
-    $template .= view('profile');
-    
-    $template .= view('common/footer');
+      $template .= view('profile');
+      $template .= view('common/footer');
 
     return $template;
 
