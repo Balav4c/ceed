@@ -113,14 +113,14 @@ body {
 #alertbox {
     transition: opacity 0.5s ease-in-out;
 }
-.signup-form{
+/* .signup-form{
 	padding:60px;
-}
+} */
 .signup-img{
 	  background: linear-gradient(180deg, rgba(0,0,0,0.3) 30%, rgba(0,0,0,0.8) 80%),
         url('../img/login-img.jpg') no-repeat center center;
     background-size: cover;
-    height: 150vh;
+    height: 100vh;
     color: #fff;
 
 }
@@ -139,6 +139,4 @@ body {
     white-space: nowrap; /* prevent wrapping */
 }
 
-.dropdown:hover .dropdown-menu { display: block; }
 
-.dropdown-menu { display: none !important; }

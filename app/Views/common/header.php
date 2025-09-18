@@ -3,6 +3,7 @@
 
 <head>
     <title>CEED - Empowering Kids with Growth</title>
+	<link rel="icon" href="<?php echo base_url().ASSET_PATH; ?>admin/assets/img/logo.png" type="image/x-icon" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>assets/css/styles.css">
     <link rel="stylesheet" href="<?php echo base_url().ASSET_PATH; ?>assets/css/bootstrap.min.css">
@@ -47,7 +48,7 @@
                                 <?php else: ?>
                                 <!-- Show login/demo buttons -->
                                 <button class="btn btn-login"
-                                    onclick="window.location.href='<?= base_url('signin'); ?>'">Login</button>
+                                    onclick="window.location.href='<?= base_url('signin'); ?>'">Signin</button>
 
                                 <?php endif; ?>
                                 <button class="btn btn-demo">Request A Demo</button>
