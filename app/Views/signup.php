@@ -22,7 +22,7 @@
             <div class="col-md-5 signup-img d-flex flex-column justify-content-between">
                 <div class="p-4">
 
-                    <img class="logo" src="<?php echo base_url().ASSET_PATH; ?>assets/img/login-logo.png" />
+                    <img class="logo" src="<?php echo base_url().ASSET_PATH; ?>assets/img/logo.png" />
                 </div>
                 <div class="p-4">
                     <p class="text-white login-content">
