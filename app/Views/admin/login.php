@@ -127,7 +127,7 @@
         let $alertBox = $('#errorDiv');
         $alertBox
             .hide()
-            .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
+            .html('<div id="alertbox" class="login-alert alert-' + type + '">' + message + '</div>')
             .fadeIn();
 
 
