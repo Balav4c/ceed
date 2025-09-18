@@ -26,7 +26,7 @@ public function login()
     if (!$email || !$password) {
         return $this->response->setJSON([
             "status"  => "error",
-            "message" => "Missing Email Or Password"
+            "message" => "Missing email or password"
         ]);
     }
 
@@ -36,25 +36,23 @@ public function login()
     if ($user === false) {
     return $this->response->setJSON([
         "status"  => "error",
-        "message" => "Invalid Email Or Password"
+        "message" => "Access denied. Your account has been removed."
     ]);
 }
 
 if ($user === 'suspended') {
     return $this->response->setJSON([
         "status"  => "error",
-        "message" => "Your Account Has Been Suspended By Admin."
+        "message" => "Your account has been suspended by admin."
     ]);
 }
 $roleMenuModel = new \App\Models\admin\RoleMenuModel();
 $menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
 
-// Extract only the menu names
 $menuNames = array_map(function($menu) {
     return $menu['menu_name'];
 }, $menus);
      
-         // Set session data
     $session->set([
         'user_id'    => $user->user_id,
         'user_name'  => $user->name,

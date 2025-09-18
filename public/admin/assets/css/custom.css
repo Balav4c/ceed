@@ -175,21 +175,15 @@
   .login-card {
     width: 90% !important;
   }
-.sidebar .nav.nav-secondary .nav-item.active > .nav-link {
-    background-color: #007bff !important;
-    color: #fff !important;
-    border-radius: 5px;
-}
-
-.sidebar .nav.nav-secondary .nav-item.active > .nav-link i {
+.nav-link.active {
+    background-color: #03142e;
+    font-weight: bold !important;
     color: #fff !important;
 }
 
-.sidebar .nav.nav-secondary .nav-item > .nav-link:hover {
-    background-color: #0056b3 !important;
+.nav-link.active i {
     color: #fff !important;
 }
-
 
 
 }
