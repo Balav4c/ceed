@@ -115,8 +115,10 @@
 }
 
 .login-alert{
-    padding: 5px;
+    padding: 5px 14px;
     background: white;
+    border: none;
+    color: red !important;
 
 }
 .nav-link.active {
