@@ -1,4 +1,4 @@
-<div class="container py-5">
+<div class="container mb-4">
     <div class="row justify-content-center">
         <div class="col-md-7">
             <!--Personal Information Card-->
