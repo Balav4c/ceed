@@ -19,13 +19,13 @@ class Login extends BaseController
 
 public function login()
 {
-     $session = session();
+    $session = session();
     $email = $this->request->getPost('email');
     $password = $this->request->getPost('password');
 
     if (!$email || !$password) {
         return $this->response->setJSON([
-            "status"  => "error",
+            "success" => false,
             "message" => "Missing email or password"
         ]);
     }
@@ -34,25 +34,26 @@ public function login()
     $user = $loginModel->checkLoginUser($email, $password);
 
     if ($user === false) {
-    return $this->response->setJSON([
-        "status"  => "error",
-        "message" => "Access denied. Your account has been removed."
-    ]);
-}
+        return $this->response->setJSON([
+            "success" => false,
+            "message" => "Access denied. Your account has been removed."
+        ]);
+    }
 
-if ($user === 'suspended') {
-    return $this->response->setJSON([
-        "status"  => "error",
-        "message" => "Your account has been suspended by admin."
-    ]);
-}
-$roleMenuModel = new \App\Models\admin\RoleMenuModel();
-$menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
+    if ($user === 'suspended') {
+        return $this->response->setJSON([
+            "success" => false,
+            "message" => "Your account has been suspended by admin."
+        ]);
+    }
 
-$menuNames = array_map(function($menu) {
-    return $menu['menu_name'];
-}, $menus);
-     
+    $roleMenuModel = new \App\Models\admin\RoleMenuModel();
+    $menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
+
+    $menuNames = array_map(function ($menu) {
+        return $menu['menu_name'];
+    }, $menus);
+
     $session->set([
         'user_id'    => $user->user_id,
         'user_name'  => $user->name,
@@ -61,16 +62,17 @@ $menuNames = array_map(function($menu) {
         'role_menu'  => $menuNames,
     ]);
 
-        $redirectUrl = ($user->role_id == 1)
-            ? base_url('admin/dashboard')
-            : base_url('admin/user_dashboard'); 
+    $redirectUrl = ($user->role_id == 1)
+        ? base_url('admin/dashboard')
+        : base_url('admin/user_dashboard');
 
-        return $this->response->setJSON([
-            "status"   => "success",
-            "message"  => "Login successful",
-            "redirect" => $redirectUrl
-        ]);
+    return $this->response->setJSON([
+        "success"  => true,
+        "message"  => "Login successful",
+        "redirect" => $redirectUrl
+    ]);
 }
+
 
 public function logout()
 {
