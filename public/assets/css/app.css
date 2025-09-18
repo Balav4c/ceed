@@ -8,3 +8,12 @@
 .btn-user{
   border: none !important; 
 }
+
+.drop-menu:active, .drop-menu:hover {
+    text-decoration: none;
+    background-color: #a96b1f !important;
+    color: white !important;
+}
+.btn-user{
+  color: white !important;
+}
