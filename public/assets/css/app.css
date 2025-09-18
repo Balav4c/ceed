@@ -1,0 +1,37 @@
+
+.drop-menu{
+  color: #a96b1f !important;
+    text-decoration: none;
+    font-size: 14px !important;
+    text-transform: uppercase;
+    padding: 0px 20px !important;
+}
+.btn-user{
+  border: none !important; 
+}
+
+.drop-menu:active, .drop-menu:hover {
+    text-decoration: none;
+    background-color: #a96b1f !important;
+    color: white !important;
+}
+.btn-user{
+  color: white !important;
+}
+/** Profile Page CSS **/
+.card-pad{
+padding: 20px;
+}
+.card-head{
+  font-size: 18px;
+  font-weight: 500;
+ }
+ .fs-14{
+  font-size: 14px;
+ }
+ .fs-16{
+  font-size: 16px;
+  font-weight: 400;
+  font-style: regular;
+ }
+/** Profile Page CSS  end**/
