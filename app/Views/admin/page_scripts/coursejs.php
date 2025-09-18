@@ -13,6 +13,14 @@
             $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
         }
     });
+    $('#courseTable').on('click', '.read-desc', function() {
+        var fullDescription = $(this).data('description'); 
+        $('#modalDescription').text(fullDescription); 
+        var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+        myModal.show();
+    });
+
+
     $('#courseForm').on('submit', function (e) {
         e.preventDefault();
         var form = $(this);
@@ -73,7 +81,12 @@
                         return data.replace(/\b\w/g, c => c.toUpperCase());
                     }
             },
-            { data: "description" },
+           { 
+            data: "description",
+            render: function(data, type, row) {
+                return '<a href="javascript:void(0)" class="read-desc" data-description="' + data + '">Read Description</a>';
+            }
+        },
             { data: "duration_weeks" },
             {
                 data: "status",
@@ -124,7 +137,7 @@
 });
 
     // toggle status 
-  $('#courseTable').on('change', '.toggle-status', function () {
+$('#courseTable').on('change', '.toggle-status', function () {
     let courseId = $(this).data('id');  
     let newStatus = $(this).is(':checked') ? 1 : 2;
 
@@ -162,7 +175,6 @@
         }
     });
 });
-
     // delete pop up 
 
     $(document).on("click", ".delete-all", function (e) {
@@ -233,3 +245,4 @@
             }
         });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

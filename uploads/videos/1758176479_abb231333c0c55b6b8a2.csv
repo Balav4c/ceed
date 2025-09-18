@@ -1,0 +1,167 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1:3306
+-- Generation Time: Sep 17, 2025 at 04:17 AM
+-- Server version: 9.1.0
+-- PHP Version: 8.2.26
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `ceed`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course`
+--
+
+DROP TABLE IF EXISTS `course`;
+CREATE TABLE IF NOT EXISTS `course` (
+  `course_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `duration_weeks` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int NOT NULL COMMENT '1  active \r\n 2 inactive\r\n9 delete',
+  PRIMARY KEY (`course_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_modules`
+--
+
+DROP TABLE IF EXISTS `course_modules`;
+CREATE TABLE IF NOT EXISTS `course_modules` (
+  `module_id` int NOT NULL AUTO_INCREMENT,
+  `course_id` int NOT NULL,
+  `module_name` varchar(128) NOT NULL,
+  `duration_weeks` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`module_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(128) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int NOT NULL COMMENT ' 1  active\r\n2  inactive\r\n9 delete',
+  PRIMARY KEY (`role_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 ;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role_name`, `created_at`, `updated_at`, `status`) VALUES
+(88, 'Staff', '2025-09-15 22:57:51', '2025-09-15 23:28:21', 1),
+(87, 'Admin', '2025-09-15 22:11:26', '2025-09-15 22:57:34', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_menus`
+--
+
+DROP TABLE IF EXISTS `role_menus`;
+CREATE TABLE IF NOT EXISTS `role_menus` (
+  `rolemenu_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
+  `menu_name` varchar(256) NOT NULL,
+  `access` set('1','0') NOT NULL,
+  PRIMARY KEY (`rolemenu_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 ;
+
+--
+-- Dumping data for table `role_menus`
+--
+
+INSERT INTO `role_menus` (`rolemenu_id`, `role_id`, `menu_name`, `access`) VALUES
+(251, 88, 'Manage User', '1'),
+(250, 88, 'Dashboard', '1'),
+(249, 87, 'Manage Role', '1'),
+(248, 87, 'Manage User', '1'),
+(247, 87, 'Dashboard', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
+  `role_name` varchar(256) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `email` varchar(256) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  `status` int NOT NULL DEFAULT '1' COMMENT '1 active \r\n2 inactive\r\n9 delete',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=49 DEFAULT CHARSET=utf8mb4 ;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `role_id`, `role_name`, `name`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, '', 'Admin', 'admin@gmail.com', '$2y$10$U2pbffipUyKHNiwD9cDRF.P3vHYOOphWrwlZaO1Grmz66IdrZAL7y', 9, '2025-09-11 17:02:07', '2025-09-14 11:30:13'),
+(2, 2, '', 'fathi', 'wwewe', '$2y$10$EnQCeiZgr7dIACq6l5a1nurinmWgiKJ1vBZ7eyLKYHcDGCW3yOjRa', 9, '2025-09-12 10:14:53', '2025-09-14 00:53:45'),
+(3, 2, '', 'fathi', 'wwww@gmail.com', '$2y$10$LYhzAfiz175vGfeHKMKgO.7RQk5AHBYz6zTbDZV7SX4/fqaJXjuxy', 9, '2025-09-12 10:17:49', '2025-09-14 11:23:58'),
+(4, 2, '', 'aizah', 'aizah@gmail.com', '$2y$10$Ygd0kkJY6LYnSwgyS0mfw.id/mQgH9QT4nu37PwTIVzvP4u.mLZdm', 9, '2025-09-13 22:39:56', '2025-09-14 00:55:02'),
+(24, 25, '', ' MUFEEDA ', 'mufeedahidaya@gmail.com', '$2y$10$.x3/LsROD5F7HkyovcbsceJU1weO5Wjrlu3klbmqMhzR6Ui7WRWAO', 9, '2025-09-15 02:18:59', '2025-09-15 03:10:07'),
+(25, 22, '', 'HIDAYATHUL MUFEEDA S', 'mufeeda@gmail.com', '$2y$10$GtORr31G2pCCIEANk/onmuaiDQcBUNbH2Dz06pXs7hTcYM0lqnu.i', 9, '2025-09-15 02:24:38', '2025-09-15 03:08:28'),
+(26, 18, '', 'fathi', 'fath@gmail.com', '$2y$10$Zz7R7MraWk6QBOB/gnDQvOYXbdCnNe9li2U9fTxxOIXD4o2QZAXMm', 9, '2025-09-15 02:45:05', '2025-09-15 04:20:37'),
+(27, 19, '', 'fathi', 'mufeedahidaya@gmail.com', '$2y$10$cB4KRmtP/wkvOqZmzPwGh.TS.AeAPtwLpqeTFa4wTDag0FSiExGG2', 9, '2025-09-15 03:03:25', '2025-09-15 03:08:35'),
+(28, 19, '', 'HIDAYATHUL MUFEEDA S', 'fath@gmail.com', '$2y$10$8AdAFTuWx6VN6ViGFjdZB.GSjDFQpdGHzsErYgArrsbqo4Krl3Vla', 9, '2025-09-15 03:04:09', '2025-09-15 03:34:58'),
+(29, 19, '', 'HIDAYATHUL MUFEEDA S', 'fath@gmail.com', '$2y$10$yXwxTJgUSWmAUDCb/nNwbujnwGYrudMG/ZXD0B/ihDRCd.n/EYljS', 9, '2025-09-15 03:04:11', '2025-09-15 03:34:53'),
+(30, 29, '', 'mufeeda', 'mufeedahidaya@gmail.com', '$2y$10$eR2D1QqxJsvwrboGjYDPjuN0GnmmP7UYDUF/7WGa/ek3l1ZBdVaRi', 1, '2025-09-15 03:10:25', '2025-09-15 05:25:15'),
+(31, 22, '', 'duaaaa', 'dua@gmail.com', '$2y$10$ZChvpNpjuhjF62/IfxUow.Z8MU4Q1d/9FS7AOiq2yaAsAj.znpjT.', 1, '2025-09-15 03:36:00', '2025-09-15 09:06:00'),
+(32, 18, '', 'hidaya', 'admi@gmail.com', '$2y$10$lWjlBgMtEcGE6sl7B8hjlud9urJSLF.a68cbLwmW3Id8NHMz3ixmO', 1, '2025-09-15 04:05:14', '2025-09-15 04:57:58'),
+(33, 26, '', 'duaaaa', 'sss@gmail.com', '$2y$10$ssLEmcgSDRSGlWim65aFWOK5mPPpsC8v1su0NAIRPMceXnXKR3/Jq', 9, '2025-09-15 10:09:57', '2025-09-15 10:10:37'),
+(34, 22, '', 'duaaaa', 'admin@gmail.com', '$2y$10$nNLHUa9I2gDWjLdYwZIp3OUrlZzNuw0xvjVg42H18iXTk0MXEvoea', 1, '2025-09-15 10:13:05', '2025-09-15 15:43:05'),
+(35, 34, '', 'sandra', 'fffgg@gmail.com', '$2y$10$DvsUJ7W5nrvKgS/1mW0iHOGlufTV6tAIEyaKp7YxBLpZOLwozZZ8a', 9, '2025-09-15 10:13:32', '2025-09-15 10:13:38'),
+(36, 19, '', 'fathi', 'fffgg@gmail.com', '$2y$10$JSIIwRH/0OH6hJykPefvCOYTHrAYaIK.6td00USUVK.6ujBi5babG', 9, '2025-09-15 10:31:37', '2025-09-16 01:28:02'),
+(37, 33, '', 'sanddd', 'sanddd@gmail.com', '$2y$10$CAxFjlrhN5qoZIiIpOX8GuTACRHnnrCvQ1DIYInQCyyCRcx1dR.OO', 9, '2025-09-15 10:43:48', '2025-09-16 01:27:54'),
+(38, 18, '', 'www', 'admina@gmail.com', '$2y$10$ukvTw8If6ydsfe3LbGln8.4zxRoc7c2BCaRbE.RslRWSy8LDkWMpq', 1, '2025-09-15 11:18:28', '2025-09-15 16:48:28'),
+(39, 19, '', 'dsdd', 'mufeessdahidaya@gmail.com', '$2y$10$gVMg1yOK/Rog9LnIYR4aVeAj0MqqH1sIuKqTGUrgdw5pdHs5r3.2q', 1, '2025-09-15 11:18:54', '2025-09-15 16:48:54'),
+(40, 33, '', 'wwwws', 'fatho@gmail.com', '$2y$10$t5SjmuRAHyy1oWG1g/0UYeOBHi9hvOhgtHeieLyxYMTLxgBZcjMIW', 1, '2025-09-15 11:20:58', '2025-09-15 11:27:28'),
+(41, 31, '', 'dddd', 'dddd@gmail.com', '$2y$10$Kak60O7tDw7DpiOTOGa3n.NHqlYAqaH6K7pC9HIVpTKHJoy80neVC', 1, '2025-09-15 11:29:05', '2025-09-15 16:59:05'),
+(42, 87, '', 'achu', 'achu@gmail.com', '$2y$10$.s5iYBheE6APR3.m/2JyYuL3gvBTVxZFcqbU9GOmUAlKi7Uxkz6Ue', 2, '2025-09-15 22:12:09', '2025-09-16 03:42:09'),
+(43, 87, '', 'sandra', 'san@gmail.com', '$2y$10$YxFedhNvbsKut9VpOz2ghuxe3viIxBgwxWolvx6Fmy4EtVOpCnnYe', 2, '2025-09-15 22:23:40', '2025-09-16 03:53:40'),
+(44, 87, '', 'sandra', 'san11@gmail.com', '$2y$10$03CYTwhMebDng073HcXb7uGnuk43rnv.vc.dxUKCzhudfVoqs3LzW', 2, '2025-09-15 22:30:48', '2025-09-16 04:00:48'),
+(45, 87, '', 'shaff', 'admiyyn@gmail.com', '$2y$10$8U7cJkONgGz78HkuSkvzF.iCCPbRT22l0EUciGcgunPySJlO1DniG', 9, '2025-09-15 22:35:23', '2025-09-16 01:20:22'),
+(46, 88, '', 'shaff', 'adm@gmail.com', '$2y$10$3t4vMgA2FJaNQYQ92iv5K.HuisytYT6sB/YnitEFaKEFAu9X9N9ky', 9, '2025-09-15 23:04:16', '2025-09-15 23:04:25'),
+(47, 88, '', 'abcd', 'alrai@gmail.com', '$2y$10$OQnrAdpykL01xpCAUS5QieGCNIW651urjwEtcjL/AReP1t9Qb6X32', 9, '2025-09-15 23:10:01', '2025-09-15 23:26:14'),
+(48, 88, '', 'sinan', 'sinan@gmail.com', '$2y$10$5xjrpfAMUl6UhOkO3D4S9O3jvl19C9lO/nyAvE/SgdhnaTSdRGvw.', 1, '2025-09-16 01:19:23', '2025-09-16 01:20:16');
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
