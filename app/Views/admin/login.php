@@ -110,18 +110,19 @@
         var url = "<?php echo base_url('admin/login'); ?>";
 
          $.post(url, $('#loginForm').serialize(), function(data) {
-    if (data.success) {
-        window.location.href = data.redirect;
-    } else {
-        showAlert(data.message, 'danger');
-        $btn.prop('disabled', false).html('Log in');
-    }
-}, 'json').fail(function(xhr) {
-    showAlert("Something went wrong. Please try again.", 'danger');
-    $btn.prop('disabled', false).html('Log in');
-});
+            if (data.status == 'success') {
+                window.location.href = data.redirect;
+            } else {
+                showAlert(data.message, 'danger');
+                $btn.prop('disabled', false).html('Log in');
+            }
+        }, 'json').fail(function(xhr) {
+            showAlert("Something went wrong. Please try again.", 'danger');
+            $btn.prop('disabled', false).html('Log in');
+        });
 
-});
+    });
+
     function showAlert(message, type = 'danger') {
         let $alertBox = $('#errorDiv');
         $alertBox
@@ -130,11 +131,11 @@
             .fadeIn();
 
 
-        // setTimeout(() => {
-        //     $('#alertbox').fadeOut(function() {
-        //         $(this).remove();
-        //     });
-        // }, 3000);
+        setTimeout(() => {
+            $('#alertbox').fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
     }
 
 
