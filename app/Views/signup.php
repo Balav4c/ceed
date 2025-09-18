@@ -122,7 +122,7 @@
 
             if (!passwordPattern.test(password)) {
                 $("#passwordError").text(
-                    "Password must be 8+ chars, include 1 uppercase and 1 special character."
+                    "Minimum 8 chars with one uppercase and one special chars required"
                 );
                 return false;
             } else {
@@ -170,7 +170,7 @@
 
             // Check empty fields first
             if (!name || !email || !password || !cpassword) {
-                showAlert("Please fill in all fields.", "danger");
+                showAlert("Fill in all required fields.", "danger");
                 return;
             }
 
