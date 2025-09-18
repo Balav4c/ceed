@@ -16,28 +16,25 @@
 
                     <div class="mb-3">
                         <label>Description</label>
-                        <textarea name="description" maxlength="250" class="form-control"><?= $course['description'] ?? '' ?></textarea>
+                        <textarea name="description" class="form-control"><?= $course['description'] ?? '' ?></textarea>
                     </div>
 
                     <div class="mb-3">
-                        <label>Total Duration (weeks)</label>
+                        <label>Total Duration (In Weeks)</label>
                         <input type="number" name="duration_weeks" class="form-control" value="<?= $course['duration_weeks'] ?? '' ?>" required>
                     </div>
-
-                    <!-- <h5>Add Modules</h5> -->
-                    <!-- <div class="table-responsive"> -->
-
-                    <!-- <button type="button" class="btn btn-outline-primary mb-34" id="addModule">Add Module</button> -->
                     <br><br>
                     <div class="col-12 d-flex justify-content-end gap-2">
                         <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary" id="saveBtn">Save</button>
-                        <a href="<?= base_url('admin/add_module') ?>" class="btn btn-primary">Add Module</a>
+                        <!-- <a href="<?= base_url('admin/add_module') ?>" class="btn btn-primary">Add Module</a> -->
                     </div>
                 </form>
             </div>
         </div>
     </div>
 </div>
+
+
 
 

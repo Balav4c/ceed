@@ -122,9 +122,11 @@
 
 }
 .nav-link.active {
-    background-color: #0d6efd; /* Bootstrap primary */
-    color: #fff !important;
-    font-weight: bold;
+    background-color: #03142e;
+    font-weight: bold !important;
+}
+.dt-type-numeric{
+  text-align: left;
 }
 /* dashboard */
  .welcome-container {

@@ -1,0 +1,160 @@
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1:3306
+-- Generation Time: Sep 17, 2025 at 10:03 AM
+-- Server version: 9.1.0
+-- PHP Version: 8.2.26
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `ceed`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course`
+--
+
+DROP TABLE IF EXISTS `course`;
+CREATE TABLE IF NOT EXISTS `course` (
+  `course_id` int NOT NULL AUTO_INCREMENT,
+  `name` varchar(128) NOT NULL,
+  `description` varchar(256) NOT NULL,
+  `duration_weeks` int NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int NOT NULL COMMENT '1  active \r\n 2 inactive\r\n9 delete',
+  PRIMARY KEY (`course_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `course`
+--
+
+INSERT INTO `course` (`course_id`, `name`, `description`, `duration_weeks`, `created_at`, `updated_at`, `status`) VALUES
+(1, 'web development', 'web development ', 1, '2025-09-17 05:12:25', '2025-09-17 00:53:06', 2),
+(4, 'fchgfvj', 'rdyfui', 2, '2025-09-17 02:28:26', '2025-09-17 02:30:35', 1),
+(2, 'drgfd', 'rt5rf', 2, '2025-09-17 01:43:37', '2025-09-17 02:00:55', 9),
+(3, 'gsdvge', 'wgwdvhsedi', 2, '2025-09-17 01:45:00', '2025-09-17 02:10:29', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `course_modules`
+--
+
+DROP TABLE IF EXISTS `course_modules`;
+CREATE TABLE IF NOT EXISTS `course_modules` (
+  `module_id` int NOT NULL AUTO_INCREMENT,
+  `course_id` int NOT NULL,
+  `module_name` varchar(128) NOT NULL,
+  `duration_weeks` varchar(50) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`module_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `course_modules`
+--
+
+INSERT INTO `course_modules` (`module_id`, `course_id`, `module_name`, `duration_weeks`, `created_at`, `updated_at`) VALUES
+(1, 0, 'introduction', 'week 1', '2025-09-17 05:45:24', '2025-09-17 05:45:24'),
+(2, 2, 'fc', 'week 1', '2025-09-17 01:43:37', '2025-09-17 01:43:37'),
+(3, 3, 'ygdu', 'week 1', '2025-09-17 01:45:00', '2025-09-17 01:45:00'),
+(4, 4, 'tgfvhy', 'week 1', '2025-09-17 02:28:26', '2025-09-17 02:28:26');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `roles`
+--
+
+DROP TABLE IF EXISTS `roles`;
+CREATE TABLE IF NOT EXISTS `roles` (
+  `role_id` int NOT NULL AUTO_INCREMENT,
+  `role_name` varchar(128) NOT NULL,
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `status` int NOT NULL COMMENT ' 1  active\r\n2  inactive\r\n9 delete',
+  PRIMARY KEY (`role_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=89 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `roles`
+--
+
+INSERT INTO `roles` (`role_id`, `role_name`, `created_at`, `updated_at`, `status`) VALUES
+(88, 'Staff', '2025-09-15 22:57:51', '2025-09-17 00:40:57', 2),
+(87, 'Admin', '2025-09-15 22:11:26', '2025-09-15 22:57:34', 1);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `role_menus`
+--
+
+DROP TABLE IF EXISTS `role_menus`;
+CREATE TABLE IF NOT EXISTS `role_menus` (
+  `rolemenu_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
+  `menu_name` varchar(256) NOT NULL,
+  `access` set('1','0') NOT NULL,
+  PRIMARY KEY (`rolemenu_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=252 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `role_menus`
+--
+
+INSERT INTO `role_menus` (`rolemenu_id`, `role_id`, `menu_name`, `access`) VALUES
+(251, 88, 'Manage User', '1'),
+(250, 88, 'Dashboard', '1'),
+(249, 87, 'Manage Role', '1'),
+(248, 87, 'Manage User', '1'),
+(247, 87, 'Dashboard', '1');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `user`
+--
+
+DROP TABLE IF EXISTS `user`;
+CREATE TABLE IF NOT EXISTS `user` (
+  `user_id` int NOT NULL AUTO_INCREMENT,
+  `role_id` int NOT NULL,
+  `role_name` varchar(256) NOT NULL,
+  `name` varchar(128) NOT NULL,
+  `email` varchar(256) NOT NULL,
+  `password` varchar(256) NOT NULL,
+  `status` int NOT NULL DEFAULT '1' COMMENT '1 active \r\n2 inactive\r\n9 delete',
+  `created_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`user_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=52 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+--
+-- Dumping data for table `user`
+--
+
+INSERT INTO `user` (`user_id`, `role_id`, `role_name`, `name`, `email`, `password`, `status`, `created_at`, `updated_at`) VALUES
+(1, 1, 'admin', 'Admin', 'admin@gmail.com', '$2y$10$U2pbffipUyKHNiwD9cDRF.P3vHYOOphWrwlZaO1Grmz66IdrZAL7y', 9, '2025-09-11 17:02:07', '2025-09-14 11:30:13'),
+(51, 87, '', 'shaff', 'san@gmail.com', '$2y$10$AlEW7PZp.6kaD1EG570O8OvGqjWovEIfePmf3FiEBckzpflF1x6nC', 1, '2025-09-17 04:32:10', '2025-09-17 10:02:10');
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

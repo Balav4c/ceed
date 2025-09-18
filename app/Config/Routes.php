@@ -74,7 +74,6 @@ $routes->post('admin/manage_course/update/(:num)', 'admin\Course::update/$1');
 $routes->post('admin/manage_course/delete', 'admin\Course::delete');
 $routes->post('admin/manage_course/toggleStatus', 'admin\Course::toggleStatus');
 
-// Module Routes
 // Open add_module with course_id
 $routes->get('admin/add_module/(:num)', 'admin\CourseModule::index/$1');
 $routes->get('admin/manage_module', 'admin\CourseModule::addModule');
