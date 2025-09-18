@@ -44,7 +44,7 @@ class Course extends BaseController
     $id = $this->request->getPost('course_id');
     $courseData = [
         'name'          => $this->request->getPost('name'),
-        'description'   => substr($this->request->getPost('description'), 0, 250),
+        'description'   => $this->request->getPost('example'),
         'duration_weeks'=> $this->request->getPost('duration_weeks'),
         'status'         => 1
     ];
