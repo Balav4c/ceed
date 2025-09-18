@@ -11,7 +11,13 @@ class Login extends BaseController
     public function index(): string
     {
       
-       return view('login');
+       return view('signin');
+
+    }
+      public function signup(): string
+    {
+      
+       return view('signup');
 
     }
    public function login()
@@ -28,6 +34,7 @@ class Login extends BaseController
         if($user){
             $session = session();
             $session->set([
+                 'isLoggedIn' => true, 
                 'user_id'    => $user->user_id,
                 'user_name'  => $user->name,
                 'user_email' => $user->email,
@@ -35,7 +42,8 @@ class Login extends BaseController
 
             return $this->response->setJSON([
                 "status"  => "success",
-                "message" => "Login Successful"
+                "message" => "Login Successful",
+                 "redirect" => base_url('/')
             ]);
         }else{
             return $this->response->setJSON([
@@ -50,5 +58,73 @@ class Login extends BaseController
         "message" => "Email and Password are required"
     ]);
 }
+public function saveUser()
+{
+    $name      = $this->request->getPost('name');
+    $email     = $this->request->getPost('email');
+    $password  = $this->request->getPost('password');
+    $cpassword = $this->request->getPost('cpassword');
+
+    if ($name && $email && $password && $cpassword) {
+        // Check if passwords match
+        if ($password !== $cpassword) {
+            return $this->response->setJSON([
+                "status"  => "error",
+                "message" => "Passwords do not match"
+            ]);
+        }
+
+        // Validate password strength
+        if (strlen($password) < 8 || 
+            !preg_match('/[A-Z]/', $password) ||     
+            !preg_match('/[\W]/', $password)) {     
+            return $this->response->setJSON([
+                "status"  => "error",
+                "message" => "Password must be at least 8 characters long, contain one uppercase letter and one special character."
+            ]);
+        }
+
+        $loginModel = new LoginModel();
+
+        // Check if email already exists
+        $existingUser = $loginModel->where('email', $email)->first();
+        if ($existingUser) {
+            return $this->response->setJSON([
+                "status"  => "error",
+                "message" => "Email already registered"
+            ]);
+        }
+
+        // Hash the password
+        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+
+        // Insert user data
+        $userData = [
+            'role_id'  => 2, // default role, you can change as needed
+            'name'     => $name,
+            'email'    => $email,
+            'password' => $hashedPassword,
+            'status'   => 1
+        ];
+
+        if ($loginModel->insert($userData)) {
+            return $this->response->setJSON([
+                "status"  => "success",
+                "message" => "Account created successfully"
+            ]);
+        } else {
+            return $this->response->setJSON([
+                "status"  => "error",
+                "message" => "Failed to create account. Please try again."
+            ]);
+        }
+    }
+
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "All fields are required"
+    ]);
+}
+
 
 }
