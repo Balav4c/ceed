@@ -1,16 +1,29 @@
 <?php
 $session = session();
 $roleId = $session->get('role_id');
-$menus = $session->get('role_menu'); 
+$menus   = $session->get('role_menu'); 
 
-$uri = service('uri');
-$segment2 = $uri->getSegment(2); // controller segment
+$uri          = service('uri');
+$currentPath  = uri_string(); // e.g. "admin/manage_user/edit/5"
 
+// define menus with keywords that should keep it active
 $allMenus = [
-    'Manage Role'       => ['url' => 'manage_role', 'icon' => 'fas fa-th-list'],
-    'Manage Admin User' => ['url' => 'manage_user', 'icon' => 'bi bi-person-fill'],
-    'Manage Course'     => ['url' => 'manage_course', 'icon' => 'bi bi-book'],
-    // Add more menus
+    'Manage Role' => [
+        'url'   => 'manage_role',
+        'icon'  => 'fas fa-th-list',
+        'match' => ['manage_role', 'add_role']
+    ],
+    'Manage Admin User' => [
+        'url'   => 'manage_user',
+        'icon'  => 'bi bi-person-fill',
+        'match' => ['manage_user', 'adduser']
+    ],
+    'Manage Course' => [
+        'url'   => 'manage_course',
+        'icon'  => 'bi bi-book',
+        'match' => ['manage_course', 'add_course', 'add_module']
+    ],
+    // add more menus with their subpage keywords
 ];
 ?>
 
@@ -28,7 +41,7 @@ $allMenus = [
             <ul class="nav nav-secondary">
 
                 <!-- Dashboard -->
-                <li class="nav-item <?= ($segment2 == 'dashboard') ? 'active' : '' ?>">
+                <li class="nav-item <?= ($uri->getSegment(2) == 'dashboard') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
@@ -44,11 +57,17 @@ $allMenus = [
                     <?php
                     if ($roleId != 1 && (!in_array($name, $menus))) continue;
 
-                    // ✅ highlight if current controller matches menu url
-                    $isActive = ($segment2 === $data['url']);
+                    // ✅ check if any keyword from "match" exists in current URL
+                    $isActive = false;
+                    foreach ($data['match'] as $keyword) {
+                        if (strpos($currentPath, $keyword) !== false) {
+                            $isActive = true;
+                            break;
+                        }
+                    }
                     ?>
                     <li class="nav-item <?= $isActive ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= base_url('admin/'.$data['url']) ?>">
+                        <a class="nav-link <?= $isActive ? 'active' : '' ?>" href="<?= base_url('admin/'.$data['url']) ?>">
                             <i class="<?= $data['icon'] ?>"></i>
                             <p><?= esc($name) ?></p>
                         </a>
@@ -67,6 +86,10 @@ $allMenus = [
         </div>
     </div>
 </div>
+
+
+
+
 
 <script>
 $(document).ready(function() {
