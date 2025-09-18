@@ -1,17 +1,16 @@
-  <!-- Sidebar -->
-  <?php
+<?php
 $session = session();
 $roleId = $session->get('role_id');
-$menus = $session->get('role_menu'); // array of allowed menu names for non-admin
-$uri = service('uri');
-$segment1 = $uri->getSegment(2);
+$menus = $session->get('role_menu'); 
 
-// Define all available menus with their URLs and icons
+$uri = service('uri');
+$segment2 = $uri->getSegment(2); // controller segment
+
 $allMenus = [
-    'Manage Role'       => ['url' => 'admin/manage_role', 'icon' => 'fas fa-th-list'],
-    'Manage Admin User' => ['url' => 'admin/manage_user', 'icon' => 'bi bi-person-fill'],
-    'Manage Course'     => ['url' => 'admin/manage_course', 'icon' => 'bi bi-book'],
-    // Add more menus here if needed
+    'Manage Role'       => ['url' => 'manage_role', 'icon' => 'fas fa-th-list'],
+    'Manage Admin User' => ['url' => 'manage_user', 'icon' => 'bi bi-person-fill'],
+    'Manage Course'     => ['url' => 'manage_course', 'icon' => 'bi bi-book'],
+    // Add more menus
 ];
 ?>
 
@@ -19,13 +18,8 @@ $allMenus = [
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
             <a href="<?= base_url('admin/dashboard') ?>" class="logo">
-                <img src="<?= base_url().ASSET_PATH; ?>admin/assets/img/logo.png" alt="navbar brand" class="navbar-brand" height="50" />
+                <img src="<?= base_url().ASSET_PATH; ?>admin/assets/img/logo.png" class="navbar-brand" height="50" />
             </a>
-            <div class="nav-toggle">
-                <button class="btn btn-toggle toggle-sidebar"><i class="gg-menu-right"></i></button>
-                <button class="btn btn-toggle sidenav-toggler"><i class="gg-menu-left"></i></button>
-            </div>
-            <button class="topbar-toggler more"><i class="gg-more-vertical-alt"></i></button>
         </div>
     </div>
 
@@ -33,8 +27,8 @@ $allMenus = [
         <div class="sidebar-content">
             <ul class="nav nav-secondary">
 
-                <!-- Dashboard is always visible -->
-                <li class="nav-item <?= ($segment1 == 'dashboard') ? 'active' : '' ?>">
+                <!-- Dashboard -->
+                <li class="nav-item <?= ($segment2 == 'dashboard') ? 'active' : '' ?>">
                     <a class="nav-link" href="<?= base_url('admin/dashboard') ?>">
                         <i class="fas fa-home"></i>
                         <p>Dashboard</p>
@@ -46,17 +40,15 @@ $allMenus = [
                     <h4 class="text-section">Menus</h4>
                 </li>
 
-                <!-- Loop through menus -->
-                <?php
-                foreach ($allMenus as $name => $data):
-                    // Skip Dashboard as it is already displayed
-                    if ($name === 'Dashboard') continue;
-
-                    // For non-admin users, only show allowed menus
+                <?php foreach ($allMenus as $name => $data): ?>
+                    <?php
                     if ($roleId != 1 && (!in_array($name, $menus))) continue;
-                ?>
-                    <li class="nav-item <?= ($segment1 == basename($data['url'])) ? 'active' : '' ?>">
-                        <a class="nav-link" href="<?= base_url($data['url']) ?>">
+
+                    // ✅ highlight if current controller matches menu url
+                    $isActive = ($segment2 === $data['url']);
+                    ?>
+                    <li class="nav-item <?= $isActive ? 'active' : '' ?>">
+                        <a class="nav-link" href="<?= base_url('admin/'.$data['url']) ?>">
                             <i class="<?= $data['icon'] ?>"></i>
                             <p><?= esc($name) ?></p>
                         </a>
@@ -76,9 +68,7 @@ $allMenus = [
     </div>
 </div>
 
-
-  <!-- End Sidebar -->
-  <script>
+<script>
 $(document).ready(function() {
     $("#logout_btn").on("click", function(e) {
         swal({
@@ -87,7 +77,7 @@ $(document).ready(function() {
             icon: "warning",
             buttons: {
                 confirm: {
-                    text: "Yes, logout",
+                    text: "Logout",
                     className: "btn btn-success",
                 },
                 cancel: {
@@ -104,4 +94,4 @@ $(document).ready(function() {
         });
     });
 });
-  </script>
+</script>
