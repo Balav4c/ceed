@@ -64,9 +64,16 @@
                                 </small>
                             </div>
                         </div>
+                        <!--Captcha-->
+                        <div class="g-recaptcha" data-sitekey="6Le-VXcrAAAAAFdEqJLtM5DxM6GoGl7cJdV6hknL"></div>
+                        <br>
 
 
-                        <button type="submit" class="btn btn-signin w-100 mb-3">Sign In</button>
+                        <!-- <button type="submit" id="signincheck" class="btn btn-signin w-100 mb-3">Sign In</button> -->
+                        <button type="submit" id="signincheck" class="btn btn-signin w-100 mb-3">
+                            <span class="spinner-border spinner-border-sm me-2 d-none" id="loginSpinner"></span>
+                            <span id="loginText">Sign In</span>
+                        </button>
 
                         <!-- <div class="text-center mb-3">or</div> -->
                         <div class="separator text-center mb-3">or</div>
@@ -79,7 +86,8 @@
                         </button>
 
                         <div class="text-center">
-                            Don’t have an account? <a href="#" class="login-text-color">Sign Up</a>
+                            Don’t have an account? <a href="<?= base_url('signup') ?>" class="login-text-color">Sign
+                                Up</a>
                         </div>
                     </form>
                 </div>
@@ -90,50 +98,106 @@
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/app.js"></script>
-
+    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <script>
-   $(document).ready(function() {
-    $("#loginForm").submit(function(e) {
-        e.preventDefault(); 
-    
-        $.ajax({
-            url: "<?= base_url('auth/login'); ?>",
-            type: "POST",
-            data: $(this).serialize(),
-            dataType: "json",
-            success: function(response) {
-                if (response.status === "success") {
-                    showAlert(response.message, 'success');
+    $(document).ready(function() {
+        $("#loginForm").submit(function(e) {
+            e.preventDefault();
 
-                    // redirect to dashboard after 1 sec
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('/'); ?>";
-                    }, 1000);
-                } else {
-                    showAlert(response.message, 'danger');
-                }
-            },
-            error: function() {
-                showAlert("Something went wrong. Please try again.", 'danger');
+            let email = $("#email").val().trim();
+            let password = $("#password").val().trim();
+            let errorMessage = "";
+
+            if (email === "" && password === "") {
+                errorMessage = "Please enter email and password.";
+            } else if (email === "") {
+                errorMessage = "Please enter your email.";
+            } else if (password === "") {
+                errorMessage = "Please enter your password.";
             }
+
+            if (errorMessage !== "") {
+                showAlert(errorMessage, "danger");
+                return;
+            }
+
+            var response = grecaptcha.getResponse();
+            if (response.length === 0) {
+                showAlert("Please complete the reCAPTCHA.", "danger");
+                return;
+            }
+
+            let $btn = $("#signincheck");
+            let $spinner = $("#loginSpinner");
+            let $btnText = $("#loginText");
+
+            // 👉 Show spinner and disable button
+            $btn.prop("disabled", true);
+            $spinner.removeClass("d-none");
+            $btnText.text("Signing in...");
+
+            $.ajax({
+                url: "<?= base_url('auth/login'); ?>",
+                type: "POST",
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function(response) {
+                    if (response.status === "success") {
+                        showAlert(response.message, "success");
+
+                        setTimeout(() => {
+                            window.location.href = "<?= base_url('/'); ?>";
+                        }, 1000);
+                    } else {
+                        showAlert(response.message, "danger");
+                        // reset button so user can try again
+                        $btn.prop("disabled", false);
+                        $spinner.addClass("d-none");
+                        $btnText.text("Sign In");
+                    }
+                },
+                error: function() {
+                    showAlert("Something went wrong. Please try again.", "danger");
+                    // reset button on error
+                    $btn.prop("disabled", false);
+                    $spinner.addClass("d-none");
+                    $btnText.text("Sign In");
+                },
+            });
         });
     });
-});
 
-//Reusable Alert Function
-function showAlert(message, type = 'danger') {
-    let $alertBox = $('#responseMessage'); // container div in your HTML
-    $alertBox
-        .hide()
-        .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
-        .fadeIn();
 
-    setTimeout(() => {
-        $('#alertbox').fadeOut(function() {
-            $(this).remove();
-        });
-    }, 3000);
-}
+    // Reusable Alert Function
+    function showAlert(message, type = "danger") {
+        let $alertBox = $("#responseMessage"); // container div in your HTML
+        $alertBox
+            .hide()
+            .html('<div id="alertbox" class="alert alert-' + type + '">' + message + "</div>")
+            .fadeIn();
+
+        setTimeout(() => {
+            $("#alertbox").fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
+
+
+    //Reusable Alert Function
+    function showAlert(message, type = 'danger') {
+        let $alertBox = $('#responseMessage'); // container div in your HTML
+        $alertBox
+            .hide()
+            .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
+            .fadeIn();
+
+        setTimeout(() => {
+            $('#alertbox').fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
+    }
 
 
     //Password Show and hide
