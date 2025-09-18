@@ -126,5 +126,15 @@ public function saveUser()
     ]);
 }
 
+public function logout()
+{
+    $session = session();
+    $session->destroy(); 
+    return $this->response->setJSON([
+        "status" => "success",
+        "message" => "Logged out successfully"
+    ]);
+}
+
 
 }

@@ -1,0 +1,10 @@
+.drop-menu{
+  color: #a96b1f !important;
+    text-decoration: none;
+    font-size: 14px !important;
+    text-transform: uppercase;
+    padding: 0px 20px !important;
+}
+.btn-user{
+  border: none !important; 
+}
