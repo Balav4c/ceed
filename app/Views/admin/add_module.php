@@ -26,23 +26,16 @@
                                 <div class="col-md-6">
                                     <div class="page-wrapper box-content width-word">
                                         <label for="example">Description</label>
-                                        <textarea class="content" id="example" name="example"></textarea>
+                                        <textarea class="content" id="example" name="module_description[]"></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 ">
                                     <div class="page-wrapper box-content width-word">
-                                        <!-- <ins class="adsbygoogle" style="display:block"
-                                            data-ad-client="ca-pub-2783044520727903" data-ad-slot="7325992188"
-                                            data-ad-format="auto" data-full-width-responsive="true"></ins>
-                                        <script>
-                                            (adsbygoogle = window.adsbygoogle || []).push({});
-                                        </script> -->
                                         <label>Module Video</label>
-                                        <div id="fileUpload"></div>
+                                        <div id="fileUpload" name="module_videos[]"></div>
                                     </div>
                                 </div>
-                            </div>
-                            
+                            </div>  
                         </div>
                     </div>
 

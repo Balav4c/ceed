@@ -4,7 +4,7 @@
             <div id="messageBox" class="alert d-none text-center"  role="alert"></div>
             <div class="card-header d-flex justify-content-between">
                 <h3>Manage Modules</h3>
-                <a href="<?= base_url('admin/add_module') ?>" class="btn btn-primary">Add Module</a>
+                <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back To Course</a>
             </div>
             <div class="card-body">
                 <table id="moduleTable" class="table table-bordered">
