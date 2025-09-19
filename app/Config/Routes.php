@@ -17,6 +17,8 @@ $routes->post('save/user','Login::saveUser');
 $routes->get('logout', 'Login::logout');
 
 $routes->get('profile', 'UserProfile::index');
+$routes->post('save/profile', 'UserProfile::saveProfile');
+$routes->post('change/password', 'UserProfile::changePassword');
 
 
 
