@@ -42,7 +42,7 @@
                     <button type="button" class="btn btn-outline-primary mb-3 " id="addModule">Add Module</button>
                     <button type="button" class="btn btn-danger mb-3 remove-module">Remove</button>
                     <div class="col-12 d-flex justify-content-end gap-2">
-                        <a href="<?= base_url('admin/manage_module') ?>" class="btn btn-secondary">Back</a>
+                        <a href="<?= base_url('admin/add_course') ?>" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary" id="saveBtn">Save Module</button>
                     </div>
                 </form>

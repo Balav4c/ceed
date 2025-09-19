@@ -36,52 +36,74 @@ class CourseModule extends BaseController
         return $template;
 
     }
-    public function save()
-    {
-        $courseId = $this->request->getPost('course_id');
-        $moduleNames = $this->request->getPost('module_name');
-        $durations = $this->request->getPost('module_duration');
-        $descriptions = $this->request->getPost('module_description');
-        $videoFiles = $this->request->getFileMultiple('module_videos');
+   public function save()
+{
+    $courseId = $this->request->getPost('course_id');
+    $moduleNames = $this->request->getPost('module_name');
+    $durations = $this->request->getPost('module_duration');
+    $descriptions = $this->request->getPost('module_description');
+    $videoFiles = $this->request->getFileMultiple('module_videos');
 
-        foreach ($moduleNames as $index => $name) {
-            if (empty($name)) {
+    $allSuccess = true;
+    $errorMsg = '';
+
+    foreach ($moduleNames as $index => $name) {
+        if (empty($name)) {
+            $allSuccess = false;
+            $errorMsg = 'Module Name cannot be empty';
+            continue;
+        }
+
+        $moduleData = [
+            'course_id' => $courseId,
+            'module_name' => $name,
+            'duration_weeks' => $durations[$index] ?? null,
+            'description' => $descriptions[$index] ?? null,
+            'status' => 1
+        ];
+
+        $this->moduleModel->insert($moduleData);
+        $moduleId = $this->moduleModel->insertID();
+
+        if (!empty($videoFiles[$index]) && $videoFiles[$index]->isValid() && !$videoFiles[$index]->hasMoved()) {
+            $file = $videoFiles[$index];
+            $allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+
+            if (!in_array($file->getClientMimeType(), $allowedTypes)) {
+                $allSuccess = false;
+                $errorMsg = 'Only video files are allowed';
                 continue;
             }
 
-            $moduleData = [
-                'course_id' => $courseId,
-                'module_name' => $name,
-                'duration_weeks' => $durations[$index] ?? null,
-                'description' => $descriptions[$index] ?? null,
-                'status' => 1
-            ];
-
-            $this->moduleModel->insert($moduleData);
-            $moduleId = $this->moduleModel->insertID();
-
-            if (!empty($videoFiles[$index]) && $videoFiles[$index]->isValid() && !$videoFiles[$index]->hasMoved()) {
-                $file = $videoFiles[$index];
-                $newName = $file->getRandomName();
-
-                $uploadPath = FCPATH . 'uploads/videos';
-                if (!is_dir($uploadPath)) {
-                    mkdir($uploadPath, 0777, true);
-                }
-
-                $file->move($uploadPath, $newName);
-
-                $videoData = [
-                    'module_id' => $moduleId,
-                    'video_file' => $newName
-                ];
-                $this->videoModel->insert($videoData);
+            $newName = $file->getRandomName();
+            $uploadPath = FCPATH . 'uploads/videos';
+            if (!is_dir($uploadPath)) {
+                mkdir($uploadPath, 0777, true);
             }
-        }
 
-        return redirect()->to(base_url('admin/manage_module'))
-            ->with('success', 'Modules & Videos Added Successfully!');
+            $file->move($uploadPath, $newName);
+
+            $videoData = [
+                'module_id' => $moduleId,
+                'video_file' => $newName
+            ];
+            $this->videoModel->insert($videoData);
+        }
     }
+
+    if ($allSuccess) {
+        return $this->response->setJSON([
+            'status' => 'success',
+            'msg' => 'Modules & Videos Added Successfully!'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => $errorMsg ?: 'Some modules could not be saved'
+        ]);
+    }
+}
+
     public function moduleListAjax()
     {
         $request = service('request');
