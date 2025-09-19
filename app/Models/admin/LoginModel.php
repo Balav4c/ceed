@@ -13,19 +13,19 @@ class LoginModel extends Model
     $user = $this->where('email', $email)->first();
 
     if (!$user) {
-        return false; 
+        return 'invalid'; 
     }
     if (!password_verify($password, $user['password'])) {
-        return false; 
+        return 'invalid'; 
     }
     if ($user['role_id'] != 1) {
         if ($user['status'] == 2) {
             return 'suspended';
         } elseif ($user['status'] == 9) {
-            return false; 
+            return 'removed'; // Explicit removed account
         }
     }
-    return (object) $user; 
+    return (object) $user;
 }
 
 }
