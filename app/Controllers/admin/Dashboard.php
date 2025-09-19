@@ -18,7 +18,7 @@ class Dashboard extends BaseController
     }
 
     if ($this->session->get('role_id') != 1) {
-        return redirect()->to(base_url('user/dashboard')); 
+        return redirect()->to(base_url('admin/user_dashboard')); 
     }
 
     $template  = view('admin/common/header');

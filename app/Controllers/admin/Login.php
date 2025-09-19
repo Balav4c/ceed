@@ -2,6 +2,7 @@
 namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 use App\Models\admin\LoginModel;
+use App\Models\admin\RoleMenuModel;
 
 class Login extends BaseController 
 {
@@ -33,20 +34,28 @@ public function login()
     $loginModel = new LoginModel();
     $user = $loginModel->checkLoginUser($email, $password);
 
-    if ($user === false) {
+if ($user === 'invalid') {
     return $this->response->setJSON([
-        "status"  => "error",
+        "success"  => false,
+        "message" => "Invalid email or password."
+    ]);
+}
+
+if ($user === 'removed') {
+    return $this->response->setJSON([
+        "success"  => false,
         "message" => "Access denied. Your account has been removed."
     ]);
 }
 
 if ($user === 'suspended') {
     return $this->response->setJSON([
-        "status"  => "error",
+        "success"  => false,
         "message" => "Your account has been suspended by admin."
     ]);
 }
-$roleMenuModel = new \App\Models\admin\RoleMenuModel();
+
+$roleMenuModel = new RoleMenuModel();
 $menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
 
 $menuNames = array_map(function($menu) {
@@ -67,7 +76,7 @@ $menuNames = array_map(function($menu) {
             : base_url('admin/user_dashboard'); 
 
         return $this->response->setJSON([
-            "status"   => "success",
+            "success"   => true,
             "message"  => "Login successful",
             "redirect" => $redirectUrl
         ]);
