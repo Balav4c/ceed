@@ -3,7 +3,6 @@
     const $saveBtn = $('#saveBtn');
     const $roleForm = $('#roleForm');
     const $roleName = $('#role_name');
-    const $permissions = $('.permission-checkbox, #select_all_permissions');
 
     let originalData = $roleForm.serialize();
 
@@ -23,20 +22,24 @@
         originalData = $roleForm.serialize();
         $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
     }
-        $('#select_all_permissions').on('change', function () {
-            $('.permission-checkbox').prop('checked', $(this).prop('checked'));
-        });
+       const $selectAll = $("#select_all_permissions");
+    const $permissions = $(".permission-checkbox");
+    if ($permissions.length > 0 && $permissions.filter(":checked").length === $permissions.length) {
+        $selectAll.prop("checked", true);
+    }
+    $selectAll.on("change", function () {
+        $permissions.prop("checked", $(this).is(":checked"));
+    });
 
-        $('.permission-checkbox').on('change', function () {
-            if ($('.permission-checkbox:checked').length === $('.permission-checkbox').length) {
-                $('#select_all_permissions').prop('checked', true);
-            } else {
-                $('#select_all_permissions').prop('checked', false);
-            }
-        });
+    $permissions.on("change", function () {
+        if ($permissions.filter(":checked").length === $permissions.length) {
+            $selectAll.prop("checked", true);
+        } else {
+            $selectAll.prop("checked", false);
+        }
+    });
 
         let table = "";
-        // const alertBox = $('.alert');
         table = $('#roleTable').DataTable({
             ajax: {
                 url: "<?= base_url('admin/manage_role/rolelistajax') ?>",

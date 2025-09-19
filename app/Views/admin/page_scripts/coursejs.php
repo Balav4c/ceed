@@ -1,111 +1,121 @@
 <script>
-  $(document).ready(function() {
-     $('.content').richText();
-    const $saveBtn = $('#saveBtn');
-    const $courseForm = $('#courseForm');
-    const base_url = "<?= base_url() ?>";
-    let initialFormData = $courseForm.serialize();
-    $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-    $courseForm.on('input change', 'input, textarea, select', function() {
-        let currentFormData = $courseForm.serialize();
-        if (currentFormData !== initialFormData) {
-            $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
-        } else {
-            $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-        }
-    });
-    $('#courseTable').on('click', '.read-desc', function() {
-        var fullDescription = $(this).data('description'); 
-        $('#modalDescription').text(fullDescription); 
-        var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-        myModal.show();
-    });
-
-
-    $('#courseForm').on('submit', function (e) {
-        e.preventDefault();
-        var form = $(this);
-        var url = form.attr('action');
+    $(document).ready(function () {
+        $('.content').richText();
+        const $saveBtn = $('#saveBtn');
+        const $courseForm = $('#courseForm');
+        const base_url = "<?= base_url() ?>";
+        let initialFormData = $courseForm.serialize();
         $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-      
-        $.post(url, $('#courseForm').serialize(), function(response) {
-            $('#messageBox').removeClass('d-none alert-success alert-danger'); 
-            if (response.status === 'success' || response.status == 1) {
-                $('#messageBox')
-                    .addClass('alert-success')
-                    .text(response.msg || response.message)
-                    .show();
+        $courseForm.on('input change', 'input, textarea, select', function () {
+            let currentFormData = $courseForm.serialize();
+            if (currentFormData !== initialFormData) {
+                $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+            } else {
+                $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+            }
+        });
+        $('#courseTable').on('click', '.read-desc', function () {
+            var fullDescription = $(this).data('description');
+            $('#modalDescription').text(fullDescription);
+            var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+            myModal.show();
+        });
+
+        $(document).on('click', '.view-module', function () {
+            const courseId = $(this).data('id');
+            window.location.href = "<?= base_url('admin/manage_module/') ?>" + courseId;
+        });
+        $('#courseForm').on('submit', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+
+            $.post(url, $('#courseForm').serialize(), function (response) {
+                $('#messageBox').removeClass('d-none alert-success alert-danger');
+                if (response.status === 'success' || response.status == 1) {
+                    $('#messageBox')
+                        .addClass('alert-success')
+                        .text(response.msg || response.message)
+                        .show();
                     initialFormData = $courseForm.serialize();
                     setTimeout(function () {
                         window.location.href = base_url + '/admin/add_module/' + response.course_id;
                     }, 1500);
                     resetFormState();
-            } else {
-                $('#messageBox')
-                    .addClass('alert-danger')
-                    .text(response.message || 'Something went wrong')
-                    .show();
+                } else {
+                    $('#messageBox')
+                        .addClass('alert-danger')
+                        .text(response.message || 'Something went wrong')
+                        .show();
                     checkFormChanges();
-            }
-            setTimeout(function() {
+                }
+
+                setTimeout(function () {
                     $('#messageBox').fadeOut();
                 }, 2000);
-        }, 'json');   
-    });
-    let table = "";
-    const alertBox = $('.alert');
-    table = $('#courseTable').DataTable({
-        ajax: { 
-            url: "<?= base_url('admin/manage_course/courselistajax') ?>",
-            type: "POST",
-            dataSrc: "data"
-        },
-        serverSide: true,
-        processing: true,
-        ordering: true,
-        searching: true,
-        paging: true,
-        dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
-            "<'row'<'col-sm-12'tr>>" +
-            "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
-        drawCallback: function () {
-            $('.dataTables_info').text(function(_, txt) {
-                return txt.replace(/\(filtered.*\)/, '').trim();
-            });
-        },
-        columns: [
-            {
-                data: "slno", className: "text-start" },
-            { data: "name",
-                render: function (data, type, row) {
+            }, 'json');
+        });
+        let table = "";
+        const alertBox = $('.alert');
+        table = $('#courseTable').DataTable({
+            ajax: {
+                url: "<?= base_url('admin/manage_course/courselistajax') ?>",
+                type: "POST",
+                dataSrc: "data"
+            },
+            serverSide: true,
+            processing: true,
+            ordering: true,
+            searching: true,
+            paging: true,
+            dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
+            drawCallback: function () {
+                $('.dataTables_info').text(function (_, txt) {
+                    return txt.replace(/\(filtered.*\)/, '').trim();
+                });
+            },
+            columns: [
+                {
+                    data: "slno", className: "text-start"
+                },
+                {
+                    data: "name",
+                    render: function (data, type, row) {
                         if (!data || typeof data !== 'string') return '';
                         return data.replace(/\b\w/g, c => c.toUpperCase());
                     }
-            },
-           { 
-            data: "description",
-            render: function(data, type, row) {
-                return '<a href="javascript:void(0)" class="read-desc" data-description="' + data + '">Read Description</a>';
-            }
-        },
-            { data: "duration_weeks" },
-            {
-                data: "status",
-                render: function (data, type, row) {
-                    let checked = data == 1 ? 'checked' : '';
-                    return `
+                },
+                {
+                    data: "description",
+                    render: function (data, type, row) {
+                        if (!data) return '<a href="javascript:void(0)" class="read-desc" data-description="">Read Description</a>';
+
+                        let safeData = data.replace(/"/g, '&quot;');
+
+                        return '<a href="javascript:void(0)" class="read-desc" data-description="' + safeData + '">Read Description</a>';
+                    }
+                },
+                { data: "duration_weeks" },
+                {
+                    data: "status",
+                    render: function (data, type, row) {
+                        let checked = data == 1 ? 'checked' : '';
+                        return `
                         <div class="form-check form-switch">
                             <input class="form-check-input toggle-status" type="checkbox" 
                                 data-id="${row.course_id}" ${checked}>
                             
                         </div>
                     `;
-                }
-            },
-            {
-                data: "course_id",
-                render: function (id) {
-                    return `
+                    }
+                },
+                {
+                    data: "course_id",
+                    render: function (id) {
+                        return `
                     <div class="d-flex align-items-center gap-3">
                         <a href="<?= base_url('admin/manage_course/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                             <i class="bi bi-pencil-fill"></i>
@@ -113,74 +123,77 @@
                         <a href="javascript:void(0);" class="delete-all"  data-id="${id}" title="Delete" style="color: #dc3545;" >
                             <i class="bi bi-trash-fill"></i>
                         </a>
+                        <a href="javascript:void(0);" class="view-module" data-id="${id}" title="View Module" style="color:green;">
+                            <i class="bi bi-eye-fill"></i>
+                        </a>
                     </div>
                 `;
-                }
-            },
-        ],
-        order: [[6, 'desc']],
+                    }
+                },
+            ],
+            order: [[6, 'desc']],
             columnDefs: [
-                { searchable: false, orderable: false, targets: [0,3, 5] }
+                { searchable: false, orderable: false, targets: [0, 3, 5] }
             ],
             language: {
                 infoFiltered: "",
             }, scrollX: false,
             autoWidth: false
+        });
+        table.on('order.dt search.dt draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' })
+                .nodes()
+                .each(function (cell, i) {
+                    var pageInfo = table.page.info();
+                    cell.innerHTML = pageInfo.start + i + 1;
+                });
+        });
     });
-    table.on('order.dt search.dt draw.dt', function () {
-        table.column(0, { search: 'applied', order: 'applied' })
-            .nodes()
-            .each(function (cell, i) {
-                var pageInfo = table.page.info();
-                cell.innerHTML = pageInfo.start + i + 1;
-            });
-    });
-});
 
     // toggle status 
-$('#courseTable').on('change', '.toggle-status', function () {
-    let courseId = $(this).data('id');  
-    let newStatus = $(this).is(':checked') ? 1 : 2;
+    $('#courseTable').on('change', '.toggle-status', function () {
+        let courseId = $(this).data('id');
+        let newStatus = $(this).is(':checked') ? 1 : 2;
 
-    $.ajax({
-        url: "<?= base_url('admin/manage_course/toggleStatus') ?>",
-        type: "POST",
-        data: {
-            course_id: courseId,     
-            status: newStatus,
-            '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
-        },
-        dataType: "json",
-        success: function(response) {
-            let $msg = $('#messageBox');
-            $msg.removeClass('d-none alert-success alert-danger');
+        $.ajax({
+            url: "<?= base_url('admin/manage_course/toggleStatus') ?>",
+            type: "POST",
+            data: {
+                course_id: courseId,
+                status: newStatus,
+                '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
+            },
+            dataType: "json",
+            success: function (response) {
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success alert-danger');
 
-            if (response.status === 'success') {
-                $msg.addClass('alert-success').text(response.message).show();
-                setTimeout(function() {
-                    $msg.fadeOut();
-                    table.ajax.reload(null, false);
-                }, 1500);
-            } else {
-                $msg.addClass('alert-danger').text(response.message || 'Failed to update status').show();
-                setTimeout(function() {
-                    $msg.fadeOut();
-                }, 2000);
+                if (response.status === 'success') {
+                    $msg.addClass('alert-success').text(response.message).show();
+                    setTimeout(function () {
+                        $msg.fadeOut();
+                        table.ajax.reload(null, false);
+                    }, 1500);
+                } else {
+                    $msg.addClass('alert-danger').text(response.message || 'Failed to update status').show();
+                    setTimeout(function () {
+                        $msg.fadeOut();
+                    }, 2000);
+                }
+            },
+            error: function (xhr, status, error) {
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success').addClass('alert-danger')
+                    .text('Error updating status').show();
+                setTimeout(function () { $msg.fadeOut(); }, 2000);
             }
-        },
-        error: function(xhr, status, error) {
-            let $msg = $('#messageBox');
-            $msg.removeClass('d-none alert-success').addClass('alert-danger')
-                .text('Error updating status').show();
-            setTimeout(function() { $msg.fadeOut(); }, 2000);
-        }
+        });
     });
-});
     // delete pop up 
 
     $(document).on("click", ".delete-all", function (e) {
         e.preventDefault();
-        let roleId = $(this).data("id"); 
+        let roleId = $(this).data("id");
 
         swal({
             title: "Are You Sure?",
@@ -234,16 +247,16 @@ $('#courseTable').on('change', '.toggle-status', function () {
             }
         });
     });
- $(window).on('keydown', function (e) {
-            if (e.ctrlKey && e.key === 'Enter') {
-                e.preventDefault();
-                $('#saveBtn').trigger('click');
-            }
+    $(window).on('keydown', function (e) {
+        if (e.ctrlKey && e.key === 'Enter') {
+            e.preventDefault();
+            $('#saveBtn').trigger('click');
+        }
 
-            if (e.ctrlKey && e.key.toLowerCase() === 'f') {
-                e.preventDefault();
-                $('#moduleTable').trigger('click');
-            }
-        });
+        if (e.ctrlKey && e.key.toLowerCase() === 'f') {
+            e.preventDefault();
+            $('#courseTable').trigger('click');
+        }
+    });
 </script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

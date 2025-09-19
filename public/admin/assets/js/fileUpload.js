@@ -69,7 +69,7 @@
                                 <td>${preview}</td>
                                 <td>${fileSize}</td>
                                 <td>${fileType}</td>
-                                <td><button type="button" class="deleteBtn"><i class="material-icons-outlined">delete</i></button></td>
+                                <td><button type="button" class="deleteBtn"><i class="bi bi-trash-fill"></i></button></td>
                             </tr>
                         `);
                     });

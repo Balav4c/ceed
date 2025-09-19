@@ -36,117 +36,125 @@ class Course extends BaseController
         $template .= view('admin/common/footer');
         $template .= view('admin/page_scripts/coursejs');
         return $template;
-       
+
     }
 
-  public function save()
-{
-    $id = $this->request->getPost('course_id');
-    $courseData = [
-        'name'          => $this->request->getPost('name'),
-        'description'   => $this->request->getPost('example'),
-        'duration_weeks'=> $this->request->getPost('duration_weeks'),
-        'status'         => 1
-    ];
-    $courseId = $this->courseModel->insert($courseData);
-    if ($id) {
-        $this->courseModel->update($id, $courseData);
-        $courseId = $id;
-        $message = 'Course Updated Successfully!';
-    } else {
-        $courseData['status'] = 1;
-        $this->courseModel->insert($courseData);
-        $courseId = $this->courseModel->insertID();
-        $message = 'Course Saved Successfully! Now Add Modules.';
-    }
+    public function save()
+    {
+        $id = $this->request->getPost('course_id');
+        $name = trim($this->request->getPost('name'));
+        $description = $this->request->getPost('example');
+        $duration_weeks = trim($this->request->getPost('duration_weeks'));
+        if (empty($name) || empty($duration_weeks)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Please Fill In All Mandatory Fields.'
+            ]);
+        }
+        $courseData = [
+            'name' => $this->request->getPost('name'),
+            'description' => $this->request->getPost('example'),
+            'duration_weeks' => $this->request->getPost('duration_weeks'),
+            'status' => 1
+        ];
 
-    $this->moduleModel->where('course_id', $courseId)->delete();
-    $moduleNames = $this->request->getPost('module_name');
-    $durations   = $this->request->getPost('module_duration');
+        if ($id) {
+            $this->courseModel->update($id, $courseData);
+            $courseId = $id;
+            $message = 'Course Updated Successfully!';
+        } else {
+            $this->courseModel->insert($courseData);
+            $courseId = $this->courseModel->insertID();
+            $message = 'Course Saved Successfully! Now Add Modules.';
+        }
+        $this->moduleModel->where('course_id', $courseId)->delete();
+        $moduleNames = $this->request->getPost('module_name');
+        $durations = $this->request->getPost('module_duration');
 
-    if (!empty($moduleNames)) {
-        foreach ($moduleNames as $index => $mname) {
-            if (!empty($mname)) {
-                $this->moduleModel->insert([
-                    'course_id'      => $courseId,
-                    'module_name'    => $mname,
-                    'duration_weeks' => $durations[$index] ?? ''
-                ]);
+        if (!empty($moduleNames)) {
+            foreach ($moduleNames as $index => $mname) {
+                if (!empty($mname)) {
+                    $this->moduleModel->insert([
+                        'course_id' => $courseId,
+                        'module_name' => $mname,
+                        'duration_weeks' => $durations[$index] ?? ''
+                    ]);
+                }
             }
         }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => $message,
+            'course_id' => $courseId
+        ]);
     }
 
-    return $this->response->setJSON([
-        'status'  => 'success',
-        'message' => $message,
-        'course_id' => $courseId
-    ]);
-}
 
-public function courseListAjax()
-{
+    public function courseListAjax()
+    {
 
-    $request = service('request');
+        $request = service('request');
 
-    $draw       = $request->getPost('draw') ?? 1;
-    $fromstart  = $request->getPost('start') ?? 0;
-    $tolimit    = $request->getPost('length') ?? 10;
-    $search     = $request->getPost('search')['value'] ?? '';
+        $draw = $request->getPost('draw') ?? 1;
+        $fromstart = $request->getPost('start') ?? 0;
+        $tolimit = $request->getPost('length') ?? 10;
+        $search = $request->getPost('search')['value'] ?? '';
 
-    $condition = "1=1";
-    if (!empty($search)) {
-        $search = trim(preg_replace('/\s+/', ' ', $search));
-        $noSpaceSearch = str_replace(' ', '', strtolower($search));
-        $esc = $this->courseModel->db->escapeLikeString($noSpaceSearch);
+        $condition = "1=1";
+        if (!empty($search)) {
+            $search = trim(preg_replace('/\s+/', ' ', $search));
+            $noSpaceSearch = str_replace(' ', '', strtolower($search));
+            $esc = $this->courseModel->db->escapeLikeString($noSpaceSearch);
 
-        $condition .= " AND (
+            $condition .= " AND (
             REPLACE(LOWER(name), ' ', '') LIKE '%{$esc}%'
             OR REPLACE(LOWER(description), ' ', '') LIKE '%{$esc}%'
             OR REPLACE(LOWER(duration_weeks), ' ', '') LIKE '%{$esc}%'
         )";
+        }
+
+        $columns = ['slno', 'name', 'description', 'duration_weeks', 'status', 'course_id'];
+        $orderColumnIndex = $request->getPost('order')[0]['column'] ?? 0;
+        $orderDir = $request->getPost('order')[0]['dir'] ?? 'desc';
+        $orderBy = $columns[$orderColumnIndex] ?? 'course_id';
+        if ($orderBy === 'slno') {
+            $orderBy = 'course_id';
+        }
+
+        $courseRecords = $this->courseModel
+            ->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
+
+        $result = [];
+        $slno = $fromstart + 1;
+
+        foreach ($courseRecords as $c) {
+            $result[] = [
+                'slno' => $slno++,
+                'course_id' => $c->course_id,
+                'name' => $c->name,
+                'description' => $c->description,
+                'duration_weeks' => $c->duration_weeks,
+                'status' => $c->status,
+            ];
+        }
+
+        $totalCount = $this->courseModel->getAllCourseCount();
+        $filteredCountObj = $this->courseModel->getFilterCourseCount($condition);
+        $filteredCount = $filteredCountObj->filRecords ?? 0;
+
+        return $this->response->setJSON([
+            "draw" => intval($draw),
+            "recordsTotal" => $totalCount,
+            "recordsFiltered" => $filteredCount,
+            "data" => $result
+        ]);
     }
-
-    $columns = ['slno', 'name', 'description', 'duration_weeks', 'status', 'course_id'];
-    $orderColumnIndex = $request->getPost('order')[0]['column'] ?? 0;
-    $orderDir = $request->getPost('order')[0]['dir'] ?? 'desc';
-    $orderBy = $columns[$orderColumnIndex] ?? 'course_id';
-    if ($orderBy === 'slno') {
-        $orderBy = 'course_id';
-    }
-
-    $courseRecords = $this->courseModel
-        ->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
-
-    $result = [];
-    $slno   = $fromstart + 1;
-
-    foreach ($courseRecords as $c) {
-        $result[] = [
-            'slno'           => $slno++,
-            'course_id'      => $c->course_id,
-            'name'           => $c->name,
-            'description'    => $c->description,
-            'duration_weeks' => $c->duration_weeks,
-            'status'         => $c->status,
-        ];
-    }
-
-    $totalCount       = $this->courseModel->getAllCourseCount();
-    $filteredCountObj = $this->courseModel->getFilterCourseCount($condition);
-    $filteredCount    = $filteredCountObj->filRecords ?? 0;
-
-    return $this->response->setJSON([
-        "draw"            => intval($draw),
-        "recordsTotal"    => $totalCount,
-        "recordsFiltered" => $filteredCount,
-        "data"            => $result
-    ]);
-}
- public function toggleStatus()
+    public function toggleStatus()
     {
         if ($this->request->isAJAX()) {
             $course_id = $this->request->getPost('course_id');
-           $status = (int)$this->request->getPost('status');
+            $status = (int) $this->request->getPost('status');
 
             if (!$course_id || !in_array($status, [1, 2])) {
                 return $this->response->setJSON([
@@ -155,10 +163,10 @@ public function courseListAjax()
                 ]);
             }
 
-           $updated = $this->courseModel->update($course_id, ['status' => $status]);
+            $updated = $this->courseModel->update($course_id, ['status' => $status]);
 
             if ($updated) {
-                return $this->response->setJSON(['status' => 'success','message' =>'Status Updated Successfully!']);
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Status Updated Successfully!']);
             } else {
                 return $this->response->setJSON([
                     'status' => 'error',
@@ -172,74 +180,88 @@ public function courseListAjax()
         ]);
     }
     public function edit($id)
-{
-    $course = $this->courseModel->find($id);
+    {
+        $course = $this->courseModel->find($id);
 
-    $modules = $this->moduleModel->where('course_id', $id)->findAll();
+        // $modules = $this->moduleModel->where('course_id', $id)->findAll();
 
-    $data = [
-        'course'  => $course,
-        'modules' => $modules
-    ];
+        $data = [
+            'course' => $course,
+            // 'modules' => $modules
+        ];
 
-    $template  = view('admin/common/header');
-    $template .= view('admin/common/sidemenu');
-    $template .= view('admin/add_course', $data);
-    $template .= view('admin/common/footer');
-    $template .= view('admin/page_scripts/coursejs'); 
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/add_course', $data);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/coursejs');
 
-    return $template;
-}
+        return $template;
+    }
 
-public function update($id)
-{
-    $courseData = [
-        'name'           => $this->request->getPost('name'),
-        'description'    => substr($this->request->getPost('description'), 0, 250),
-        'duration_weeks' => $this->request->getPost('duration_weeks'),
-    ];
+    // public function update($id)
+// {
+//     $courseData = [
+//         'name'           => $this->request->getPost('name'),
+//         'description'    => $this->request->getPost('description'),
+//         'duration_weeks' => $this->request->getPost('duration_weeks'),
+//     ];
 
-    $this->courseModel->update($id, $courseData);
+    //     $this->courseModel->update($id, $courseData);
 
-    $this->moduleModel->where('course_id', $id)->delete();
+    //     $this->moduleModel->where('course_id', $id)->delete();
 
-    $moduleNames = $this->request->getPost('module_name');
-    $durations   = $this->request->getPost('module_duration');
+    //     $moduleNames = $this->request->getPost('module_name');
+//     $durations   = $this->request->getPost('module_duration');
 
-    if (!empty($moduleNames)) {
-        foreach ($moduleNames as $index => $mname) {
-            if (!empty($mname)) {
-                $this->moduleModel->insert([
-                    'course_id'      => $id,
-                    'module_name'    => $mname,
-                    'duration_weeks' => $durations[$index] ?? ''
-                ]);
-            }
+    //     if (!empty($moduleNames)) {
+//         foreach ($moduleNames as $index => $mname) {
+//             if (!empty($mname)) {
+//                 $this->moduleModel->insert([
+//                     'course_id'      => $id,
+//                     'module_name'    => $mname,
+//                     'duration_weeks' => $durations[$index] ?? ''
+//                 ]);
+//             }
+//         }
+//     }
+//     return $this->response->setJSON(['status' => 'success', 'message' => 'Course Updated Successfully!']);
+
+    // }
+    public function update($id)
+    {
+        $courseData = [
+            'name' => $this->request->getPost('name'),
+            'description' => $this->request->getPost('description'),
+            'duration_weeks' => $this->request->getPost('duration_weeks'),
+        ];
+
+        $this->courseModel->update($id, $courseData);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Course Updated Successfully. Do you want to edit modules?'
+        ]);
+    }
+    public function delete()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
+        }
+
+        $id = $this->request->getPost('id');
+
+        if (!$id) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Missing course ID']);
+        }
+
+        $updated = $this->courseModel->update($id, ['status' => 9]);
+
+        if ($updated) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Course deleted successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
         }
     }
-    return $this->response->setJSON(['status' => 'success', 'message' => 'Course Updated Successfully!']);
-
-}
-
-public function delete()
-{
-    if (!$this->request->isAJAX()) {
-        return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
-    }
-
-    $id = $this->request->getPost('id');
-
-    if (!$id) {
-        return $this->response->setJSON(['status' => 'error', 'message' => 'Missing course ID']);
-    }
-
-    $updated = $this->courseModel->update($id, ['status' => 9]);
-
-    if ($updated) {
-        return $this->response->setJSON(['status' => 'success', 'message' => 'Course deleted successfully.']);
-    } else {
-        return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
-    }
-}
 
 }
