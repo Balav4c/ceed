@@ -185,20 +185,7 @@
     }
 
 
-    //Reusable Alert Function
-    function showAlert(message, type = 'danger') {
-        let $alertBox = $('#responseMessage'); // container div in your HTML
-        $alertBox
-            .hide()
-            .html('<div id="alertbox" class="alert alert-' + type + '">' + message + '</div>')
-            .fadeIn();
 
-        setTimeout(() => {
-            $('#alertbox').fadeOut(function() {
-                $(this).remove();
-            });
-        }, 3000);
-    }
 
 
     //Password Show and hide

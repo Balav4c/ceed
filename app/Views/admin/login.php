@@ -131,11 +131,11 @@
             .fadeIn();
 
 
-        // setTimeout(() => {
-        //     $('#alertbox').fadeOut(function() {
-        //         $(this).remove();
-        //     });
-        // }, 3000);
+        setTimeout(() => {
+            $('#alertbox').fadeOut(function() {
+                $(this).remove();
+            });
+        }, 3000);
     }
 
 
