@@ -85,11 +85,11 @@
         let errorMessage = '';
 
         if (email === '' && password === '') {
-            errorMessage = "Please enter email and password.";
+            errorMessage = "Please Enter Email And password.";
         } else if (email === '') {
-            errorMessage = "Please enter your email.";
+            errorMessage = "Please Enter Your Email.";
         } else if (password === '') {
-            errorMessage = "Please enter your password.";
+            errorMessage = "Please Enter Your Password.";
         }
 
         if (errorMessage !== '') {
@@ -99,13 +99,13 @@
 
         var response = grecaptcha.getResponse();
         if (response.length === 0) {
-            showAlert("Please complete the reCAPTCHA.", 'danger');
+            showAlert("Please Complete The reCAPTCHA.", 'danger');
             return;
         }
 
         let $btn = $('#loginCheck');
         $btn.prop('disabled', true).html(
-            '<span class="spinner-border spinner-border-sm me-2"></span> Authenticating, please wait…');
+            '<span class="spinner-border spinner-border-sm me-2"></span> Authenticating, Please Wait…');
 
         var url = "<?php echo base_url('admin/login'); ?>";
 
@@ -117,7 +117,7 @@
                 $btn.prop('disabled', false).html('Log in');
             }
         }, 'json').fail(function() {
-            showAlert("Something went wrong. Please try again.", 'danger');
+            showAlert("Something Went Wrong. Please Try Again.", 'danger');
             $btn.prop('disabled', false).html('Log in');
         });
 
