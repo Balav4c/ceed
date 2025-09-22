@@ -7,7 +7,7 @@ class UserModel extends Model {
  
     protected $table = 'user';
     protected $primaryKey = 'user_id';
-    protected $allowedFields = ['role_id','name', 'email', 'password', 'status', 'created_at', 'updated_at'];
+    protected $allowedFields = ['role_id','name', 'email', 'phone' , 'password', 'status', 'created_at', 'updated_at'];
  
     public function userInsert($data) {
         return $this->db->table($this->table)->insert($data);

@@ -26,8 +26,8 @@ public function login()
 
     if (!$email || !$password) {
         return $this->response->setJSON([
-            "status"  => "error",
-            "message" => "Missing email or password"
+            "success"  => false,
+            "message" => "Missing Email Or Password"
         ]);
     }
 
@@ -37,21 +37,21 @@ public function login()
 if ($user === 'invalid') {
     return $this->response->setJSON([
         "success"  => false,
-        "message" => "Invalid email or password."
+        "message" => "Invalid Email Or Password."
     ]);
 }
 
 if ($user === 'removed') {
     return $this->response->setJSON([
         "success"  => false,
-        "message" => "Access denied. Your account has been removed."
+        "message" => "Access Denied. Your Account Has Been Removed."
     ]);
 }
 
 if ($user === 'suspended') {
     return $this->response->setJSON([
         "success"  => false,
-        "message" => "Your account has been suspended by admin."
+        "message" => "Your Account Has Been Suspended By Admin."
     ]);
 }
 
@@ -77,7 +77,7 @@ $menuNames = array_map(function($menu) {
 
         return $this->response->setJSON([
             "success"   => true,
-            "message"  => "Login successful",
+            "message"  => "Login Successful",
             "redirect" => $redirectUrl
         ]);
 }

@@ -218,7 +218,7 @@ $(document).ready(function () {
                         table.ajax.reload(null, false);
                     }, 1500);
                 } else {
-                    $msg.addClass('alert-danger').text(response.message || 'Failed to update status').show();
+                    $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
                     setTimeout(function() {
                         $msg.fadeOut();
                     }, 2000);
@@ -277,11 +277,11 @@ $(document).ready(function () {
                         }
                     },
                     error: function () {
-                        swal("Error!", "Something went wrong. Try again.", "Error");
+                        swal("Error!", "Something Went Wrong. Try Again.", "Error");
                     },
                 });
             } else {
-                swal("Your data is safe!", {
+                swal("Your Data Is Safe!", {
                     buttons: {
                         confirm: {
                             className: "btn btn-success",

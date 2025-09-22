@@ -56,6 +56,7 @@ class User extends BaseController
     $name     = $this->request->getPost('name');
     $email    = $this->request->getPost('email');
     $password = $this->request->getPost('password');
+    $phone = $this->request->getPost('phone');
     $new_password = $this->request->getPost('new_password');
     $confirm_password = $this->request->getPost('confirm_password');
     $role_id  = $this->request->getPost('role_id');
@@ -63,7 +64,7 @@ class User extends BaseController
     if (empty($name) || empty($email) || empty($role_id)) {
         return $this->response->setJSON([
             'success' => false,
-            'message' => 'All Fields Are Required.'
+            'message' => 'All Fields Are required.'
         ]);
     }
 
@@ -72,6 +73,22 @@ class User extends BaseController
             'success' => false,
             'message' => 'Please Enter A Valid Email Address.'
         ]);
+    }
+    $digitsOnly = preg_replace('/[^0-9]/', '', $phone);
+
+    if (!empty($phone)) {
+        if (!preg_match('/^[0-9 +]+$/', $phone)) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Please Enter A Valid Phone Number.'
+            ]);
+        }
+        if (strlen($digitsOnly) > 20) {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Phone Number Must Not Exceed 20 Digits.'
+            ]);
+        }
     }
     if (empty($user_id) && empty($password)) {
         return $this->response->setJSON([
@@ -86,7 +103,7 @@ class User extends BaseController
         if (strlen($passToValidate) < 7) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Password Must Be At Least 7 Characters Long.'
+                'message' => 'Password Must Be At Least 7 Chracters Long.'
             ]);
         }
         if (!preg_match('/[!@#$%^&*(),.?":{}|<>]/', $passToValidate)) {
@@ -120,6 +137,7 @@ class User extends BaseController
             'email'      => $email,
             'role_id'    => $role_id,
             'password'   => $finalPassword,
+            'phone'      => $phone,
             'status'     => 1,
             'created_at' => date("Y-m-d H:i:s")
         ];
@@ -141,6 +159,7 @@ class User extends BaseController
             'name'       => $name,
             'email'      => $email,
             'role_id'    => $role_id,
+            'phone'      => $phone,
             'updated_at' => date("Y-m-d H:i:s")
         ];
         if ($finalPassword) {
@@ -247,7 +266,7 @@ class User extends BaseController
 
     return $this->response->setJSON([
         'status'  => 'error',
-        'message' => 'Invalid request'
+        'message' => 'Invalid Request'
     ]);
 }
 
