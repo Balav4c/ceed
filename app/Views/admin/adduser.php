@@ -44,6 +44,12 @@
                                     <?php endif; ?>
                                 </select>
                             </div>
+                            <div class="col-md-6 mt-4">
+                                <label class="form-label">Phone Number <span class="text-danger"></span></label>
+                                <input type="text" name="phone" class="form-control" maxlength="20"
+                                    value="<?= isset($userData['phone']) ? esc($userData['phone']) : '' ?>"
+                                    oninput="this.value = this.value.replace(/[^0-9 +]/g, '')" required>
+                            </div>
                         </div>
                         <?php if (!isset($userData['user_id'])): ?>
                             <div class="row">
@@ -67,10 +73,11 @@
                                 </div>
                             </div>
                             <?php else: ?>
-                                <!-- <div class="col-md-12">
-                                    <p class="mb-0"><b>Enter a new password and confirm it only if you wish to change your current password.</b></p>
-                                </div> -->
-    
+                                <div class="col-md-12 mt-4">
+                                    <p class="mb-0 text-muted">
+                                        <b class="fs-4 fw-bold">Change Password</b>
+                                    </p>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-6 mt-4">
                                         <label class="form-label">New Password</label>

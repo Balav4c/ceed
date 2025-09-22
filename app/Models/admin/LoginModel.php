@@ -22,7 +22,7 @@ class LoginModel extends Model
         if ($user['status'] == 2) {
             return 'suspended';
         } elseif ($user['status'] == 9) {
-            return 'removed'; // Explicit removed account
+            return 'removed'; 
         }
     }
     return (object) $user;
