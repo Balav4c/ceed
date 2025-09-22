@@ -66,6 +66,14 @@ public function saveUser()
     $cpassword = $this->request->getPost('cpassword');
 
     if ($name && $email && $password && $cpassword) {
+        // Email format validation
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            return $this->response->setJSON([
+                "status"  => "error",
+                "message" => "Please enter a valid email address"
+            ]);
+        }
+
         // Check if passwords match
         if ($password !== $cpassword) {
             return $this->response->setJSON([

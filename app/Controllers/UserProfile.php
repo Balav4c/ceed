@@ -9,10 +9,23 @@ use App\Models\UserProfileModel;
 
 class UserProfile extends BaseController
 {
+
+
+    public function __construct() 
+	{
+		$this->session = \Config\Services::session();
+		$this->input = \Config\Services::request();
+
+	}
     public function index(): string
     {
-      $session = session();
-        $userId = $session->get('user_id');
+        
+
+        $userId = $this->session->get('user_id'); 
+        // print_r($userId); exit;
+         if (!$this->session->get('user_id')) {
+        return redirect()->to(base_url('')); 
+        }
 
         $userModel = new LoginModel();
         $profileModel = new UserProfileModel(); // user_profile table
@@ -124,10 +137,5 @@ public function changePassword()
         'message' => 'Password updated successfully!'
     ]);
 }
-
-
-
-
-
 
 }
