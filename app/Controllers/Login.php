@@ -66,13 +66,35 @@ public function saveUser()
     $cpassword = $this->request->getPost('cpassword');
 
     if ($name && $email && $password && $cpassword) {
-        // Email format validation
-        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-            return $this->response->setJSON([
-                "status"  => "error",
-                "message" => "Please enter a valid email address"
-            ]);
-        }
+     list($localPart, $domain) = explode('@', $email);
+
+// 1. Require at least one letter in the local part
+if (!preg_match('/[a-zA-Z]/', $localPart)) {
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "Email address must contain at least one letter."
+    ]);
+}
+
+// 2. Block if too many digits (e.g., 6+ digits in a row)
+if (preg_match('/\d{6,}/', $localPart)) {
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "Email address is not valid. Please use a proper email."
+    ]);
+}
+
+// 3. Check MX record for real domain
+if (!checkdnsrr($domain, 'MX')) {
+    return $this->response->setJSON([
+        "status"  => "error",
+        "message" => "Email domain is not valid or cannot receive emails."
+    ]);
+}
+      
+
+
+
 
         // Check if passwords match
         if ($password !== $cpassword) {
