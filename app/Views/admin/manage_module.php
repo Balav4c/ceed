@@ -24,3 +24,39 @@
         </div>
     </div>
 </div>
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg"> <!-- lg for wide -->
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="descriptionModalLabel">Course Description</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body" id="modalDescription">
+        <!-- Description text will be injected here -->
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="videoTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <video id="videoPlayer" width="100%" controls>
+          <source src="" type="video/mp4">
+          Your browser does not support HTML video.
+        </video>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+

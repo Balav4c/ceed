@@ -14,17 +14,19 @@
                 $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
             }
         });
-        $('#courseTable').on('click', '.read-desc', function () {
-            var fullDescription = $(this).data('description');
-            $('#modalDescription').text(fullDescription);
-            var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-            myModal.show();
+        $(document).on('click', '.read-desc', function () {
+            let description = $(this).data('description');
+
+            if (!description) {
+                description = "<em>No description available.</em>";
+            }
+
+            $("#descriptionContent").text(description); // plain text
+            $("#descriptionModal").modal("show");
         });
 
-        $(document).on('click', '.view-module', function () {
-            const courseId = $(this).data('id');
-            window.location.href = "<?= base_url('admin/manage_module/') ?>" + courseId;
-        });
+
+
         $('#courseForm').on('submit', function (e) {
             e.preventDefault();
             var form = $(this);
@@ -32,29 +34,33 @@
             $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
 
             $.post(url, $('#courseForm').serialize(), function (response) {
-                $('#messageBox').removeClass('d-none alert-success alert-danger');
+                var $messageBox = $('#messageBox');
+                $messageBox.removeClass('d-none alert-success alert-danger');
+
                 if (response.status === 'success' || response.status == 1) {
-                    $('#messageBox')
+                    $messageBox
                         .addClass('alert-success')
                         .text(response.msg || response.message)
                         .show();
-                    initialFormData = $courseForm.serialize();
+
+                    initialFormData = $('#courseForm').serialize();
+
                     setTimeout(function () {
                         window.location.href = base_url + '/admin/add_module/' + response.course_id;
                     }, 1500);
+
                     resetFormState();
                 } else {
-                    $('#messageBox')
+                    $messageBox
                         .addClass('alert-danger')
                         .text(response.message || 'Something went wrong')
-                        .show();
+                        .fadeIn()
+                        .delay(2000)
+                        .fadeOut(500);
                     checkFormChanges();
                 }
-
-                setTimeout(function () {
-                    $('#messageBox').fadeOut();
-                }, 2000);
             }, 'json');
+
         });
         let table = "";
         const alertBox = $('.alert');
@@ -91,13 +97,14 @@
                 {
                     data: "description",
                     render: function (data, type, row) {
-                        if (!data) return '<a href="javascript:void(0)" class="read-desc" data-description="">Read Description</a>';
+                        if (!data)
+                            return '<a href="javascript:void(0);" class="read-desc" data-description="">Read Description</a>';
 
-                        let safeData = data.replace(/"/g, '&quot;');
-
-                        return '<a href="javascript:void(0)" class="read-desc" data-description="' + safeData + '">Read Description</a>';
+                        let cleanDescription = $('<div>').html(data).text().trim(); // removes HTML tags & entities
+                        return '<a href="javascript:void(0);" class="read-desc" data-description="' + cleanDescription + '">Read Description</a>';
                     }
                 },
+
                 { data: "duration_weeks" },
                 {
                     data: "status",
@@ -148,6 +155,11 @@
                     cell.innerHTML = pageInfo.start + i + 1;
                 });
         });
+        $(document).on('click', '.view-module', function () {
+            const courseId = $(this).data('id');
+            window.location.href = "<?= base_url('admin/manage_course/modules/') ?>" + courseId;
+        });
+
     });
 
     // toggle status 
@@ -191,6 +203,7 @@
     });
     // delete pop up 
 
+
     $(document).on("click", ".delete-all", function (e) {
         e.preventDefault();
         let roleId = $(this).data("id");
@@ -227,7 +240,7 @@
                                     },
                                 },
                             });
-                            $('#roleTable').DataTable().ajax.reload();
+                            $('#courseTable').DataTable().ajax.reload();
                         } else {
                             swal("Error!", response.message, "error");
                         }

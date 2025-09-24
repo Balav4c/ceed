@@ -277,6 +277,9 @@
 .nav-link.active i {
     color: #fff !important;
 }
+.dt-type-numeric{
+  text-align:left !important;
+}
 @media only screen and (min-width:320px) and (max-width:759px) {
   .carbon-text {
     font-size: 14px

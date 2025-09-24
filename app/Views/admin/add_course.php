@@ -15,7 +15,7 @@
                     </div>
                     <div class="page-wrapper box-content width-word">
                         <label for="example">Description</label>
-                        <textarea class="content" id="example" name="example"></textarea>
+                        <textarea class="content" id="description" name="description" ><?= esc($course['description'] ?? '') ?></textarea>
                     </div>
 
                     <div class="mb-3">

@@ -24,16 +24,16 @@
     </div>
 </div>
 <!-- Description Modal -->
-<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg"> <!-- lg for wide -->
+
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="descriptionModalLabel">Course Description</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">Course Description</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body" id="modalDescription">
-        <!-- Description text will be injected here -->
-      </div>
+      <div class="modal-body" id="descriptionContent"></div>
     </div>
   </div>
 </div>
+

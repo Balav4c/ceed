@@ -18,16 +18,14 @@ class CourseModuleModel extends Model
 
     public function getAllModuleCount()
     {
-        return $this->db->table($this->table)
-            ->where('status !=', 9)
-            ->countAllResults();
+        return $this->where('status !=', 9)->countAllResults();
     }
 
     public function getAllFilteredRecords($condition, $start, $length, $orderBy = 'module_id', $orderDir = 'desc')
     {
         return $this->db->table($this->table . ' m')
             ->select('m.*, GROUP_CONCAT(cv.video_file) as module_videos')
-            ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status != 9', 'left')
+            ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status = 1', 'left')
             ->where('m.status !=', 9)
             ->where($condition, null, false)
             ->groupBy('m.module_id')
@@ -40,11 +38,13 @@ class CourseModuleModel extends Model
     public function getFilterModuleCount($condition)
     {
         return $this->db->table($this->table . ' m')
-            ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status != 9', 'left')
+           ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status = 1', 'left')
             ->select('COUNT(DISTINCT m.module_id) as filRecords')
             ->where('m.status !=', 9)
             ->where($condition, null, false)
             ->get()
             ->getRow();
     }
+
+
 }

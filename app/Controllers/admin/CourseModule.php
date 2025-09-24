@@ -27,7 +27,6 @@ class CourseModule extends BaseController
     public function addModule($id = null)
     {
         $data['course'] = $id ? $this->moduleModel->find($id) : null;
-        // $data['modules'] = $id ? $this->moduleModel->where('course_id', $id)->findAll() : [];
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
         $template .= view('admin/manage_module');
@@ -38,72 +37,96 @@ class CourseModule extends BaseController
     }
    public function save()
 {
+    $moduleId = $this->request->getPost('module_id');
     $courseId = $this->request->getPost('course_id');
     $moduleNames = $this->request->getPost('module_name');
     $durations = $this->request->getPost('module_duration');
     $descriptions = $this->request->getPost('module_description');
-    $videoFiles = $this->request->getFileMultiple('module_videos');
-
-    $allSuccess = true;
-    $errorMsg = '';
+    $uploadedVideos = $this->request->getPost('uploaded_videos'); // comma-separated filenames
 
     foreach ($moduleNames as $index => $name) {
-        if (empty($name)) {
-            $allSuccess = false;
-            $errorMsg = 'Module Name cannot be empty';
-            continue;
+        if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Please Fill All Mandatory Fields.'
+            ]);
         }
+    }
+
+    foreach ($moduleNames as $index => $name) {
+        $plainDescription = isset($descriptions[$index]) ? strip_tags($descriptions[$index]) : null;
 
         $moduleData = [
-            'course_id' => $courseId,
-            'module_name' => $name,
+            'course_id'      => $courseId,
+            'module_name'    => $name,
             'duration_weeks' => $durations[$index] ?? null,
-            'description' => $descriptions[$index] ?? null,
-            'status' => 1
+            'description'    => $plainDescription,
+            'status'         => 1
         ];
 
-        $this->moduleModel->insert($moduleData);
-        $moduleId = $this->moduleModel->insertID();
+        if (!empty($moduleId)) {
+            $this->moduleModel->update($moduleId, $moduleData);
+        } else {
+            $this->moduleModel->insert($moduleData);
+            $moduleId = $this->moduleModel->getInsertID();
+        }
+    }
 
-        if (!empty($videoFiles[$index]) && $videoFiles[$index]->isValid() && !$videoFiles[$index]->hasMoved()) {
-            $file = $videoFiles[$index];
-            $allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+    // ✅ Save uploaded videos in DB
+    if (!empty($uploadedVideos)) {
+        $videoArray = explode(',', $uploadedVideos);
+        foreach ($videoArray as $video) {
+            $this->videoModel->insert([
+                'module_id'  => $moduleId,
+                'video_file' => trim($video),
+                'status'     => 1
+            ]);
+        }
+    }
 
+    return $this->response->setJSON([
+        'status' => 'success',
+        'msg'    => !empty($moduleId) ? 'Module Updated Successfully!' : 'Modules Added Successfully!'
+    ]);
+}
+   public function uploadVideo()
+{
+    $videoFiles = $this->request->getFileMultiple('module_videos');
+
+    $uploadedFiles = [];
+    $errors = [];
+
+    $allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+    $uploadPath = WRITEPATH . '../public/uploads/videos/';
+
+    if (!is_dir($uploadPath)) {
+        mkdir($uploadPath, 0777, true);
+    }
+
+    foreach ($videoFiles as $file) {
+        if ($file && $file->isValid() && !$file->hasMoved()) {
             if (!in_array($file->getClientMimeType(), $allowedTypes)) {
-                $allSuccess = false;
-                $errorMsg = 'Only video files are allowed';
+                $errors[] = $file->getClientName() . " is not valid. Please upload video files only (MP4, WEBM, OGG).";
                 continue;
             }
 
             $newName = $file->getRandomName();
-            $uploadPath = FCPATH . 'uploads/videos';
-            if (!is_dir($uploadPath)) {
-                mkdir($uploadPath, 0777, true);
+
+            if ($file->move($uploadPath, $newName)) {
+                $uploadedFiles[] = $newName; // Store just filenames
+            } else {
+                $errors[] = $file->getClientName() . " could not be uploaded.";
             }
-
-            $file->move($uploadPath, $newName);
-
-            $videoData = [
-                'module_id' => $moduleId,
-                'video_file' => $newName
-            ];
-            $this->videoModel->insert($videoData);
         }
     }
 
-    if ($allSuccess) {
-        return $this->response->setJSON([
-            'status' => 'success',
-            'msg' => 'Modules & Videos Added Successfully!'
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'status' => 'error',
-            'message' => $errorMsg ?: 'Some modules could not be saved'
-        ]);
-    }
+    return $this->response->setJSON([
+        'status' => empty($errors) ? 'success' : 'error',
+        'message' => empty($errors) ? 'Videos uploaded successfully!' : 'Some videos could not be uploaded.',
+        'uploaded' => $uploadedFiles,
+        'errors' => $errors
+    ]);
 }
-
     public function moduleListAjax()
     {
         $request = service('request');
@@ -112,12 +135,12 @@ class CourseModule extends BaseController
         $fromstart = $request->getPost('start') ?? 0;
         $tolimit = $request->getPost('length') ?? 10;
         $search = $request->getPost('search')['value'] ?? '';
-
         $condition = "1=1";
+
         if (!empty($search)) {
             $search = trim(preg_replace('/\s+/', ' ', $search));
             $noSpaceSearch = str_replace(' ', '', strtolower($search));
-            $esc = addslashes($noSpaceSearch);
+            $esc = $this->moduleModel->db->escapeLikeString($noSpaceSearch);
 
             $condition .= " AND (
             REPLACE(LOWER(m.module_name), ' ', '') LIKE '%{$esc}%'
@@ -140,11 +163,12 @@ class CourseModule extends BaseController
         $orderColumnIndex = $order[0]['column'] ?? 0;
         $orderDir = $order[0]['dir'] ?? 'desc';
         $orderBy = $columns[$orderColumnIndex] ?? 'module_id';
+
         if ($orderBy === 'slno' || $orderBy === 'module_videos') {
             $orderBy = 'module_id';
         }
 
-        $moduleRecords = $this->courseModuleModel
+        $moduleRecords = $this->moduleModel
             ->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
 
         $result = [];
@@ -159,12 +183,12 @@ class CourseModule extends BaseController
                 'description' => $m->description,
                 'duration_weeks' => $m->duration_weeks,
                 'status' => $m->status,
-                'module_videos' => $m->module_videos ? str_replace(',', '<br>', $m->module_videos) : 'N/A'
+                'module_videos' => $m->module_videos ?? ''
             ];
         }
 
-        $totalCount = $this->courseModuleModel->getAllModuleCount();
-        $filteredCountObj = $this->courseModuleModel->getFilterModuleCount($condition);
+        $totalCount = $this->moduleModel->getAllModuleCount();
+        $filteredCountObj = $this->moduleModel->getFilterModuleCount($condition);
         $filteredCount = $filteredCountObj->filRecords ?? 0;
 
         return $this->response->setJSON([
@@ -173,6 +197,91 @@ class CourseModule extends BaseController
             "recordsFiltered" => $filteredCount,
             "data" => $result
         ]);
+    }
+
+    public function toggleStatus()
+    {
+        if ($this->request->isAJAX()) {
+            $module_id = $this->request->getPost('module_id');
+            $status = (int) $this->request->getPost('status');
+
+            if (!$module_id || !in_array($status, [1, 2])) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Invalid status value'
+                ]);
+            }
+
+            $updated = $this->moduleModel->update($module_id, ['status' => $status]);
+
+            if ($updated) {
+                return $this->response->setJSON(['status' => 'success', 'message' => 'Status Updated Successfully!']);
+            } else {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Update Failed'
+                ]);
+            }
+        }
+        return $this->response->setJSON([
+            'status' => 'error',
+            'message' => 'Invalid request'
+        ]);
+    }
+    public function edit($id)
+    {
+        $module = $this->moduleModel->find($id);
+        
+
+        $data = [
+            'module' => $module,
+        ];
+
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/add_module', $data);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/modulejs');
+
+        return $template;
+    }
+
+
+    public function update($id)
+    {
+        $moduleData = [
+            'module_name' => $this->request->getPost('module_name'),
+            'description' => $this->request->getPost('description'),
+            'duration_weeks' => $this->request->getPost('duration_weeks'),
+            'video_file' => $this->request->getPost('module_videos'),
+        ];
+
+        $this->moduleModel->update($id, $moduleData);
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Module Updated Successfully.'
+        ]);
+    }
+    public function delete()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
+        }
+
+        $id = $this->request->getPost('id');
+
+        if (!$id) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Missing module ID']);
+        }
+
+        $updated = $this->moduleModel->update($id, ['status' => 9]);
+
+        if ($updated) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Module deleted successfully.']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
+        }
     }
 
 
