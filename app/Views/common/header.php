@@ -13,6 +13,13 @@
 </head>
 
 <body>
+    <?php
+$profileModel = new \App\Models\UserProfileModel();
+$userId = session()->get('user_id');
+$profile = $profileModel->where('user_id', $userId)->first();
+$progress = $profile['profile_percentage'] ?? 0;
+?>
+
     <header>
         <div class="container-lg">
             <div class="col-md-12">
@@ -37,16 +44,29 @@
                                 <?php if (session()->get('isLoggedIn')): ?>
                                 <!-- Show user dropdown -->
                                 <div class="dropdown d-inline-block">
-                                    <button class="btn btn-user dropdown-toggle" type="button" id="userMenu"
-                                        data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                        <?= session()->get('user_name'); ?>
+                                    <button class="btn btn-user dropdown-toggle d-flex align-items-center gap-2"
+                                        type="button" id="userMenu" data-bs-toggle="dropdown" aria-haspopup="true"
+                                        aria-expanded="false">
+                                        <!-- Username -->
+                                       <span><?= ucwords(session()->get('user_name')); ?></span>
+
+
+                                        <!-- Circular Progress (inline with name) -->
+                                        <!-- <div id="profileProgressCircle" class="progress-circle"></div> -->
+                                        <div id="profileProgressCircle" class="progress-circle"
+                                            style="--percent: <?= $progress ?? 0 ?>%;">
+                                            <?= $progress ?? 0 ?>%
+                                        </div>
+
                                     </button>
+
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
-                                        <li><a class="dropdown-item drop-menu"
-                                                href="<?= base_url('profile'); ?>">Profile</a></li>
-                                        <li><a class="dropdown-item drop-menu" id="logout-btn">Logout</a></li>
+                                        <a class="dropdown-item drop-menu"
+                                            href="<?= base_url('profile'); ?>">Profile</a>
+                                        <a class="dropdown-item drop-menu" id="logout-btn">Logout</a>
                                     </div>
                                 </div>
+
                                 <?php else: ?>
                                 <!-- Show login/demo buttons -->
                                 <button class="btn btn-login"
@@ -93,7 +113,7 @@
                         </div>
                     </div>
                 </div>
-               
+
             </div>
         </div>
     </header>
@@ -144,4 +164,7 @@
             });
         });
     });
+
+
+
     </script>

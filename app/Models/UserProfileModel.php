@@ -10,7 +10,7 @@ class UserProfileModel extends Model
 
     protected $allowedFields = [
         'user_id', 'name', 'grade', 'school', 'bio',
-        'phone', 'notification', 'status'
+        'phone', 'notification', 'status','profile_percentage'
     ];
 
     protected $useTimestamps = true; 
