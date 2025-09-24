@@ -5,16 +5,19 @@ namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 use App\Models\admin\CourseModel;
 use App\Models\admin\CourseModuleModel;
+use App\Models\admin\CourseVideoModel;
 
 class Course extends BaseController
 {
     protected $courseModel;
     protected $moduleModel;
+    protected $videoModel;
 
     public function __construct()
     {
         $this->courseModel = new CourseModel();
         $this->moduleModel = new CourseModuleModel();
+        $this->videoModel = new CourseVideoModel();
     }
 
     public function index()
@@ -43,17 +46,18 @@ class Course extends BaseController
     {
         $id = $this->request->getPost('course_id');
         $name = trim($this->request->getPost('name'));
-        $description = $this->request->getPost('example');
+        $description = $this->request->getPost('description');
         $duration_weeks = trim($this->request->getPost('duration_weeks'));
         if (empty($name) || empty($duration_weeks)) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Please Fill In All Mandatory Fields.'
+                'message' => 'Please Fill All Mandatory Fields.'
             ]);
         }
+        $plainDescription = isset($descriptions[0]) ? strip_tags($description[0]) : null;
         $courseData = [
             'name' => $this->request->getPost('name'),
-            'description' => $this->request->getPost('example'),
+            'description' =>  $plainDescription,
             'duration_weeks' => $this->request->getPost('duration_weeks'),
             'status' => 1
         ];
@@ -172,7 +176,7 @@ class Course extends BaseController
                     'status' => 'error',
                     'message' => 'Update Failed'
                 ]);
-            }
+            } 
         }
         return $this->response->setJSON([
             'status' => 'error',
@@ -199,35 +203,7 @@ class Course extends BaseController
         return $template;
     }
 
-    // public function update($id)
-// {
-//     $courseData = [
-//         'name'           => $this->request->getPost('name'),
-//         'description'    => $this->request->getPost('description'),
-//         'duration_weeks' => $this->request->getPost('duration_weeks'),
-//     ];
-
-    //     $this->courseModel->update($id, $courseData);
-
-    //     $this->moduleModel->where('course_id', $id)->delete();
-
-    //     $moduleNames = $this->request->getPost('module_name');
-//     $durations   = $this->request->getPost('module_duration');
-
-    //     if (!empty($moduleNames)) {
-//         foreach ($moduleNames as $index => $mname) {
-//             if (!empty($mname)) {
-//                 $this->moduleModel->insert([
-//                     'course_id'      => $id,
-//                     'module_name'    => $mname,
-//                     'duration_weeks' => $durations[$index] ?? ''
-//                 ]);
-//             }
-//         }
-//     }
-//     return $this->response->setJSON(['status' => 'success', 'message' => 'Course Updated Successfully!']);
-
-    // }
+ 
     public function update($id)
     {
         $courseData = [
@@ -242,6 +218,27 @@ class Course extends BaseController
             'status' => 'success',
             'message' => 'Course Updated Successfully. Do you want to edit modules?'
         ]);
+    }
+ public function viewCourseModules($courseId)
+    {
+
+        $course = $this->courseModel->find($courseId);
+        if (!$course) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Course not found');
+        }
+
+        $modules = $this->moduleModel->where('course_id', $courseId)->findAll();
+
+        $videoModel = new VideoModel();
+
+        // Pass data to view
+        $data = [
+            'course' => $course,
+            'modules' => $modules,
+            'videoModel' => $videoModel
+        ];
+
+        return view('admin/view_module', $data);
     }
     public function delete()
     {

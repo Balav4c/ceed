@@ -1,12 +1,178 @@
 <script>
+    // fileupload
+    (function ($) {
+        var fileUploadCount = 0;
+
+        $.fn.fileUpload = function () {
+            return this.each(function () {
+                var fileUploadDiv = $(this);
+                var fileUploadId = `fileUpload-${++fileUploadCount}`;
+
+                var fileDivContent = `
+                    <label for="${fileUploadId}" class="file-upload">
+                        <div style="margin-top: 42px;">
+                            <i class="material-icons-outlined">video_upload</i>
+                            <p>Drag & Drop Files Here</p>
+                            <span>OR</span>
+                            <div>Browse Files</div>
+                        </div>
+                        <!-- FIX: set correct name -->
+                       <input type="file" id="${fileUploadId}" name="module_videos[]" multiple hidden />
+                    </label>
+                `;
+
+                fileUploadDiv.html(fileDivContent).addClass("file-container");
+
+                var table = null;
+                var tableBody = null;
+                function createTable() {
+                    table = $(`
+                    <table>
+                        <thead>
+                            <tr>
+                                <th></th>
+                                <th style="width: 30%;">File Name</th>
+                                <th>Preview</th>
+                                <th style="width: 20%;">Size</th>
+                                <th>Type</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                `);
+
+                    tableBody = table.find("tbody");
+                    fileUploadDiv.append(table);
+                }
+                function uploadFiles(files) {
+                    let formData = new FormData();
+
+                    // module_id is optional now, you can remove or set dynamically
+                    formData.append('module_id', $('#module_id').val() || '');
+
+                    for (let i = 0; i < files.length; i++) {
+                        formData.append('module_videos[]', files[i]);
+                    }
+
+                    $.ajax({
+                        url: "<?= base_url('admin/coursemodule/uploadVideo') ?>",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            let $msg = $('#messageBox');
+                            $msg.removeClass('d-none alert-success alert-danger');
+
+                            if (response.status === 'success') {
+                                $msg.addClass('alert-success')
+                                    .text(response.message || 'Videos uploaded successfully!')
+                                    .show();
+
+                                // Store uploaded filenames in hidden input for save later
+                                let existing = $('#uploaded_videos').val();
+                                let newVideos = response.uploaded.join(',');
+                                $('#uploaded_videos').val(existing ? existing + ',' + newVideos : newVideos);
+
+                                setTimeout(function () {
+                                    $msg.fadeOut();
+                                    if (typeof table !== "undefined" && table.ajax) {
+                                        table.ajax.reload(null, false);
+                                    }
+                                }, 1500);
+
+                            } else {
+                                $msg.addClass('alert-danger')
+                                    .text(response.message || (response.errors ? response.errors.join(', ') : 'Upload failed'))
+                                    .show();
+
+                                setTimeout(function () { $msg.fadeOut(); }, 2000);
+                            }
+                        },
+                        error: function (xhr, status, error) {
+                            let $msg = $('#messageBox');
+                            $msg.removeClass('d-none alert-success')
+                                .addClass('alert-danger')
+                                .text('Error uploading video(s)')
+                                .show();
+
+                            setTimeout(function () { $msg.fadeOut(); }, 2000);
+                        }
+                    });
+                }
+
+
+                function handleFiles(files) {
+                    if (!table) {
+                        createTable();
+                    }
+                    tableBody.empty();
+
+                    if (files.length > 0) {
+                        $.each(files, function (index, file) {
+                            var fileName = file.name;
+                            var fileSize = (file.size / 1024).toFixed(2) + " KB";
+                            var fileType = file.type;
+                            var preview = fileType.startsWith("image")
+                                ? `<img src="${URL.createObjectURL(file)}" alt="${fileName}" height="30">`
+                                : `<i class="material-icons-outlined">visibility_off</i>`;
+
+                            tableBody.append(`
+                                <tr>
+                                    <td>${index + 1}</td>
+                                    <td>${fileName}</td>
+                                    <td>${preview}</td>
+                                    <td>${fileSize}</td>
+                                    <td>${fileType}</td>
+                                    <td><button type="button" class="deleteBtn"><i class="bi bi-trash-fill"></i></button></td>
+                                </tr>
+                            `);
+                        });
+                        tableBody.find(".deleteBtn").click(function () {
+                            $(this).closest("tr").remove();
+
+                            if (tableBody.find("tr").length === 0) {
+                                tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
+                            }
+                        });
+                        uploadFiles(files);
+                    }
+                }
+
+                fileUploadDiv.on({
+                    dragover: function (e) {
+                        e.preventDefault();
+                        fileUploadDiv.toggleClass("dragover", e.type === "dragover");
+                    },
+                    drop: function (e) {
+                        e.preventDefault();
+                        fileUploadDiv.removeClass("dragover");
+
+                        let files = e.originalEvent.dataTransfer.files;
+                        handleFiles(files);
+
+                        let dt = new DataTransfer();
+                        for (let i = 0; i < files.length; i++) {
+                            dt.items.add(files[i]);
+                        }
+                        fileUploadDiv.find(`#${fileUploadId}`)[0].files = dt.files;
+                    },
+
+                });
+                fileUploadDiv.find(`#${fileUploadId}`).change(function () {
+                    handleFiles(this.files);
+                });
+            });
+        };
+    })(jQuery);
+
+
     $(document).ready(function () {
+
         $('.content').richText();
-        $("#fileUpload").fileUpload({
-            allowedTypes: ['video/mp4', 'video/webm', 'video/ogg'], // only video files
-            onError: function (file) {
-                alert('Only video files are allowed: ' + file.name);
-            }
-        });
+        $("#fileUpload").fileUpload();
 
         const $saveBtn = $('#saveBtn');
         const $moduleForm = $('#moduleForm');
@@ -32,86 +198,105 @@
                 alert('At least one module is required.');
             }
         });
+        $('#moduleTable').on('click', '.read-desc', function () {
+            var fullDescription = $(this).data('description');
+            $('#modalDescription').text(fullDescription);
+            var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+            myModal.show();
+        });
+        $(document).ready(function () {
+            const videoModalEl = document.getElementById('videoModal');
+            const videoModal = new bootstrap.Modal(videoModalEl);
 
-        $moduleForm.on('submit', function (e) {
-            e.preventDefault();
+            $(document).on("click", ".play-video-link", function () {
+                let videoFile = $(this).data("video");
+                let title = $(this).data("title");
 
-            let valid = true;
-            let firstEmptyName = false;
+                $("#videoTitle").text(title);
 
-            $('.module-item').each(function () {
-                let moduleName = $(this).find('input[name="module_name[]"]').val().trim();
-                if (moduleName === '') {
-                    valid = false;
-                    if (!firstEmptyName) {
-                        firstEmptyName = true;
-                        $messageBox.removeClass('d-none alert-success alert-danger')
-                            .addClass('alert-danger')
-                            .text('Please fill all mandatory Module Name fields')
-                            .show();
-                    }
-                }
+                let videoPlayer = $("#videoPlayer")[0];
+                let source = $("#videoPlayer source")[0];
 
-                let $videoInput = $(this).find('input[type="file"]');
-                $videoInput.each(function () {
-                    let files = this.files;
-                    for (let i = 0; i < files.length; i++) {
-                        if (!files[i].type.startsWith('video/')) {
-                            valid = false;
-                            $messageBox.removeClass('d-none alert-success alert-danger')
-                                .addClass('alert-danger')
-                                .text('Only video files are allowed for Module Video')
-                                .show();
-                        }
-                    }
-                });
+                source.src = videoFile;
+                source.type = "video/mp4";
+
+                videoPlayer.load();
+                videoPlayer.play();
+
+                videoModal.show();
             });
 
-            if (!valid) return;
+            $(videoModalEl).on("hidden.bs.modal", function () {
+                let videoPlayer = $("#videoPlayer")[0];
+                $("#videoPlayer source").attr("src", "");
+                videoPlayer.load();
+            });
+        });
+
+
+
+        $('#moduleForm').on('submit', function (e) {
+            e.preventDefault();
+            var form = $(this);
+            var url = form.attr('action');
+            let isValid = true;
+
+            form.find('input[name="module_videos[]"]').each(function () {
+                let files = this.files;
+                if (files.length > 0) {
+                    $.each(files, function (i, file) {
+                        let fileType = file.type;
+                        if (!['video/mp4', 'video/webm', 'video/ogg'].includes(fileType)) {
+                            isValid = false;
+                        }
+                    });
+                }
+            });
+
+            if (!isValid) {
+                $('#messageBox')
+                    .removeClass('d-none alert-success')
+                    .addClass('alert-danger')
+                    .html("Please Upload Video Files Only.")
+                    .fadeIn()
+                    .delay(2000)
+                    .fadeOut(500);
+
+                return;
+            }
 
             $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
 
-            var formData = new FormData(this);
-            $.ajax({
-                url: $moduleForm.attr('action'),
-                type: 'POST',
-                data: formData,
-                contentType: false,
-                processData: false,
-                dataType: 'json',
-                success: function (response) {
-                    if (response.status === 'success' || response.status == 1) {
-                        $messageBox.removeClass('d-none alert-success alert-danger')
-                            .addClass('alert-success')
-                            .text(response.msg || 'Modules Added Successfully!')
-                            .show();
+            $.post(url, form.serialize(), function (response) {
+                var $messageBox = $('#messageBox');
+                $messageBox.removeClass('d-none alert-success alert-danger');
 
-                        setTimeout(function () {
-                            window.location.href = "<?= base_url('admin/manage_module'); ?>";
-                        }, 1500);
-                    } else {
-                        $messageBox.removeClass('d-none alert-success alert-danger')
-                            .addClass('alert-danger')
-                            .text(response.message || 'Something went wrong')
-                            .show();
-                        enableSaveButton();
-                    }
+                if (response.status === 'success' || response.status == 1) {
+                    $messageBox
+                        .addClass('alert-success')
+                        .text(response.msg || response.message)
+                        .show();
 
                     setTimeout(function () {
-                        $messageBox.fadeOut();
-                    }, 2000);
-                },
-                error: function () {
-                    $messageBox.removeClass('d-none alert-success alert-danger')
+                        window.location.href = "<?= base_url('admin/manage_module'); ?>";
+                    }, 1500);
+
+                } else {
+                    $messageBox
+                        .addClass('alert-danger')
+                        .text(response.message || 'Something went wrong')
+                        .fadeIn()
+                        .delay(2000)
+                        .fadeOut(500);
+                }
+            }, 'json')
+                .fail(function () {
+                    $('#messageBox')
+                        .removeClass('d-none alert-success')
                         .addClass('alert-danger')
                         .text('Error submitting the form. Please try again.')
                         .show();
-                    enableSaveButton();
-                    setTimeout(function () {
-                        $messageBox.fadeOut();
-                    }, 2000);
-                }
-            });
+                });
         });
 
         $(document).ready(function () {
@@ -158,15 +343,18 @@
                     { data: "duration_weeks" },
                     {
                         data: "module_videos",
-                        render: function (data) {
-                            if (!data) return 'N/A';
-                            let videos = data.split(',');
-                            let html = videos.map(v => {
-                                v = v.trim();
-                                return `<a href="<?= base_url('uploads/videos/') ?>${v}" target="_blank">${v}</a>`;
-                            }).join('<br>');
+                        render: function (data, type, row) {
+                            if (!data || data.trim() === "")
+                                return '<span class="text-muted">No Videos</span>';
 
-                            return html;
+                            let videos = data.split(',');
+                            return videos.map(v => {
+                                v = v.trim();
+                                let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + v;
+                                return `<a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${v}">Play Video
+                                            <i class="bi bi-play-circle"></i> 
+                                        </a>`;
+                            }).join('<br>');
                         }
                     },
 
@@ -174,9 +362,13 @@
                         data: "status",
                         render: function (data, type, row) {
                             let checked = data == 1 ? 'checked' : '';
-                            return `<div class="form-check form-switch">
-                        <input class="form-check-input toggle-module-status" type="checkbox" data-id="${row.module_id}" ${checked}>
-                    </div>`;
+                            return `
+                        <div class="form-check form-switch">
+                            <input class="form-check-input toggle-status" type="checkbox" 
+                                data-id="${row.module_id}" ${checked}>
+                            
+                        </div>
+                    `;
                         }
                     },
                     {
@@ -189,16 +381,13 @@
                         <a href="javascript:void(0);" class="delete-module" data-id="${id}" title="Delete" style="color: #dc3545;">
                             <i class="bi bi-trash-fill"></i>
                         </a>
-                        <a href="javascript:void(0);" class="view-module-details" data-id="${id}" title="View Module Details" style="color:green;">
-                            <i class="bi bi-eye-fill"></i>
-                        </a>
                     </div>`;
                         }
                     }
                 ],
-                order: [[1, 'asc']], // FIXED
+                order: [[7, 'desc']],
                 columnDefs: [
-                    { searchable: false, orderable: false, targets: [0, 4, 5, 6] } // allow search in description
+                    { searchable: false, orderable: false, targets: [0, 5, 6] }
                 ],
                 language: { infoFiltered: "" },
                 scrollX: false,
@@ -214,10 +403,106 @@
                     });
             });
         });
-
-
-
     });
+    // toggle status 
+    $('#moduleTable').on('change', '.toggle-status', function () {
+        let moduleId = $(this).data('id');
+        let newStatus = $(this).is(':checked') ? 1 : 2;
+
+        $.ajax({
+            url: "<?= base_url('admin/manage_module/toggleStatus') ?>",
+            type: "POST",
+            data: {
+                module_id: moduleId,
+                status: newStatus,
+                '<?= csrf_token() ?>': '<?= csrf_hash() ?>'
+            },
+            dataType: "json",
+            success: function (response) {
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success alert-danger');
+
+                if (response.status === 'success') {
+                    $msg.addClass('alert-success').text(response.message).show();
+                    setTimeout(function () {
+                        $msg.fadeOut();
+                        table.ajax.reload(null, false);
+                    }, 1500);
+                } else {
+                    $msg.addClass('alert-danger').text(response.message || 'Failed to update status').show();
+                    setTimeout(function () {
+                        $msg.fadeOut();
+                    }, 2000);
+                }
+            },
+            error: function (xhr, status, error) {
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success').addClass('alert-danger')
+                    .text('Error updating status').show();
+                setTimeout(function () { $msg.fadeOut(); }, 2000);
+            }
+        });
+    });
+    // delete pop up 
+
+
+    $(document).on("click", ".delete-module", function (e) {
+        e.preventDefault();
+        let roleId = $(this).data("id");
+
+        swal({
+            title: "Are You Sure?",
+            text: "You Want To Delete This Module!",
+            icon: "warning",
+            buttons: {
+                cancel: {
+                    visible: true,
+                    text: "Cancel",
+                    className: "btn btn-danger",
+                },
+                confirm: {
+                    text: "Delete",
+                    className: "btn btn-success",
+                },
+            },
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "<?= base_url('admin/manage_module/delete'); ?>",
+                    type: "POST",
+                    data: { id: roleId },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === "success") {
+                            swal("Deleted!", response.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: {
+                                        className: "btn btn-success",
+                                    },
+                                },
+                            });
+                            $('#moduleTable').DataTable().ajax.reload(null, false);
+                        } else {
+                            swal("Error!", response.message, "error");
+                        }
+                    },
+                    error: function () {
+                        swal("Error!", "Something went wrong. Try again.", "error");
+                    },
+                });
+            } else {
+                swal("Your Module Is Safe!", {
+                    buttons: {
+                        confirm: {
+                            className: "btn btn-success",
+                        },
+                    },
+                });
+            }
+        });
+    });
+
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
