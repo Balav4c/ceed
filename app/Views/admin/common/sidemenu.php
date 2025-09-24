@@ -27,12 +27,23 @@ $allMenus = [
 ];
 ?>
 
-<div class="sidebar" data-background-color="dark">
+<div class="sidebar"  data-background-color="dark">
     <div class="sidebar-logo">
         <div class="logo-header" data-background-color="dark">
             <a href="<?= base_url('admin/dashboard') ?>" class="logo">
                 <img src="<?= base_url().ASSET_PATH; ?>admin/assets/img/logo.png" class="navbar-brand" height="50" />
             </a>
+            <div class="nav-toggle">
+                <button class="btn btn-toggle toggle-sidebar">
+                    <i class="gg-menu-right"></i>
+                </button>
+                <button class="btn btn-toggle sidenav-toggler">
+                    <i class="gg-menu-left"></i>
+                </button>
+            </div>
+            <button class="topbar-toggler more">
+                <i class="gg-more-vertical-alt"></i>
+            </button>
         </div>
     </div>
 
@@ -54,7 +65,7 @@ $allMenus = [
                 </li>
 
                 <?php foreach ($allMenus as $name => $data): ?>
-                    <?php
+                <?php
                     if ($roleId != 1 && (!in_array($name, $menus))) continue;
 
                     // ✅ check if any keyword from "match" exists in current URL
@@ -66,12 +77,12 @@ $allMenus = [
                         }
                     }
                     ?>
-                    <li class="nav-item <?= $isActive ? 'active' : '' ?>">
-                        <a class="nav-link <?= $isActive ? 'active' : '' ?>" href="<?= base_url('admin/'.$data['url']) ?>">
-                            <i class="<?= $data['icon'] ?>"></i>
-                            <p><?= esc($name) ?></p>
-                        </a>
-                    </li>
+                <li class="nav-item <?= $isActive ? 'active' : '' ?>">
+                    <a class="nav-link <?= $isActive ? 'active' : '' ?>" href="<?= base_url('admin/'.$data['url']) ?>">
+                        <i class="<?= $data['icon'] ?>"></i>
+                        <p><?= esc($name) ?></p>
+                    </a>
+                </li>
                 <?php endforeach; ?>
 
                 <!-- Logout -->
