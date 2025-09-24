@@ -9,22 +9,22 @@
 
                     <div class="mb-3">
                         <label for="fullName" class="form-label fs-14">Full Name</label>
-                        <input type="text" id="name" name="name" value="<?= esc($user['name'] ?? '') ?>"
-                            class="form-control">
+                        <input type="text" id="name" name="name"  value="<?= esc($user['name'] ?? '') ?>"
+                            class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="grade" class="form-label fs-14">Grade</label>
-                        <input type="text" id="grade" name="grade" value="<?= esc($user['grade'] ?? '') ?>"
-                            class="form-control">
+                        <input type="text" id="grade" name="grade"  value="<?= esc($user['grade'] ?? '') ?>"
+                            class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="school" class="form-label fs-14">School</label>
-                        <input type="text" id="school" name="school" value="<?= esc($user['school'] ?? '') ?>"
-                            class="form-control">
+                        <input type="text" id="school" name="school"  value="<?= esc($user['school'] ?? '') ?>"
+                            class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="bio" class="form-label fs-14">Bio</label>
-                        <textarea id="bio" class="form-control" name="bio"
+                        <textarea id="bio" class="form-control fs-13"  name="bio"
                             rows="3"><?= esc($user['bio'] ?? '') ?></textarea>
                     </div>
 
@@ -39,7 +39,7 @@
                         <div class="d-flex align-items-center">
                             <i class="bi bi-envelope fs-5 me-2"></i>
                             <input type="email" id="email" name="email" value="<?= esc($user['email'] ?? '') ?>"
-                                class="form-control" readonly>
+                                class="form-control fs-13" readonly>
                         </div>
                     </div>
 
@@ -49,12 +49,13 @@
                         <div class="d-flex align-items-center">
                             <i class="bi bi-telephone fs-5 me-2"></i>
                             <input type="text" id="phone" name="phone" value="<?= esc($user['phone'] ?? '') ?>"
-                                class="form-control">
+                                class="form-control fs-13">
                         </div>
                     </div>
 
 
-
+                    <input type="hidden" name="profile_percentage"
+                        value="">
                 </div>
                 <!--Notifications--->
                 <div class="card card-pad mt-4">
@@ -114,21 +115,21 @@
                 <div class="card card-pad mt-4">
                     <h5 class="card-head mb-4">Security</h5>
                     <div id="passwordResponse" class="mt-2"></div>
-                    <div class="mb-3 position-relative">
+                    <!-- <div class="mb-3 position-relative">
                         <label for="password" class="form-label fs-14">Current Password</label>
-                        <input type="password" id="currentpassword" class="form-control" value="">
+                        <input type="password" id="currentpassword" class="form-control fs-13" value="">
                         <i class="bi bi-eye-slash end-0 translate-middle-y me-3 toggle-password"
                             data-target="currentpassword"></i>
-                    </div>
+                    </div> -->
                     <div class="mb-3 position-relative">
                         <label for="password" class="form-label fs-14">New Password</label>
-                        <input type="password" id="newpassword" class="form-control" value="">
+                        <input type="password" id="newpassword" class="form-control fs-13" value="">
                         <i class="bi bi-eye-slash end-0 translate-middle-y me-3 toggle-password"
                             data-target="newpassword"></i>
                     </div>
                     <div class="mb-3 position-relative">
                         <label for="password" class="form-label fs-14">Confirm Password</label>
-                        <input type="password" id="confirmpassword" class="form-control" value="">
+                        <input type="password" id="confirmpassword" class="form-control fs-13" value="">
                         <i class="bi bi-eye-slash end-0 translate-middle-y me-3 toggle-password"
                             data-target="confirmpassword"></i>
                     </div>
@@ -150,7 +151,6 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-
 $(function() {
     let formInitial = $("#profileForm").serialize(); // store initial form state
     let $saveBtn = $("#profileForm button[type='submit']");
@@ -167,7 +167,7 @@ $(function() {
         let $alertBox = $(container);
         $alertBox.html(
             `<div class="alert alert-${type} alert-dismissible fade show">${message}
-                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                 
             </div>`
         ).fadeIn();
 
@@ -178,7 +178,9 @@ $(function() {
 
         // Auto remove after 3 seconds
         setTimeout(() => {
-            $alertBox.find(".alert").fadeOut(function() { $(this).remove(); });
+            $alertBox.find(".alert").fadeOut(function() {
+                $(this).remove();
+            });
         }, 3000);
     }
 
@@ -194,15 +196,19 @@ $(function() {
             dataType: "json",
             success: function(res) {
                 let alertClass = res.status === "success" ? "success" : "danger";
-                let message = res.status === "success" 
-                    ? (res.message || "Profile updated successfully!") 
-                    : (res.message || "Something went wrong!");
+                let message = res.status === "success" ?
+                    (res.message || "Profile updated successfully!") :
+                    (res.message || "Something went wrong!");
 
                 showAlert(message, alertClass, "#profileResponse");
 
                 if (res.status === "success") {
                     formInitial = formCurrent;
                     $saveBtn.prop("disabled", true);
+                    // 🔥 Update header percentage
+                    $("#profileProgressCircle")
+                        .css("--percent", res.percentage + "%")
+                        .text(res.percentage + "%");
                 }
             },
             error: function() {
@@ -217,21 +223,23 @@ $(function() {
             url: "<?= base_url('change/password'); ?>",
             type: "POST",
             data: {
-                currentpassword: $("#currentpassword").val(),
+                // currentpassword: $("#currentpassword").val(),
                 newpassword: $("#newpassword").val(),
                 confirmpassword: $("#confirmpassword").val(),
             },
             dataType: "json",
             success: function(response) {
                 let alertClass = response.status === "success" ? "success" : "danger";
-                showAlert(response.message || "Password change response", alertClass, "#passwordResponse");
+                showAlert(response.message || "Password change response", alertClass,
+                    "#passwordResponse");
 
-                if (response.status === "success") {
-                    $("#currentpassword, #newpassword, #confirmpassword").val("");
-                }
+                // if (response.status === "success") {
+                //     $("#currentpassword, #newpassword, #confirmpassword").val("");
+                // }
             },
             error: function() {
-                showAlert("Something went wrong. Please try again.", "danger", "#passwordResponse");
+                showAlert("Something went wrong. Please try again.", "danger",
+                    "#passwordResponse");
             },
         });
     });
@@ -252,6 +260,4 @@ document.querySelectorAll(".toggle-password").forEach(icon => {
         }
     });
 });
-
-
 </script>
