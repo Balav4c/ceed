@@ -14,17 +14,12 @@
                 $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
             }
         });
-        $(document).on('click', '.read-desc', function () {
-            let description = $(this).data('description');
-
-            if (!description) {
-                description = "<em>No description available.</em>";
-            }
-
-            $("#descriptionContent").text(description); // plain text
-            $("#descriptionModal").modal("show");
+        $('#courseTable').on('click', '.read-desc', function () {
+            var fullDescription = $(this).data('description');
+            $('#modalDescription').text(fullDescription);
+            var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+            myModal.show();
         });
-
 
 
         $('#courseForm').on('submit', function (e) {
@@ -97,11 +92,10 @@
                 {
                     data: "description",
                     render: function (data, type, row) {
-                        if (!data)
-                            return '<a href="javascript:void(0);" class="read-desc" data-description="">Read Description</a>';
+                        if (!data) return '<a href="javascript:void(0);" class="read-desc" data-description="">Read Description</a>';
 
-                        let cleanDescription = $('<div>').html(data).text().trim(); // removes HTML tags & entities
-                        return '<a href="javascript:void(0);" class="read-desc" data-description="' + cleanDescription + '">Read Description</a>';
+                        let safeData = $('<div>').text(data).html(); // escape text safely
+                        return '<a href="javascript:void(0);" class="read-desc" data-description="' + safeData + '">Read Description</a>';
                     }
                 },
 

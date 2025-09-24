@@ -47,14 +47,14 @@ class Course extends BaseController
         $id = $this->request->getPost('course_id');
         $name = trim($this->request->getPost('name'));
         $description = $this->request->getPost('description');
+        $plainDescription = strip_tags($description);
         $duration_weeks = trim($this->request->getPost('duration_weeks'));
         if (empty($name) || empty($duration_weeks)) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Please Fill All Mandatory Fields.'
+                'message' => 'Please Fill In All Mandatory Fields.'
             ]);
         }
-        $plainDescription = isset($descriptions[0]) ? strip_tags($description[0]) : null;
         $courseData = [
             'name' => $this->request->getPost('name'),
             'description' =>  $plainDescription,
