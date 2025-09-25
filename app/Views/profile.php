@@ -2,29 +2,39 @@
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div id="profileResponse" class="mt-2"></div>
+            <div class="mb-3">
+                <label class="form-label fs-14">Profile Completion</label>
+                <div class="progress" style="height: 20px;">
+                    <div class="progress-bar bg-warning" role="progressbar" style="width: <?= $progress ?? 0 ?>%;"
+                        aria-valuenow="<?= $progress ?? 0 ?>" aria-valuemin="0" aria-valuemax="100">
+                        <?= $progress ?? 0 ?>%
+                    </div>
+                </div>
+            </div>
             <form id="profileForm">
                 <!--Personal Information Card-->
                 <div class="card card-pad">
                     <h5 class="card-head mb-4">Personal Information</h5>
 
+
                     <div class="mb-3">
                         <label for="fullName" class="form-label fs-14">Full Name</label>
-                        <input type="text" id="name" name="name"  value="<?= esc($user['name'] ?? '') ?>"
+                        <input type="text" id="name" name="name" value="<?= esc($user['name'] ?? '') ?>"
                             class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="grade" class="form-label fs-14">Grade</label>
-                        <input type="text" id="grade" name="grade"  value="<?= esc($user['grade'] ?? '') ?>"
+                        <input type="text" id="grade" name="grade" value="<?= esc($user['grade'] ?? '') ?>"
                             class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="school" class="form-label fs-14">School</label>
-                        <input type="text" id="school" name="school"  value="<?= esc($user['school'] ?? '') ?>"
+                        <input type="text" id="school" name="school" value="<?= esc($user['school'] ?? '') ?>"
                             class="form-control fs-13">
                     </div>
                     <div class="mb-3">
                         <label for="bio" class="form-label fs-14">Bio</label>
-                        <textarea id="bio" class="form-control fs-13"  name="bio"
+                        <textarea id="bio" class="form-control fs-13" name="bio"
                             rows="3"><?= esc($user['bio'] ?? '') ?></textarea>
                     </div>
 
@@ -54,8 +64,7 @@
                     </div>
 
 
-                    <input type="hidden" name="profile_percentage"
-                        value="">
+                    <input type="hidden" name="profile_percentage" value="">
                 </div>
                 <!--Notifications--->
                 <div class="card card-pad mt-4">

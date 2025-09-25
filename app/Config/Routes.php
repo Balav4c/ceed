@@ -22,6 +22,8 @@ $routes->get('profile', 'UserProfile::index');
 $routes->post('save/profile', 'UserProfile::saveProfile');
 $routes->post('change/password', 'UserProfile::changePassword');
 
+$routes->get('leaderboard', 'LeaderBoard::index');
+
 
 
 
