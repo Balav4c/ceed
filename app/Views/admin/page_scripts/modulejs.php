@@ -185,19 +185,20 @@
         }
 
         $moduleForm.on('input change', 'input, textarea', enableSaveButton);
-        $('#addModule').click(function () {
-            let moduleItem = $('.module-item:first').clone();
-            moduleItem.find('input, textarea').val('');
-            moduleItem.find('#fileUpload').fileUpload();
-            $moduleContainer.append(moduleItem);
-        });
-        $(document).on('click', '.remove-module', function () {
-            if ($('.module-item').length > 1) {
-                $(this).closest('.module-item').remove();
-            } else {
-                alert('At least one module is required.');
-            }
-        });
+        // $('#addModule').click(function () {
+        //     let moduleItem = $('.module-item:first').clone();
+        //     moduleItem.find('input, textarea').val('');
+        //     moduleItem.find('.fileUpload').html('<input type="file" name="module_videos[]">');
+        //     $('#module-container').append(moduleItem);
+        // });
+
+        // $(document).on('click', '.remove-module', function () {
+        //     if ($('.module-item').length > 1) {
+        //         $(this).closest('.module-item').remove();
+        //     } else {
+        //         alert('At least one module is required.');
+        //     }
+        // });
         $('#moduleTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
             $('#modalDescription').text(fullDescription);
@@ -278,7 +279,7 @@
                         .show();
 
                     setTimeout(function () {
-                        window.location.href = "<?= base_url('admin/manage_module'); ?>";
+                       location.reload(); 
                     }, 1500);
 
                 } else {
@@ -375,7 +376,7 @@
                         data: "module_id",
                         render: function (id) {
                             return `<div class="d-flex align-items-center gap-3">
-                        <a href="<?= base_url('admin/manage_module/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                        <a href="<?= base_url('admin/add_module/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
                         <a href="javascript:void(0);" class="delete-module" data-id="${id}" title="Delete" style="color: #dc3545;">

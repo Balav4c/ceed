@@ -18,23 +18,37 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php foreach($modules as $index => $module): ?>
-                            <tr>
-                                <td><?= $index + 1 ?></td>
-                                <td><?= esc($module['module_name']) ?></td>
-                                <td><?= esc($module['description']) ?></td>
-                                <td><?= esc($module['duration_weeks']) ?></td>
-                                <td>
-                                    <?php 
-                                    $videos = $videoModel->where('module_id', $module['module_id'])->findAll(); 
-                                    if ($videos):
-                                        foreach ($videos as $v): ?>
-                                            <a href="<?= base_url('uploads/videos/' . $v['video_file']) ?>" target="_blank"><?= esc($v['video_file']) ?></a><br>
-                                    <?php endforeach; else: ?>
-                                        No videos
-                                    <?php endif; ?>
-                                </td>
-                            </tr>
+                            <?php foreach ($modules as $index => $module): ?>
+                                <tr>
+                                    <td><?= $index + 1 ?></td>
+                                    <td><?= esc($module['module_name']) ?></td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="read-desc"
+                                            data-description="<?= esc($module['description'], 'attr') ?>"
+                                            data-name="<?= esc($module['module_name'], 'attr') ?>">
+                                            Read Description
+                                        </a>
+                                    </td>
+
+                                    <td><?= esc($module['duration_weeks']) ?></td>
+                                    <td>
+                                        <?php
+                                        $videos = $videoModel->where('module_id', $module['module_id'])->findAll();
+                                        if ($videos):
+                                            foreach ($videos as $v): ?>
+                                                <a href="javascript:void(0);" class="play-video"
+                                                    data-video="<?= base_url('public/uploads/videos/' . $v['video_file']) ?>"
+                                                    data-name="<?= esc($v['video_file'], 'attr') ?>" data-title="${v}">Play Video
+                                                    <i class="bi bi-play-circle"></i>
+                                                </a><br>
+                                            <?php endforeach;
+                                        else: ?>
+                                            No videos
+                                        <?php endif; ?>
+                                    </td>
+
+
+                                </tr>
                             <?php endforeach; ?>
                         </tbody>
                     </table>
@@ -45,3 +59,59 @@
         </div>
     </div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="descriptionModalLabel">Course Description</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="modalDescription"></div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="videoModal" tabindex="-1" aria-labelledby="videoModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="videoModalLabel">Video Player</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <video id="popupVideo" width="100%" controls>
+                    <source src="" type="video/mp4">
+                    Your browser does not support HTML5 video.
+                </video>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).on('click', '.read-desc', function () {
+        var fullDescription = $(this).data('description');
+        var courseName = $(this).data('name');
+
+        $('#descriptionModalLabel').text("Course Description: " + courseName);
+        $('#modalDescription').text(fullDescription);
+
+        var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+        myModal.show();
+    });
+    $(document).on('click', '.play-video', function () {
+        var videoSrc = $(this).data('video');
+        var videoName = $(this).data('name'); // 👈 get video name
+
+        $('#popupVideo source').attr('src', videoSrc);
+        $('#popupVideo')[0].load(); // reload video
+
+        $('#videoModalLabel').text(videoName); // 👈 change modal title
+
+        var myModal = new bootstrap.Modal(document.getElementById('videoModal'));
+        myModal.show();
+    });
+
+
+
+</script>

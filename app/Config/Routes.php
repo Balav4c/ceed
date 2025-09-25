@@ -44,10 +44,10 @@ $routes->get('admin/logout', 'admin\Login::logout');
 
 
 // Manage leader board
-$routes->get('admin/leader_board' , 'admin\LeaderBoard::index');
-$routes->post('admin/leader_board/leaderboardListAjax', 'admin\LeaderBoard::leaderboardListAjax');
-$routes->post('admin/leader_board/delete', 'admin\LeaderBoard::delete');
-$routes->post('admin/leader_board/toggleStatus', 'admin\LeaderBoard::toggleStatus');
+$routes->get('admin/manage_leaderboard' , 'admin\LeaderBoard::index');
+$routes->post('admin/manage_leaderboard/leaderboardListAjax', 'admin\LeaderBoard::leaderboardListAjax');
+$routes->post('admin/manage_leaderboard/delete', 'admin\LeaderBoard::delete');
+$routes->post('admin/manage_leaderboard/toggleStatus', 'admin\LeaderBoard::toggleStatus');
 
 // Manage Admin user
 $routes->get('admin/manage_user' , 'admin\User::index');
@@ -88,12 +88,12 @@ $routes->get('admin/manage_course/modules/(:num)', 'admin\Course::viewCourseModu
 
 // Open add_module with course_id
 $routes->get('admin/add_module/(:num)', 'admin\CourseModule::index/$1');
-$routes->get('admin/add_module', 'admin\CourseModule::addModule');
+// $routes->get('admin/add_module', 'admin\CourseModule::addModule');
 $routes->post('admin/save_module', 'admin\CourseModule::save');
 $routes->get('admin/manage_module', 'admin\CourseModule::addModule');
 $routes->post('admin/manage_module/modulelistajax', 'admin\CourseModule::moduleListAjax'); 
 $routes->post('admin/coursemodule/uploadVideo', 'admin\CourseModule::uploadVideo');
-$routes->get('admin/manage_module/edit/(:num)', 'admin\CourseModule::edit/$1');
+$routes->get('admin/add_module/edit/(:num)', 'admin\CourseModule::edit/$1');
 $routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::update/$1');
 $routes->post('admin/manage_module/delete', 'admin\CourseModule::delete');
 $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleStatus');

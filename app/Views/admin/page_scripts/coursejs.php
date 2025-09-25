@@ -14,9 +14,15 @@
                 $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
             }
         });
-          $('#courseTable').on('click', '.read-desc', function () {
+        $('#courseTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
+            var courseName = $(this).data('name');
+
+            
+            $('#descriptionModalLabel').text(courseName);
+
             $('#modalDescription').text(fullDescription);
+
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
@@ -88,14 +94,17 @@
                         return data.replace(/\b\w/g, c => c.toUpperCase());
                     }
                 },
-                 {
-                        data: "description",
-                        render: function (data) {
-                            if (!data) return '<a href="javascript:void(0)" class="read-desc" data-description="">Read Description</a>';
-                            let safeData = data.replace(/"/g, '&quot;');
-                            return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}">Read Description</a>`;
+                {
+                    data: "description",
+                    render: function (data, type, row) {
+                        if (!data) {
+                            return `<a href="javascript:void(0)" class="read-desc" data-description="" data-name="${row.name}">Read Description</a>`;
                         }
-                    },
+                        let safeData = data.replace(/"/g, '&quot;');
+                        let safeName = row.name.replace(/"/g, '&quot;'); // 👈 escape course name
+                        return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}" data-name="${safeName}">Read Description</a>`;
+                    }
+                },
                 { data: "duration_weeks" },
                 {
                     data: "status",
