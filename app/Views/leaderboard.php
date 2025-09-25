@@ -35,7 +35,7 @@
 
                 <!-- Points -->
                 <div class="col-md-6">
-                    <div class="card p-3 stat-card">
+                    <div class="card p-3 stat-card point">
                         <div class="d-flex justify-content-between align-items-center p-3">
                             <div class="para">
                                 <p class="mb-1 text-muted  fs-14">Points</p>

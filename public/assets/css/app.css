@@ -64,19 +64,7 @@
   transition: opacity 0.5s ease-in-out;
 }
 
-.progress-circle {
-  --percent: 0%;
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-  background: conic-gradient(#ee962c var(--percent), #e0e0e0 0%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: bold;
-  color: #333;
-}
+
 
 .fs-13 {
   font-size: 13px !important;
@@ -155,4 +143,40 @@ color: #EE962C
 }
 .stat-card{
   border-radius: 16px !important;
+}
+
+.resp-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 1050;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.resp-menu.active {
+  display: block;
+}
+
+.resp-menu-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.resp-menu-item a {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #333;
+}
+
+
+@media screen and (max-width: 764px) {
+  .point {
+    margin-top: 30px;
+  }
 }

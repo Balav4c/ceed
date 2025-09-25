@@ -2,19 +2,31 @@
     <div class="row justify-content-center">
         <div class="col-md-7">
             <div id="profileResponse" class="mt-2"></div>
-            <div class="mb-3">
-                <label class="form-label fs-14">Profile Completion</label>
-                <div class="progress" style="height: 20px;">
-                    <div class="progress-bar bg-warning" role="progressbar" style="width: <?= $progress ?? 0 ?>%;"
-                        aria-valuenow="<?= $progress ?? 0 ?>" aria-valuemin="0" aria-valuemax="100">
-                        <?= $progress ?? 0 ?>%
-                    </div>
-                </div>
-            </div>
+
+
+
             <form id="profileForm">
                 <!--Personal Information Card-->
                 <div class="card card-pad">
-                    <h5 class="card-head mb-4">Personal Information</h5>
+                    <div class="row align-items-center mb-3">
+                        <!-- Left side -->
+                        <div class="col-md-6">
+                            <h5 class="card-head mb-0">Personal Information</h5>
+                        </div>
+                        <!-- Right side -->
+                        <div class="col-md-6 text-end">
+                            <label class="form-label fs-14 mb-1">Profile Completion</label>
+                            <div class="progress" style="height: 20px; max-width: 160px; margin-left: auto;">
+                                <div id="profileProgressBar" class="progress-bar bg-warning" role="progressbar"
+                                    style="width: <?= $progress ?? 0 ?>%;" aria-valuenow="<?= $progress ?? 0 ?>"
+                                    aria-valuemin="0" aria-valuemax="100">
+                                    <?= $progress ?? 0 ?>%
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+
 
 
                     <div class="mb-3">
@@ -205,18 +217,21 @@ $(function() {
             dataType: "json",
             success: function(res) {
                 let alertClass = res.status === "success" ? "success" : "danger";
-                let message = res.status === "success" ?
-                    (res.message || "Profile updated successfully!") :
-                    (res.message || "Something went wrong!");
+                let message =
+                    res.status === "success" ?
+                    res.message || "Profile updated successfully!" :
+                    res.message || "Something went wrong!";
 
                 showAlert(message, alertClass, "#profileResponse");
 
                 if (res.status === "success") {
                     formInitial = formCurrent;
                     $saveBtn.prop("disabled", true);
-                    // 🔥 Update header percentage
-                    $("#profileProgressCircle")
-                        .css("--percent", res.percentage + "%")
+
+                    // Update only the correct progress bar
+                    $("#profileProgressBar")
+                        .css("width", res.percentage + "%")
+                        .attr("aria-valuenow", res.percentage)
                         .text(res.percentage + "%");
                 }
             },
@@ -225,6 +240,7 @@ $(function() {
             },
         });
     });
+
 
     // Change password submit
     $("#changePasswordBtn").click(function() {
