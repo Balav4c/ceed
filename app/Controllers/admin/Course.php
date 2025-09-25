@@ -221,24 +221,35 @@ class Course extends BaseController
     }
  public function viewCourseModules($courseId)
     {
+        
 
         $course = $this->courseModel->find($courseId);
+        
         if (!$course) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Course not found');
         }
 
         $modules = $this->moduleModel->where('course_id', $courseId)->findAll();
+        
+       
 
-        $videoModel = new VideoModel();
-
+        $videoModel = new CourseVideoModel();
+        
+         
         // Pass data to view
         $data = [
             'course' => $course,
             'modules' => $modules,
             'videoModel' => $videoModel
         ];
+         
+    $template  = view('admin/common/header');
+    $template .= view('admin/common/sidemenu');
+    $template .= view('admin/view_module', $data);
+    $template .= view('admin/common/footer');
+    $template .= view('admin/page_scripts/coursejs');
 
-        return view('admin/view_module', $data);
+        return $template;
     }
     public function delete()
     {
