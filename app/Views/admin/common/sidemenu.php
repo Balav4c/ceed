@@ -4,7 +4,7 @@ $roleId = $session->get('role_id');
 $menus   = $session->get('role_menu'); 
 
 $uri          = service('uri');
-$currentPath  = uri_string(); // e.g. "admin/manage_user/edit/5"
+$currentPath  = uri_string(); 
 
 // define menus with keywords that should keep it active
 $allMenus = [
@@ -22,6 +22,11 @@ $allMenus = [
         'url'   => 'manage_course',
         'icon'  => 'bi bi-book',
         'match' => ['manage_course', 'add_course', 'add_module']
+    ],
+    'Manage Leader Board' => [
+        'url'   => 'leader_board',
+        'icon'  => 'bi bi-bar-chart-fill',
+        'match' => ['leader_board']
     ],
     // add more menus with their subpage keywords
 ];
@@ -56,8 +61,6 @@ $allMenus = [
                 <?php foreach ($allMenus as $name => $data): ?>
                     <?php
                     if ($roleId != 1 && (!in_array($name, $menus))) continue;
-
-                    // ✅ check if any keyword from "match" exists in current URL
                     $isActive = false;
                     foreach ($data['match'] as $keyword) {
                         if (strpos($currentPath, $keyword) !== false) {

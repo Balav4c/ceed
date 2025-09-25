@@ -7,7 +7,7 @@ $(document).ready(function () {
     $('#userForm input, #userForm select, #userForm textarea').on('input change', function () {
         $('#saveUserBtn').prop('disabled', false);
     });
-    // --- Save Button Click ---
+    // ---  Manage admin user Save Button Click ---
    $(document).ready(function() {
     var $form = $('#userForm');
     var $btn = $('#saveUserBtn');
@@ -105,7 +105,7 @@ $(document).ready(function () {
             });
         });
     });
-
+// Manage admin user table
      var table = $('#userTable').DataTable({
         ajax: {
             url: "<?= base_url('admin/manage_user/userlistajax') ?>",
@@ -180,6 +180,7 @@ $(document).ready(function () {
         language: { infoFiltered: "" }
     });
  
+// Manage admin user password toggle
 
     $(document).on("click", ".toggle-password", function () {
         let input = $($(this).data("target"));
@@ -193,49 +194,51 @@ $(document).ready(function () {
     });
 
  });
- // toggle switch
-    $('#userTable').on('change', '.toggle-status', function () {
-    let userId = $(this).data('id');
-    let newStatus = $(this).is(':checked') ? 1 : 2;
- 
-    $.ajax({
-        url: "<?= base_url('admin/manage_user/toggleStatus') ?>",
-        type: "POST",
-        data: {
-            user_id: userId,
-            status: newStatus,
-            "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
-        },
-        dataType: "json",
-            success: function(response) {
-                let $msg = $('#messageBox');
-                $msg.removeClass('d-none alert-success alert-danger');
- 
-                if (response.status === 'success') {
-                    $msg.addClass('alert-success').text(response.message).show();
-                    setTimeout(function() {
-                        $msg.fadeOut();
-                        table.ajax.reload(null, false);
-                    }, 1500);
-                } else {
-                    $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
-                    setTimeout(function() {
-                        $msg.fadeOut();
-                    }, 2000);
-                }
-            },
-        error: function(xhr, status, error) {
-            console.error(xhr.responseText);
-            let $msg = $('#messageBox');
-            $msg.removeClass('d-none alert-success').addClass('alert-danger')
-                .text('Error Updating Status').show();
-            setTimeout(function() { $msg.fadeOut(); }, 2000);
-        }
-    });
-});
- 
+ // Manage admin user toggle switch
 
- $(document).on("click", ".delete-all", function (e) {
+    $('#userTable').on('change', '.toggle-status', function () {
+        let userId = $(this).data('id');
+        let newStatus = $(this).is(':checked') ? 1 : 2;
+    
+        $.ajax({
+            url: "<?= base_url('admin/manage_user/toggleStatus') ?>",
+            type: "POST",
+            data: {
+                user_id: userId,
+                status: newStatus,
+                "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+            },
+            dataType: "json",
+                success: function(response) {
+                    let $msg = $('#messageBox');
+                    $msg.removeClass('d-none alert-success alert-danger');
+    
+                    if (response.status === 'success') {
+                        $msg.addClass('alert-success').text(response.message).show();
+                        setTimeout(function() {
+                            $msg.fadeOut();
+                            table.ajax.reload(null, false);
+                        }, 1500);
+                    } else {
+                        $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
+                        setTimeout(function() {
+                            $msg.fadeOut();
+                        }, 2000);
+                    }
+                },
+            error: function(xhr, status, error) {
+                console.error(xhr.responseText);
+                let $msg = $('#messageBox');
+                $msg.removeClass('d-none alert-success').addClass('alert-danger')
+                    .text('Error Updating Status').show();
+                setTimeout(function() { $msg.fadeOut(); }, 2000);
+            }
+        });
+    });
+ 
+// Manage admin user delete
+
+    $(document).on("click", ".delete-all", function (e) {
         e.preventDefault();
         let userId = $(this).data("id");
  
@@ -291,4 +294,160 @@ $(document).ready(function () {
             }
         });
     });
+
+    // leaderboard table js
+
+    var table = $('#leaderTable').DataTable({
+    ajax: {
+        url: "<?= base_url('admin/leader_board/leaderboardListAjax') ?>",
+        type: "POST",
+        data: function(d) {
+            d.selected_date = $('#filterDate').val(); 
+        },
+        dataSrc: "data"
+    },
+    serverSide: true,
+    processing: true,
+    ordering: true,
+    searching: true,
+    paging: true,
+    columns: [
+        { data: "slno" },
+        { data: "name", render: d => d ? d.replace(/\b\w/g,c=>c.toUpperCase()) : '' },
+        { data: "course_name", render: d => d ? d.replace(/\b\w/g,c=>c.toUpperCase()) : '' },
+        { data: "module_name", render: d => d ? d.replace(/\b\w/g,c=>c.toUpperCase()) : 'N/A' },
+        { data: "score" }, 
+        { data: "rank" },  
+        {
+            data: "status",
+            render: function(data, type, row){
+                let checked = data == 1 ? 'checked' : '';
+                return `<div class="form-check form-switch">
+                            <input class="form-check-input toggle-status"
+                                   type="checkbox"
+                                   data-id="${row.leaderboard_id}" ${checked}>
+                        </div>`;
+            }
+        },
+        
+        {
+            data: "leaderboard_id",
+            render: function (id) {
+                return `<div class="d-flex align-items-center gap-3">
+                            <a href="javascript:void(0);" class="delete-all"
+                               data-id="${id}" title="Delete" style="color:#dc3545;">
+                               <i class="bi bi-trash-fill"></i>
+                            </a>
+                        </div>`;
+            }
+        }
+    ],
+    order: [[5, 'asc']], 
+    columnDefs: [
+        { orderable: false, searchable: false, targets: [0,6,7] }
+    ]
+});
+$('#filterDate').on('change', function() {
+    table.ajax.reload();
+});
+
+// leaderboard delete
+
+    $(document).on("click", ".delete-all", function (e) {
+    e.preventDefault();
+    let leaderboardId = $(this).data("id");
+
+    swal({
+        title: "Are You Sure?",
+        text: "You want to delete this leaderboard entry!",
+        icon: "warning",
+        buttons: {
+            cancel: {
+                visible: true,
+                text: "Cancel",
+                className: "btn btn-danger",
+            },
+            confirm: {
+                text: "Delete",
+                className: "btn btn-success",
+            },
+        },
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url: "<?= base_url('admin/leader_board/delete') ?>",
+                type: "POST",
+                data: {
+                    leaderboard_id: leaderboardId,
+                    "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.success) {
+                        swal("Deleted!", response.message, {
+                            icon: "success",
+                            buttons: {
+                                confirm: { className: "btn btn-success" },
+                            },
+                        });
+                        $('#leaderTable').DataTable().ajax.reload(); 
+                    } else {
+                        swal("Error!", response.message, "error");
+                    }
+                },
+                error: function () {
+                    swal("Error!", "Something went wrong. Try again.", "error");
+                },
+            });
+        } else {
+            swal("Your Data Is Safe!", {
+                buttons: {
+                    confirm: { className: "btn btn-success" },
+                },
+            });
+        }
+    });
+});
+
+// leaderboard toggle status
+
+$('#leaderTable').on('change', '.toggle-status', function () {
+    let $checkbox = $(this);
+    let leaderboardId = $checkbox.data('id'); 
+    let newStatus = $checkbox.is(':checked') ? 1 : 2;
+
+    $.ajax({
+        url: "<?= base_url('admin/leader_board/toggleStatus') ?>",
+        type: "POST",
+        data: {
+            leaderboard_id: leaderboardId,
+            status: newStatus,
+            "<?= csrf_token() ?>": "<?= csrf_hash() ?>" 
+        },
+        dataType: "json",
+        success: function(response) {
+            let $msg = $('#messageBox');
+            $msg.removeClass('d-none alert-success alert-danger');
+
+            if (response.success) {
+                $msg.addClass('alert-success').text(response.message).show();
+                setTimeout(() => $msg.fadeOut(), 1500);
+            } else {
+                $msg.addClass('alert-danger').text(response.message || 'Failed To Update Status').show();
+                $checkbox.prop('checked', !$checkbox.is(':checked')); 
+                setTimeout(() => $msg.fadeOut(), 2000);
+            }
+        },
+        error: function(xhr) {
+            console.error(xhr.responseText);
+            let $msg = $('#messageBox');
+            $msg.removeClass('d-none alert-success')
+                .addClass('alert-danger')
+                .text('Error Updating Status')
+                .show();
+            $checkbox.prop('checked', !$checkbox.is(':checked')); 
+            setTimeout(() => $msg.fadeOut(), 2000);
+        }
+    });
+});
 </script>

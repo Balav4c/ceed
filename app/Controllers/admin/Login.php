@@ -20,7 +20,7 @@ class Login extends BaseController
 
 public function login()
 {
-     $session = session();
+    $session = session();
     $email = $this->request->getPost('email');
     $password = $this->request->getPost('password');
 
@@ -34,33 +34,31 @@ public function login()
     $loginModel = new LoginModel();
     $user = $loginModel->checkLoginUser($email, $password);
 
-if ($user === 'invalid') {
-    return $this->response->setJSON([
-        "success"  => false,
-        "message" => "Invalid Email Or Password."
-    ]);
-}
+    if ($user === 'invalid') {
+        return $this->response->setJSON([
+            "success"  => false,
+            "message" => "Invalid Email Or Password."
+        ]);
+    }
 
-if ($user === 'removed') {
-    return $this->response->setJSON([
-        "success"  => false,
-        "message" => "Access Denied. Your Account Has Been Removed."
-    ]);
-}
+    if ($user === 'removed') {
+        return $this->response->setJSON([
+            "success"  => false,
+            "message" => "Access Denied. Your Account Has Been Removed."
+        ]);
+    }
 
-if ($user === 'suspended') {
-    return $this->response->setJSON([
-        "success"  => false,
-        "message" => "Your Account Has Been Suspended By Admin."
-    ]);
-}
-
-$roleMenuModel = new RoleMenuModel();
-$menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
-
-$menuNames = array_map(function($menu) {
-    return $menu['menu_name'];
-}, $menus);
+    if ($user === 'suspended') {
+        return $this->response->setJSON([
+            "success"  => false,
+            "message" => "Your Account Has Been Suspended By Admin."
+        ]);
+    }
+    $roleMenuModel = new RoleMenuModel();
+    $menus = $roleMenuModel->where('role_id', $user->role_id)->findAll();
+    $menuNames = array_map(function($menu) {
+        return $menu['menu_name'];
+    }, $menus);
      
          // Set session data
     $session->set([
@@ -89,5 +87,10 @@ public function logout()
     return redirect()->to(base_url('admin'));
 }
 
-
+// public function logout()
+//     {
+//         $session = session();
+//         $session->remove(['user_id', 'user_name', 'user_email', 'role_id', 'role_menu']);
+//         return redirect()->to(base_url('admin'));
+//     }
 }
