@@ -61,7 +61,7 @@
                             </div>
                             <div class="d-flex justify-content-end">
                                 <small class="p-1">
-                                    <a class="login-text-color" href="#">Forgot Password?</a>
+                                    <a class="login-text-color" href="<?= base_url('forget_password') ?>">Forgot Password?</a>
                                 </small>
                             </div>
                         </div>

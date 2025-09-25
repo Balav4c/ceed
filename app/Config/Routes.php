@@ -12,6 +12,8 @@ $routes->get('/', 'Home::index');
 $routes->get('signin','Login::index');
 $routes->get('signup','Login::signup');
 
+$routes->get('forget_password','Login::forgetPassword');
+
 $routes->post('auth/login', 'Login::login');
 $routes->post('save/user','Login::saveUser');
 $routes->get('logout', 'Login::logout');

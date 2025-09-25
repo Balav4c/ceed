@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <title>CEED - Empowering Kids with Growth</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -11,9 +10,7 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" />
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap"
         rel="stylesheet">
-
 </head>
-
 <body>
     <div class="container-fluid">
         <div class="row">
@@ -35,9 +32,9 @@
             <!-- Right side with login form -->
             <div class="col-md-7 d-flex align-items-center justify-content-center login-form-section">
                 <div class="login-form w-60">
-                    <p class="welcome">Welcome Back!</p>
+                    <p class="welcome">Forget Password</p>
                     <p class="mb-3 sub-content">
-                        Pick up right where you left off in your learning journey.
+                      Enter your email and we'll send you a reset link.
                     </p>
 
                     <div id="responseMessage"></div>
@@ -45,80 +42,49 @@
 
                     <form id="loginForm" class="mt-4">
                         <div class="mb-3">
-                            <label for="email" class="form-label fs-14">Email Address</label>
-                            <input type="email" id="email" name="email" class="form-control fc-font"
+                            <label for="email" class="form-label fs-14 ">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control fc-font p-3"
                                 placeholder="Enter email address">
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label fs-14">Password</label>
-                            <div class="input-group">
-                                <input type="password" id="password" name="password" class="form-control fc-font"
-                                    placeholder="Enter your password">
-                                <span class="input-group-text eye-icon" id="togglePassword" style="cursor: pointer;">
-                                    <i class="bi bi-eye-slash" id="toggleIcon"></i>
-                                </span>
-                            </div>
-                            <div class="d-flex justify-content-end">
-                                <small class="p-1">
-                                    <a class="login-text-color" href="#">Forgot Password?</a>
-                                </small>
-                            </div>
-                        </div>
 
 
-                        <button type="submit" class="btn btn-signin w-100 mb-3">Sign In</button>
-
-                        <!-- <div class="text-center mb-3">or</div> -->
-                        <div class="separator text-center mb-3">or</div>
-
-
-                        <button type="button" class="btn btn-outline-secondary w-100 mb-3 p-3">
-                            <img class="google-icon"
-                                src="<?php echo base_url().ASSET_PATH; ?>assets/img/social_icons/google.png"> Continue
-                            with Google
-                        </button>
-
-                        <div class="text-center">
-                            Don’t have an account? <a href="#" class="login-text-color">Sign Up</a>
-                        </div>
+                        <button type="submit" class="btn btn-signin w-100 mt-3">Confirm</button>
                     </form>
                 </div>
             </div>
         </div>
     </div>
-
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/jquery-3.7.1.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/bootstrap.bundle.min.js"></script>
     <script src="<?php echo base_url().ASSET_PATH; ?>assets/js/app.js"></script>
-
     <script>
-   $(document).ready(function() {
-    $("#loginForm").submit(function(e) {
-        e.preventDefault(); 
-    
-        $.ajax({
-            url: "<?= base_url('auth/login'); ?>",
-            type: "POST",
-            data: $(this).serialize(),
-            dataType: "json",
-            success: function(response) {
-                if (response.status === "success") {
-                    showAlert(response.message, 'success');
+    $(document).ready(function() {
+        $("#loginForm").submit(function(e) {
+            e.preventDefault(); 
+        
+            $.ajax({
+                url: "<?= base_url('auth/login'); ?>",
+                type: "POST",
+                data: $(this).serialize(),
+                dataType: "json",
+                success: function(response) {
+                    if (response.status === "success") {
+                        showAlert(response.message, 'success');
 
-                    // redirect to dashboard after 1 sec
-                    setTimeout(() => {
-                        window.location.href = "<?= base_url('/'); ?>";
-                    }, 1000);
-                } else {
-                    showAlert(response.message, 'danger');
+                        // redirect to dashboard after 1 sec
+                        setTimeout(() => {
+                            window.location.href = "<?= base_url('/'); ?>";
+                        }, 1000);
+                    } else {
+                        showAlert(response.message, 'danger');
+                    }
+                },
+                error: function() {
+                    showAlert("Something went wrong. Please try again.", 'danger');
                 }
-            },
-            error: function() {
-                showAlert("Something went wrong. Please try again.", 'danger');
-            }
+            });
         });
     });
-});
 
 // ✅ Reusable Alert Function
 function showAlert(message, type = 'danger') {
