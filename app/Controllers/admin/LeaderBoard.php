@@ -26,7 +26,7 @@ class LeaderBoard extends BaseController
     {
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
-        $template .= view('admin/leader_board');       
+        $template .= view('admin/manage_leaderboard');       
         $template .= view('admin/common/footer');
         $template .= view('admin/page_scripts/userjs'); 
         return $template;
@@ -68,16 +68,16 @@ class LeaderBoard extends BaseController
     foreach ($records as $row) {
         $data[] = [
             'slno'        => $slno++,
+            'leaderboard_id'=> $row->leaderboard_id,
             'name'        => $row->user_name ?? 'N/A',
             'course_name' => $row->course_name ?? 'N/A',
             'module_name' => $row->module_name ?? 'N/A',
             'score'       => $row->score ?? 'N/A',   
             'rank'        => $row->rank ?? 'N/A',    
             'status'      => $row->status,
-            'leaderboard_id' => $row->leaderboard_id
+            'date'        => $row->created_at
         ];
     }
-
     return $this->response->setJSON([
         "draw"            => intval($draw),
         "recordsTotal"    => $totalCount,
@@ -85,29 +85,25 @@ class LeaderBoard extends BaseController
         "data"            => $data
     ]);
 }
+    // public function delete()
+    // {
+    //     $leaderboard_id = $this->request->getPost('leaderboard_id');
+    //     if (!$leaderboard_id) {
+    //         return $this->response->setJSON([
+    //             'success' => false,
+    //             'message' => 'Leaderboard ID Is Required.'
+    //         ]);
+    //     }
+    //     $this->leaderboardModel->update($leaderboard_id, [
+    //         'status'     => 9, 
+    //         'updated_at' => date("Y-m-d H:i:s")
+    //     ]);
 
-
-    public function delete()
-    {
-        $leaderboard_id = $this->request->getPost('leaderboard_id');
-        if (!$leaderboard_id) {
-            return $this->response->setJSON([
-                'success' => false,
-                'message' => 'Leaderboard ID Is Required.'
-            ]);
-        }
-
-        $this->leaderboardModel->update($leaderboard_id, [
-            'status'     => 9, 
-            'updated_at' => date("Y-m-d H:i:s")
-        ]);
-
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Leaderboard Entry Deleted Successfully.'
-        ]);
-    }
-
+    //     return $this->response->setJSON([
+    //         'success' => true,
+    //         'message' => 'Leaderboard Entry Deleted Successfully.'
+    //     ]);
+    // }
     public function toggleStatus()
     {
     if ($this->request->isAJAX()) {
