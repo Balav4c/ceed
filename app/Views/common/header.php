@@ -53,16 +53,15 @@ $progress = $profile['profile_percentage'] ?? 0;
 
                                         <!-- Circular Progress (inline with name) -->
                                         <!-- <div id="profileProgressCircle" class="progress-circle"></div> -->
-                                        <div id="profileProgressCircle" class="progress-circle"
-                                            style="--percent: <?= $progress ?? 0 ?>%;">
-                                            <?= $progress ?? 0 ?>%
-                                        </div>
+                                      
 
                                     </button>
 
                                     <div class="dropdown-menu dropdown-menu-right" aria-labelledby="userMenu">
                                         <a class="dropdown-item drop-menu"
                                             href="<?= base_url('profile'); ?>">Profile</a>
+                                            <a class="dropdown-item drop-menu"
+                                            href="<?= base_url('leaderboard'); ?>">Leaderboard</a>
                                         <a class="dropdown-item drop-menu" id="logout-btn">Logout</a>
                                     </div>
                                 </div>
