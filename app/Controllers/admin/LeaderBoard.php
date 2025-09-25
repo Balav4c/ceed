@@ -93,7 +93,7 @@ class LeaderBoard extends BaseController
         if (!$leaderboard_id) {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Leaderboard ID is required.'
+                'message' => 'Leaderboard ID Is Required.'
             ]);
         }
 
@@ -104,7 +104,7 @@ class LeaderBoard extends BaseController
 
         return $this->response->setJSON([
             'success' => true,
-            'message' => 'Leaderboard entry deleted successfully.'
+            'message' => 'Leaderboard Entry Deleted Successfully.'
         ]);
     }
 
@@ -133,7 +133,7 @@ class LeaderBoard extends BaseController
         } else {
             return $this->response->setJSON([
                 'success' => false,
-                'message' => 'Update Failed. Check allowedFields or primaryKey.'
+                'message' => 'Update Failed.'
             ]);
         }
     }

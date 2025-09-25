@@ -359,7 +359,7 @@ $('#filterDate').on('change', function() {
 
     swal({
         title: "Are You Sure?",
-        text: "You want to delete this leaderboard entry!",
+        text: "You Want To Delete This Entry!",
         icon: "warning",
         buttons: {
             cancel: {
@@ -396,7 +396,7 @@ $('#filterDate').on('change', function() {
                     }
                 },
                 error: function () {
-                    swal("Error!", "Something went wrong. Try again.", "error");
+                    swal("Error!", "Something Went Wrong. Try Again.", "error");
                 },
             });
         } else {
