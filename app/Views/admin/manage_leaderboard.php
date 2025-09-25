@@ -25,8 +25,8 @@
                         <th>Module Name</th>
                         <th>Score</th>
                         <th>Rank</th>
+                        <th>Date</th>
                         <th>Status</th>
-                        <th>Action</th>
                     </tr>
                 </thead>
                 <tbody></tbody>

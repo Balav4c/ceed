@@ -24,9 +24,9 @@ $allMenus = [
         'match' => ['manage_course', 'add_course', 'add_module']
     ],
     'Manage Leader Board' => [
-        'url'   => 'leader_board',
+        'url'   => 'manage_leaderboard',
         'icon'  => 'bi bi-bar-chart-fill',
-        'match' => ['leader_board']
+        'match' => ['manage_leaderboard']
     ],
     // add more menus with their subpage keywords
 ];

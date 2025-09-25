@@ -72,6 +72,11 @@
   overflow-x: hidden;
 }
 
+/* leader board table  */
+table.dataTable thead>tr>th div.dt-column-header span.dt-column-title {
+  text-align:left !important;
+  padding-left: 13px;
+}
 .dt-search,
 .dt-length {
   padding: 2px 2px 17px !important;

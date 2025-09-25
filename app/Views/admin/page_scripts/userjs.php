@@ -299,7 +299,7 @@ $(document).ready(function () {
 
     var table = $('#leaderTable').DataTable({
     ajax: {
-        url: "<?= base_url('admin/leader_board/leaderboardListAjax') ?>",
+        url: "<?= base_url('admin/manage_leaderboard/leaderboardListAjax') ?>",
         type: "POST",
         data: function(d) {
             d.selected_date = $('#filterDate').val(); 
@@ -317,7 +317,8 @@ $(document).ready(function () {
         { data: "course_name", render: d => d ? d.replace(/\b\w/g,c=>c.toUpperCase()) : '' },
         { data: "module_name", render: d => d ? d.replace(/\b\w/g,c=>c.toUpperCase()) : 'N/A' },
         { data: "score" }, 
-        { data: "rank" },  
+        { data: "rank" },
+        { data: "date" },  
         {
             data: "status",
             render: function(data, type, row){
@@ -329,85 +330,73 @@ $(document).ready(function () {
                         </div>`;
             }
         },
-        
-        {
-            data: "leaderboard_id",
-            render: function (id) {
-                return `<div class="d-flex align-items-center gap-3">
-                            <a href="javascript:void(0);" class="delete-all"
-                               data-id="${id}" title="Delete" style="color:#dc3545;">
-                               <i class="bi bi-trash-fill"></i>
-                            </a>
-                        </div>`;
-            }
-        }
     ],
-    order: [[5, 'asc']], 
+    order: [], // for default sorting [[5, 'asc']] column5 ascending order
     columnDefs: [
-        { orderable: false, searchable: false, targets: [0,6,7] }
+        { orderable: false, searchable: false, targets: [0,6] }
     ]
 });
 $('#filterDate').on('change', function() {
     table.ajax.reload();
 });
 
-// leaderboard delete
+// // leaderboard delete
 
-    $(document).on("click", ".delete-all", function (e) {
-    e.preventDefault();
-    let leaderboardId = $(this).data("id");
+//     $(document).on("click", ".delete-all", function (e) {
+//     e.preventDefault();
+//     let leaderboardId = $(this).data("id");
 
-    swal({
-        title: "Are You Sure?",
-        text: "You Want To Delete This Entry!",
-        icon: "warning",
-        buttons: {
-            cancel: {
-                visible: true,
-                text: "Cancel",
-                className: "btn btn-danger",
-            },
-            confirm: {
-                text: "Delete",
-                className: "btn btn-success",
-            },
-        },
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                url: "<?= base_url('admin/leader_board/delete') ?>",
-                type: "POST",
-                data: {
-                    leaderboard_id: leaderboardId,
-                    "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
-                },
-                dataType: "json",
-                success: function (response) {
-                    if (response.success) {
-                        swal("Deleted!", response.message, {
-                            icon: "success",
-                            buttons: {
-                                confirm: { className: "btn btn-success" },
-                            },
-                        });
-                        $('#leaderTable').DataTable().ajax.reload(); 
-                    } else {
-                        swal("Error!", response.message, "error");
-                    }
-                },
-                error: function () {
-                    swal("Error!", "Something Went Wrong. Try Again.", "error");
-                },
-            });
-        } else {
-            swal("Your Data Is Safe!", {
-                buttons: {
-                    confirm: { className: "btn btn-success" },
-                },
-            });
-        }
-    });
-});
+//     swal({
+//         title: "Are You Sure?",
+//         text: "You Want To Delete This Entry!",
+//         icon: "warning",
+//         buttons: {
+//             cancel: {
+//                 visible: true,
+//                 text: "Cancel",
+//                 className: "btn btn-danger",
+//             },
+//             confirm: {
+//                 text: "Delete",
+//                 className: "btn btn-success",
+//             },
+//         },
+//     }).then((willDelete) => {
+//         if (willDelete) {
+//             $.ajax({
+//                 url: "<?= base_url('admin/manage_leaderboard/delete') ?>",
+//                 type: "POST",
+//                 data: {
+//                     leaderboard_id: leaderboardId,
+//                     "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
+//                 },
+//                 dataType: "json",
+//                 success: function (response) {
+//                     if (response.success) {
+//                         swal("Deleted!", response.message, {
+//                             icon: "success",
+//                             buttons: {
+//                                 confirm: { className: "btn btn-success" },
+//                             },
+//                         });
+//                         $('#leaderTable').DataTable().ajax.reload(); 
+//                     } else {
+//                         swal("Error!", response.message, "error");
+//                     }
+//                 },
+//                 error: function () {
+//                     swal("Error!", "Something Went Wrong. Try Again.", "error");
+//                 },
+//             });
+//         } else {
+//             swal("Your Data Is Safe!", {
+//                 buttons: {
+//                     confirm: { className: "btn btn-success" },
+//                 },
+//             });
+//         }
+//     });
+// });
 
 // leaderboard toggle status
 
@@ -417,7 +406,7 @@ $('#leaderTable').on('change', '.toggle-status', function () {
     let newStatus = $checkbox.is(':checked') ? 1 : 2;
 
     $.ajax({
-        url: "<?= base_url('admin/leader_board/toggleStatus') ?>",
+        url: "<?= base_url('admin/manage_leaderboard/toggleStatus') ?>",
         type: "POST",
         data: {
             leaderboard_id: leaderboardId,
