@@ -41,9 +41,13 @@ $routes->get('admin/logout', 'admin\Login::logout');
 
 
 
+// Manage leader board
+$routes->get('admin/leader_board' , 'admin\LeaderBoard::index');
+$routes->post('admin/leader_board/leaderboardListAjax', 'admin\LeaderBoard::leaderboardListAjax');
+$routes->post('admin/leader_board/delete', 'admin\LeaderBoard::delete');
+$routes->post('admin/leader_board/toggleStatus', 'admin\LeaderBoard::toggleStatus');
 
-
-
+// Manage Admin user
 $routes->get('admin/manage_user' , 'admin\User::index');
 $routes->get('admin/adduser', 'admin\User::addUser'); 
 $routes->post('admin/manage_user/userlistajax', 'admin\User::userlistajax');
