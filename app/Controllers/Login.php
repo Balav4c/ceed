@@ -20,6 +20,9 @@ class Login extends BaseController
        return view('signup');
 
     }
+    public function forgetPassword(){
+         return view('forget_password');
+    }
    public function login()
 {
     $email = $this->request->getPost('email');
