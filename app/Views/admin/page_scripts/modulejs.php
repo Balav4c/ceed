@@ -184,7 +184,7 @@
         $('#moduleTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
             var moduleName = $(this).data('name');
-            $('#descriptionModalLabel').text(moduleName); 
+            $('#descriptionModalLabel').text(moduleName);
             $('#modalDescription').html(fullDescription);
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
@@ -293,6 +293,9 @@
                 ajax: {
                     url: "<?= base_url('admin/manage_module/modulelistajax') ?>",
                     type: "POST",
+                    data: function (d) {
+                        d.course_id = $('#course_id').val(); // send course_id
+                    },
                     dataSrc: "data"
                 },
                 serverSide: true,

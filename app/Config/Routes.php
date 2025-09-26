@@ -78,19 +78,16 @@ $routes->get('admin/manage_course', 'admin\Course::index');
 $routes->get('admin/add_course', 'admin\Course::addCourse'); 
 $routes->get('admin/add_course/edit/(:num)', 'admin\Course::form/$1'); 
 $routes->post('admin/manage_course/save', 'admin\Course::save'); 
-// $routes->post('admin/manage_course/update/(:num)', 'admin\Course::update/$1');
 $routes->post('admin/manage_course/courselistajax', 'admin\Course::courseListAjax'); 
 $routes->get('admin/manage_course/edit/(:num)', 'admin\Course::edit/$1');
 $routes->post('admin/manage_course/update/(:num)', 'admin\Course::update/$1');
 $routes->post('admin/manage_course/delete', 'admin\Course::delete');
 $routes->post('admin/manage_course/toggleStatus', 'admin\Course::toggleStatus');
-// $routes->get('admin/manage_course/modules/(:num)', 'admin\Course::viewCourseModules/$1');
 $routes->get('admin/manage_course/modules/(:num)', 'admin\Course::viewCourseModules/$1');
-
 
 // Open add_module with course_id
 $routes->get('admin/add_module/(:num)', 'admin\CourseModule::index/$1');
-// $routes->get('admin/add_module', 'admin\CourseModule::addModule');
+$routes->get('admin/add_module', 'admin\CourseModule::addModule');
 $routes->post('admin/save_module', 'admin\CourseModule::save');
 $routes->get('admin/manage_module', 'admin\CourseModule::addModule');
 $routes->post('admin/manage_module/modulelistajax', 'admin\CourseModule::moduleListAjax'); 
@@ -99,6 +96,8 @@ $routes->get('admin/add_module/edit/(:num)', 'admin\CourseModule::edit/$1');
 $routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::update/$1');
 $routes->post('admin/manage_module/delete', 'admin\CourseModule::delete');
 $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleStatus');
+
+
 
 
 

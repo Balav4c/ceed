@@ -168,6 +168,8 @@
             window.location.href = "<?= base_url('admin/manage_course/modules/') ?>" + courseId;
         });
 
+
+
     });
 
     // toggle status 
