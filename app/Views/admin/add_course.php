@@ -17,11 +17,9 @@
                         <label for="example">Description</label>
                         <textarea class="content" id="description" name="description" ><?= esc($course['description'] ?? '') ?></textarea>
                     </div>
-
                     <div class="mb-3">
-                        <label>Total Duration (In Weeks) <span class="text-danger">*</span></label>
-                        <input type="number" name="duration_weeks" class="form-control"
-                            value="<?= $course['duration_weeks'] ?? '' ?>" >
+                        <label>Total Duration (In Weeks)<span class="text-danger">*</span></label>
+                        <input type="number" name="duration_weeks" class="form-control" value="<?= $course['duration_weeks'] ?? '' ?>" >
                     </div>
                     <br><br>
                     <div class="col-12 d-flex justify-content-end gap-2">
