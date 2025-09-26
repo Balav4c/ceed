@@ -33,23 +33,28 @@ class Leaderboard_Model extends Model
         return $row ? $row->filRecords : 0;
     }
 
-    public function getAllFilteredRecords($condition, $start, $length, $orderBy = 'leaderboard_id', $orderDir = 'desc')
+   public function getAllFilteredRecords($condition, $start, $length, $orderBy = 'leaderboard_id', $orderDir = 'desc')
 {
     return $this->db->table($this->table)
         ->select("
-            leader_board.*,
+            leader_board.leaderboard_id,
+            leader_board.score,
+            leader_board.rank,
+            leader_board.status,
+            DATE_FORMAT(leader_board.created_at,'%d-%m-%Y') AS created_at,
             u.name AS user_name,
             c.name AS course_name,
             m.module_name
-        ")
+        ", false)   
         ->join('user u','u.user_id = leader_board.user_id','left')
         ->join('course c','c.course_id = leader_board.course_id','left')
         ->join('course_modules m','m.module_id = leader_board.module_id','left')
         ->where($condition, null, false)
         ->orderBy($orderBy, $orderDir)
-        ->limit($length, $start) 
+        ->limit($length, $start)
         ->get()
         ->getResult();
 }
+
 
 }
