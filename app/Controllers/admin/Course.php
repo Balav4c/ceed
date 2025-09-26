@@ -43,56 +43,65 @@ class Course extends BaseController
     }
 
     public function save()
-    {
-        $id = $this->request->getPost('course_id');
-        $name = trim($this->request->getPost('name'));
-        $description = $this->request->getPost('description');
-        $plainDescription = strip_tags($description);
-        $duration_weeks = trim($this->request->getPost('duration_weeks'));
-        if (empty($name) || empty($duration_weeks)) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Please Fill In All Mandatory Fields.'
-            ]);
-        }
-        $courseData = [
-            'name' => $this->request->getPost('name'),
-            'description' =>  $plainDescription,
-            'duration_weeks' => $this->request->getPost('duration_weeks'),
-            'status' => 1
-        ];
+{
+    $id = $this->request->getPost('course_id');
+    $name = trim($this->request->getPost('name'));
+    $description = $this->request->getPost('description');
+   $plainDescription = $description; 
+    $duration_weeks = trim($this->request->getPost('duration_weeks'));
 
-        if ($id) {
-            $this->courseModel->update($id, $courseData);
-            $courseId = $id;
-            $message = 'Course Updated Successfully!';
-        } else {
-            $this->courseModel->insert($courseData);
-            $courseId = $this->courseModel->insertID();
-            $message = 'Course Saved Successfully! Now Add Modules.';
-        }
-        $this->moduleModel->where('course_id', $courseId)->delete();
-        $moduleNames = $this->request->getPost('module_name');
-        $durations = $this->request->getPost('module_duration');
-
-        if (!empty($moduleNames)) {
-            foreach ($moduleNames as $index => $mname) {
-                if (!empty($mname)) {
-                    $this->moduleModel->insert([
-                        'course_id' => $courseId,
-                        'module_name' => $mname,
-                        'duration_weeks' => $durations[$index] ?? ''
-                    ]);
-                }
-            }
-        }
-
+    if (empty($name) || empty($duration_weeks)) {
         return $this->response->setJSON([
-            'status' => 'success',
-            'message' => $message,
-            'course_id' => $courseId
+            'status' => 'error',
+            'message' => 'Please Fill In All Mandatory Fields.'
         ]);
     }
+
+    $courseData = [
+        'name' => $name,
+        'description' => $plainDescription,
+        'duration_weeks' => $duration_weeks,
+        'status' => 1
+    ];
+
+    if ($id) {
+        // ✅ Update existing course
+        $this->courseModel->update($id, $courseData);
+        $courseId = $id;
+        $message = 'Course Updated Successfully!';
+        $isUpdate = true;
+    } else {
+        // ✅ Insert new course
+        $this->courseModel->insert($courseData);
+        $courseId = $this->courseModel->insertID();
+        $message = 'Course Saved Successfully! Now Add Modules.';
+        $isUpdate = false;
+    }
+
+    // ✅ Handle modules
+    $this->moduleModel->where('course_id', $courseId)->delete();
+    $moduleNames = $this->request->getPost('module_name');
+    $durations = $this->request->getPost('module_duration');
+
+    if (!empty($moduleNames)) {
+        foreach ($moduleNames as $index => $mname) {
+            if (!empty($mname)) {
+                $this->moduleModel->insert([
+                    'course_id'      => $courseId,
+                    'module_name'    => $mname,
+                    'duration_weeks' => $durations[$index] ?? ''
+                ]);
+            }
+        }
+    }
+
+    return $this->response->setJSON([
+        'status'    => 'success',
+        'message'   => $message,
+        'course_id' => $courseId,
+        'is_update' => $isUpdate // 👈 added flag for redirect logic
+    ]);
+}
 
 
     public function courseListAjax()

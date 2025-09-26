@@ -18,14 +18,13 @@
             var fullDescription = $(this).data('description');
             var courseName = $(this).data('name');
 
-            
             $('#descriptionModalLabel').text(courseName);
-
-            $('#modalDescription').text(fullDescription);
+            $('#modalDescription').html(fullDescription);
 
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
+
 
         $('#courseForm').on('submit', function (e) {
             e.preventDefault();
@@ -46,7 +45,13 @@
                     initialFormData = $('#courseForm').serialize();
 
                     setTimeout(function () {
-                        window.location.href = base_url + '/admin/add_module/' + response.course_id;
+                        if (response.is_update) {
+                            // After editing → back to course list
+                            window.location.href = base_url + '/admin/manage_course';
+                        } else {
+                            // After adding → go to add modules page
+                            window.location.href = base_url + '/admin/add_module/' + response.course_id;
+                        }
                     }, 1500);
 
                     resetFormState();
@@ -89,9 +94,10 @@
                 },
                 {
                     data: "name",
-                    render: function (data, type, row) {
-                        if (!data || typeof data !== 'string') return '';
-                        return data.replace(/\b\w/g, c => c.toUpperCase());
+                    render: data => {
+                        if (!data) return '';
+                        let formatted = data.replace(/\b\w/g, c => c.toUpperCase());
+                        return formatted.replace(/\n/g, "<br>");
                     }
                 },
                 {
@@ -100,8 +106,10 @@
                         if (!data) {
                             return `<a href="javascript:void(0)" class="read-desc" data-description="" data-name="${row.name}">Read Description</a>`;
                         }
+
                         let safeData = data.replace(/"/g, '&quot;');
-                        let safeName = row.name.replace(/"/g, '&quot;'); // 👈 escape course name
+                        let safeName = row.name.replace(/"/g, '&quot;');
+
                         return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}" data-name="${safeName}">Read Description</a>`;
                     }
                 },

@@ -90,23 +90,28 @@
 
 <script>
     $(document).on('click', '.read-desc', function () {
-        var fullDescription = $(this).data('description');
-        var courseName = $(this).data('name');
+    var fullDescription = $(this).data('description');
+    var courseName = $(this).data('name');
 
-        $('#descriptionModalLabel').text("Course Description: " + courseName);
-        $('#modalDescription').text(fullDescription);
+    $('#descriptionModalLabel').text("Course Description: " + courseName);
 
-        var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-        myModal.show();
-    });
+    // Remove HTML tags but preserve line breaks
+    var cleanDescription = $('<div>').html(fullDescription).text();
+
+    $('#modalDescription').text(cleanDescription);
+
+    var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
+    myModal.show();
+});
+
     $(document).on('click', '.play-video', function () {
         var videoSrc = $(this).data('video');
-        var videoName = $(this).data('name'); // 👈 get video name
+        var videoName = $(this).data('name'); 
 
         $('#popupVideo source').attr('src', videoSrc);
-        $('#popupVideo')[0].load(); // reload video
+        $('#popupVideo')[0].load();
 
-        $('#videoModalLabel').text(videoName); // 👈 change modal title
+        $('#videoModalLabel').text(videoName); 
 
         var myModal = new bootstrap.Modal(document.getElementById('videoModal'));
         myModal.show();
