@@ -46,13 +46,15 @@ class LeaderBoard extends BaseController
     } else {
         $condition .= " AND DATE(leader_board.created_at) = CURDATE()";
     }
-    if (!empty($search)) {
-        $search = trim(preg_replace('/\s+/', ' ', $search));
-        $noSpaceSearch = str_replace(' ', '', strtolower($search));
+        if (!empty($search)) {
+        $search = trim(preg_replace('/\s+/', '', $search)); 
+        $noSpaceSearch = strtolower($search);
+        $scoreSearch = " OR REPLACE(CAST(leader_board.score AS CHAR), ' ', '') LIKE '%" . $this->leaderboardModel->db->escapeLikeString($noSpaceSearch) . "%'";
         $condition .= " AND (
             REPLACE(LOWER(u.name),' ','') LIKE '%" . $this->leaderboardModel->db->escapeLikeString($noSpaceSearch) . "%' OR
             REPLACE(LOWER(c.name),' ','') LIKE '%" . $this->leaderboardModel->db->escapeLikeString($noSpaceSearch) . "%' OR
             REPLACE(LOWER(m.module_name),' ','') LIKE '%" . $this->leaderboardModel->db->escapeLikeString($noSpaceSearch) . "%'
+            $scoreSearch
         )";
     }
     $columns = ['u.name','c.name','m.module_name','leader_board.score','leader_board.rank','leader_board.status','leader_board.created_at','leader_board.leaderboard_id'];
