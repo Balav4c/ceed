@@ -87,25 +87,6 @@ class LeaderBoard extends BaseController
         "data"            => $data
     ]);
 }
-    // public function delete()
-    // {
-    //     $leaderboard_id = $this->request->getPost('leaderboard_id');
-    //     if (!$leaderboard_id) {
-    //         return $this->response->setJSON([
-    //             'success' => false,
-    //             'message' => 'Leaderboard ID Is Required.'
-    //         ]);
-    //     }
-    //     $this->leaderboardModel->update($leaderboard_id, [
-    //         'status'     => 9, 
-    //         'updated_at' => date("Y-m-d H:i:s")
-    //     ]);
-
-    //     return $this->response->setJSON([
-    //         'success' => true,
-    //         'message' => 'Leaderboard Entry Deleted Successfully.'
-    //     ]);
-    // }
     public function toggleStatus()
     {
     if ($this->request->isAJAX()) {

@@ -340,64 +340,6 @@ $('#filterDate').on('change', function() {
     table.ajax.reload();
 });
 
-// // leaderboard delete
-
-//     $(document).on("click", ".delete-all", function (e) {
-//     e.preventDefault();
-//     let leaderboardId = $(this).data("id");
-
-//     swal({
-//         title: "Are You Sure?",
-//         text: "You Want To Delete This Entry!",
-//         icon: "warning",
-//         buttons: {
-//             cancel: {
-//                 visible: true,
-//                 text: "Cancel",
-//                 className: "btn btn-danger",
-//             },
-//             confirm: {
-//                 text: "Delete",
-//                 className: "btn btn-success",
-//             },
-//         },
-//     }).then((willDelete) => {
-//         if (willDelete) {
-//             $.ajax({
-//                 url: "<?= base_url('admin/manage_leaderboard/delete') ?>",
-//                 type: "POST",
-//                 data: {
-//                     leaderboard_id: leaderboardId,
-//                     "<?= csrf_token() ?>": "<?= csrf_hash() ?>"
-//                 },
-//                 dataType: "json",
-//                 success: function (response) {
-//                     if (response.success) {
-//                         swal("Deleted!", response.message, {
-//                             icon: "success",
-//                             buttons: {
-//                                 confirm: { className: "btn btn-success" },
-//                             },
-//                         });
-//                         $('#leaderTable').DataTable().ajax.reload(); 
-//                     } else {
-//                         swal("Error!", response.message, "error");
-//                     }
-//                 },
-//                 error: function () {
-//                     swal("Error!", "Something Went Wrong. Try Again.", "error");
-//                 },
-//             });
-//         } else {
-//             swal("Your Data Is Safe!", {
-//                 buttons: {
-//                     confirm: { className: "btn btn-success" },
-//                 },
-//             });
-//         }
-//     });
-// });
-
 // leaderboard toggle status
 
 $('#leaderTable').on('change', '.toggle-status', function () {

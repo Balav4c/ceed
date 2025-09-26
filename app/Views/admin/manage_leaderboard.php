@@ -1,3 +1,4 @@
+<!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css"> -->
 <div class="container">
   <div class="page-inner">
     <div class="row">
@@ -10,22 +11,21 @@
                 </div>
                 <div class="col-12 col-md-6 text-md-end">
                     <label for="filterDate" class="form-label me-2">Select Date:</label>
-                    <input type="date" id="filterDate" class="form-control d-inline-block" style="width:auto;">
+                    <input type="date" id="filterDate" class="form-control d-inline-block" style="width:auto;" placeholder="dd/mm/yyyy">
+                    <!-- <input type="text" id="filterDate" class="form-control d-inline-block" style="width:auto;" placeholder="dd/mm/yyyy"> -->
                 </div>
             </div>
-
             <hr>
-
             <table class="table table-hover" id="leaderTable">
                 <thead class="table-light">
                     <tr>
-                        <th>Sl No</th>
+                        <th class="nowrap">Sl No</th>
                         <th>User Name</th>
                         <th>Course Name</th>
                         <th>Module Name</th>
                         <th>Score</th>
                         <th>Rank</th>
-                        <th>Date</th>
+                        <th class="date-column">Date</th>
                         <th>Status</th>
                     </tr>
                 </thead>
@@ -35,3 +35,10 @@
     </div> 
   </div> 
 </div>
+
+<!-- <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+flatpickr("#filterDate", {
+    dateFormat: "d/m/Y", // dd/mm/yyyy
+});
+</script> -->

@@ -7,7 +7,7 @@ class Leaderboard_Model extends Model
 {
     protected $table = 'leader_board';
     protected $primaryKey = 'leaderboard_id';
-    protected $allowedFields = ['user_id','course_id','module_id','score','rank','status','created_at','updated_at'];
+    protected $allowedFields = ['user_id','course_id','module_id','score','rank','status','points','created_at','updated_at'];
 
     protected $useTimestamps = true;
     protected $createdField  = 'created_at';
@@ -55,6 +55,4 @@ class Leaderboard_Model extends Model
         ->get()
         ->getResult();
 }
-
-
 }

@@ -74,9 +74,29 @@
 
 /* leader board table  */
 table.dataTable thead>tr>th div.dt-column-header span.dt-column-title {
-  text-align:left !important;
+  text-align: left !important;
   padding-left: 13px;
 }
+
+.date-column,
+#leaderTable td:nth-child(7) {
+  width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-align: center;
+  padding: 0px 10px;
+}
+
+table.dataTable th.dt-type-numeric,
+table.dataTable th.dt-type-date,
+table.dataTable td.dt-type-numeric,
+table.dataTable td.dt-type-date {
+  text-align: center !important;
+}
+#leaderTable th.nowrap {
+    white-space: nowrap;
+}
+
 .dt-search,
 .dt-length {
   padding: 2px 2px 17px !important;
@@ -272,22 +292,26 @@ table.dataTable thead>tr>th div.dt-column-header span.dt-column-title {
   line-height: 1;
   color: #aaa !important
 }
- /* sidemenu */
- .nav-link.active {
-    background-color: #03142e;
-    font-weight: bold !important;
-    color: #fff !important;
+
+/* sidemenu */
+.nav-link.active {
+  background-color: #03142e;
+  font-weight: bold !important;
+  color: #fff !important;
 }
- 
+
 .nav-link.active i {
-    color: #fff !important;
+  color: #fff !important;
 }
-.dt-type-numeric{
-  text-align:left !important;
+
+.dt-type-numeric {
+  text-align: left !important;
 }
+
 #modalDescription {
     white-space: pre-line;
 }
+
 @media only screen and (min-width:320px) and (max-width:759px) {
   .carbon-text {
     font-size: 14px
