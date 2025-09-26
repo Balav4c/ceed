@@ -35,102 +35,99 @@ class CourseModule extends BaseController
         return $template;
 
     }
-   public function save()
-{
-    $moduleId = $this->request->getPost('module_id');
-    $courseId = $this->request->getPost('course_id');
-    $moduleNames = $this->request->getPost('module_name');
-    $durations = $this->request->getPost('module_duration');
-    $descriptions = $this->request->getPost('module_description');
-    $uploadedVideos = $this->request->getPost('uploaded_videos'); // comma-separated filenames
+    public function save()
+    {
+        $moduleId = $this->request->getPost('module_id');
+        $courseId = $this->request->getPost('course_id');
+        $moduleNames = $this->request->getPost('module_name');
+        $durations = $this->request->getPost('module_duration');
+        $descriptions = $this->request->getPost('module_description');
+        $uploadedVideos = $this->request->getPost('uploaded_videos'); 
 
-    foreach ($moduleNames as $index => $name) {
-        if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Please Fill All Mandatory Fields.'
-            ]);
-        }
-    }
-
-    foreach ($moduleNames as $index => $name) {
-        $plainDescription = isset($descriptions[$index]) ? strip_tags($descriptions[$index]) : null;
-
-        $moduleData = [
-            'course_id'      => $courseId,
-            'module_name'    => $name,
-            'duration_weeks' => $durations[$index] ?? null,
-            'description'    => $plainDescription,
-            'status'         => 1
-        ];
-
-        if (!empty($moduleId)) {
-            $this->moduleModel->update($moduleId, $moduleData);
-        } else {
-            $this->moduleModel->insert($moduleData);
-            $moduleId = $this->moduleModel->getInsertID();
-        }
-    }
-
-    // ✅ Save uploaded videos in DB
-    if (!empty($uploadedVideos)) {
-        $videoArray = explode(',', $uploadedVideos);
-        foreach ($videoArray as $video) {
-            $this->videoModel->insert([
-                'module_id'  => $moduleId,
-                'video_file' => trim($video),
-                'status'     => 1
-            ]);
-        }
-    }
-
-    return $this->response->setJSON([
-        'status' => 'success',
-        'msg'    => !empty($moduleId) ? 'Module Updated Successfully!' : 'Modules Added Successfully!'
-    ]);
-}
-   public function uploadVideo()
-{
-    $videoFiles = $this->request->getFileMultiple('module_videos');
-
-    $uploadedFiles = [];
-    $errors = [];
-
-    $allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
-    $uploadPath = WRITEPATH . '../public/uploads/videos/';
-
-    if (!is_dir($uploadPath)) {
-        mkdir($uploadPath, 0777, true);
-    }
-
-    foreach ($videoFiles as $file) {
-        if ($file && $file->isValid() && !$file->hasMoved()) {
-            if (!in_array($file->getClientMimeType(), $allowedTypes)) {
-                $errors[] = $file->getClientName() . " is not valid. Please upload video files only (MP4, WEBM, OGG).";
-                continue;
+        foreach ($moduleNames as $index => $name) {
+            if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Please Fill All Mandatory Fields.'
+                ]);
             }
+        }
+        foreach ($moduleNames as $index => $name) {
+            $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
 
-            $newName = $file->getRandomName();
+            $moduleData = [
+                'course_id' => $courseId,
+                'module_name' => $name,
+                'duration_weeks' => $durations[$index] ?? null,
+                'description' => $plainDescription,
+                'status' => 1
+            ];
 
-            if ($file->move($uploadPath, $newName)) {
-                $uploadedFiles[] = $newName; // Store just filenames
+            if (!empty($moduleId)) {
+                $this->moduleModel->update($moduleId, $moduleData);
             } else {
-                $errors[] = $file->getClientName() . " could not be uploaded.";
+                $this->moduleModel->insert($moduleData);
+                $moduleId = $this->moduleModel->getInsertID();
             }
         }
-    }
 
-    return $this->response->setJSON([
-        'status' => empty($errors) ? 'success' : 'error',
-        'message' => empty($errors) ? 'Videos uploaded successfully!' : 'Some videos could not be uploaded.',
-        'uploaded' => $uploadedFiles,
-        'errors' => $errors
-    ]);
-}
+        if (!empty($uploadedVideos)) {
+            $videoArray = explode(',', $uploadedVideos);
+            foreach ($videoArray as $video) {
+                $this->videoModel->insert([
+                    'module_id' => $moduleId,
+                    'video_file' => trim($video),
+                    'status' => 1
+                ]);
+            }
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'msg' => !empty($moduleId) ? 'Module Updated Successfully!' : 'Modules Added Successfully!'
+        ]);
+    }
+    public function uploadVideo()
+    {
+        $videoFiles = $this->request->getFileMultiple('module_videos');
+
+        $uploadedFiles = [];
+        $errors = [];
+
+        $allowedTypes = ['video/mp4', 'video/webm', 'video/ogg'];
+        $uploadPath = WRITEPATH . '../public/uploads/videos/';
+
+        if (!is_dir($uploadPath)) {
+            mkdir($uploadPath, 0777, true);
+        }
+
+        foreach ($videoFiles as $file) {
+            if ($file && $file->isValid() && !$file->hasMoved()) {
+                if (!in_array($file->getClientMimeType(), $allowedTypes)) {
+                    $errors[] = $file->getClientName() . " is not valid. Please upload video files only (MP4, WEBM, OGG).";
+                    continue;
+                }
+
+                $newName = $file->getRandomName();
+
+                if ($file->move($uploadPath, $newName)) {
+                    $uploadedFiles[] = $newName;
+                } else {
+                    $errors[] = $file->getClientName() . "could not be uploaded.";
+                }
+            }
+        }
+
+        return $this->response->setJSON([
+            'status' => empty($errors) ? 'success' : 'error',
+            'message' => empty($errors) ? 'Videos uploaded successfully!' : 'Please Upload Video Files Only.',
+            'uploaded' => $uploadedFiles,
+            'errors' => $errors
+        ]);
+    }
     public function moduleListAjax()
     {
         $request = service('request');
-
         $draw = $request->getPost('draw') ?? 1;
         $fromstart = $request->getPost('start') ?? 0;
         $tolimit = $request->getPost('length') ?? 10;
@@ -198,7 +195,6 @@ class CourseModule extends BaseController
             "data" => $result
         ]);
     }
-
     public function toggleStatus()
     {
         if ($this->request->isAJAX()) {
@@ -231,8 +227,6 @@ class CourseModule extends BaseController
     public function edit($id)
     {
         $module = $this->moduleModel->find($id);
-        
-
         $data = [
             'module' => $module,
         ];

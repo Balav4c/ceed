@@ -17,106 +17,63 @@ class UserProfile extends BaseController
 		$this->input = \Config\Services::request();
 
 	}
-public function index(): string
-{
+public function index(): string { 
     $userId = $this->session->get('user_id'); 
     if (!$userId) {
-        return redirect()->to(base_url('')); 
-    }
+         return redirect()->to(base_url(''));
+         } 
+         $userModel = new LoginModel(); 
+         $profileModel = new UserProfileModel(); 
+         $user = $userModel->find($userId); 
+         $profile = $profileModel->where('user_id', $userId)->first(); 
+         if ($profile) { 
+            $profile['notification'] = json_decode($profile['notification'] ?? '[]', true); 
+            $user = array_merge($user, $profile); $progress = $profile['profile_percentage'] ?? 0;
+             // use stored percentage 
+             } else { 
+                $progress = 0; $user['notification'] = []; } 
+                $template = view('common/header'); 
+                $template .= view('profile', ['user' => $user,'progress' => $progress]);
+                $template .= view('common/footer'); return $template; 
+            }
 
-    $userModel = new LoginModel();
-    $profileModel = new UserProfileModel();
-
-    $user = $userModel->find($userId);
-    $profile = $profileModel->where('user_id', $userId)->first();
-
-    if ($profile) {
-        $profile['notification'] = json_decode($profile['notification'] ?? '[]', true);
-        $user = array_merge($user, $profile);
-    } else {
-        $user['notification'] = [];
-    }
-
-    // Calculate progress including notifications
-    $progress = $this->getProfileCompletion($user);
-
-    $template  = view('common/header', ['progress' => $progress]);
-    $template .= view('profile', ['user' => $user]);
-    $template .= view('common/footer');
-
-    return $template;
-}
-
-public function saveProfile()
-{
+public function saveProfile() { 
     $session = session();
-    $userId = $session->get('user_id');
-
-    $profileModel = new UserProfileModel();
-
-    // Fields to calculate profile percentage
-    $fields = [
-        'name'   => $this->request->getPost('name'),
-        'grade'  => $this->request->getPost('grade'),
-        'school' => $this->request->getPost('school'),
-        'bio'    => $this->request->getPost('bio'),
-        'phone'  => $this->request->getPost('phone'),
-    ];
-
-    $notifications = $this->request->getPost('notification') ?? [];
-        // ✅ Phone validation (must be exactly 7 digits)
-    if (!empty($fields['phone']) && !preg_match('/^\d{10}$/', $fields['phone'])) {
-        return $this->response->setJSON([
-            'status'  => 'error',
-            'message' => 'Phone number must be exactly 10 digits.'
-        ]);
-    }
-
-    // Count filled fields
-    $filled = 0;
-    foreach ($fields as $value) {
-        if (!empty($value)) {
-            $filled++;
+     $userId = $session->get('user_id'); 
+     $profileModel = new UserProfileModel(); 
+     // Fields to calculate profile percentage
+      $fields = [ 'name' => $this->request->getPost('name'), 
+      'grade' => $this->request->getPost('grade'), 
+      'school' => $this->request->getPost('school'), 
+      'bio' => $this->request->getPost('bio'), 
+      'phone' => $this->request->getPost('phone'),
+      'email' => $this->request->getPost('email'), ]; 
+      // Count filled fields
+       $filled = 0; foreach ($fields as $value) { 
+        if (!empty($value)) { $filled++; } 
+    } 
+    $totalFields = count($fields); 
+    $percentage = ($filled / $totalFields) * 100; 
+    $data = [ 'user_id' => $userId, 
+    'name' => $fields['name'],
+     'grade' => $fields['grade'], 
+     'school' => $fields['school'], 
+     'bio' => $fields['bio'], 
+     'phone' => $fields['phone'], 
+     'profile_percentage' => round($percentage), 
+    // store as integer
+     'notification'=> json_encode($this->request->getPost('notification') ?? []), ]; 
+     // Check if profile exists 
+     $existing = $profileModel->where('user_id', $userId)->first(); 
+     if ($existing) 
+        { 
+            $profileModel->update($existing['id'], $data); 
+        } else
+         { 
+            $profileModel->insert($data);
+         } 
+         return $this->response->setJSON(['status' => 'success', 'message' => 'Profile saved successfully!', 'percentage' => round($percentage)]); 
         }
-    }
-
-    // Count selected notifications
-    $notificationFields = ['push','assessment','email','achievement'];
-    foreach ($notificationFields as $notif) {
-        if (in_array($notif, $notifications)) {
-            $filled++;
-        }
-    }
-
-    // Total fields = personal fields + notification fields
-    $totalFields = count($fields) + count($notificationFields);
-    $percentage = ($filled / $totalFields) * 100;
-
-    $data = [
-        'user_id'            => $userId,
-        'name'               => $fields['name'],
-        'grade'              => $fields['grade'],
-        'school'             => $fields['school'],
-        'bio'                => $fields['bio'],
-        'phone'              => $fields['phone'],
-        'profile_percentage' => round($percentage), // store as integer
-        'notification'       => json_encode($notifications),
-    ];
-
-    // Check if profile exists
-    $existing = $profileModel->where('user_id', $userId)->first();
-    if ($existing) {
-        $profileModel->update($existing['id'], $data);
-    } else {
-        $profileModel->insert($data);
-    }
-
-    return $this->response->setJSON([
-        'status'     => 'success',
-        'message'    => 'Profile saved successfully!',
-        'percentage' => round($percentage)
-    ]);
-}
 
     
 
@@ -191,34 +148,20 @@ if (strlen($newPassword) < 8 ||
 
 
 //get profile completion percentage
+
 private function getProfileCompletion($user)
-{
-    // Personal info fields
-    $fields = ['name', 'grade', 'school', 'bio', 'phone'];
-    $filled = 0;
-
-    foreach ($fields as $field) {
-        if (!empty($user[$field])) {
-            $filled++;
+ { 
+    $fields = ['name', 'grade', 'school', 'bio', 'phone','email'];
+     $filled = 0; foreach ($fields as $field)
+      {
+         if (!empty($user[$field]))
+             {
+                 $filled++; 
+                } 
+            } 
+            $total = count($fields); 
+            return round(($filled / $total) * 100); 
         }
-    }
-
-    // Notification fields
-    $notificationFields = ['push', 'assessment', 'email', 'achievement'];
-    if (isset($user['notification']) && is_array($user['notification'])) {
-        foreach ($notificationFields as $notif) {
-            if (in_array($notif, $user['notification'])) {
-                $filled++;
-            }
-        }
-    }
-
-    $totalFields = count($fields) + count($notificationFields);
-    $percentage = ($filled / $totalFields) * 100;
-
-    return round($percentage);
-}
-
 
 
 

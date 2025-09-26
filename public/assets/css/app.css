@@ -1,75 +1,182 @@
-
-.drop-menu{
+.drop-menu {
   color: #a96b1f !important;
-    text-decoration: none;
-    font-size: 14px !important;
-    text-transform: uppercase;
-    padding: 0px 20px !important;
-}
-.btn-user{
-  border: none !important; 
+  text-decoration: none;
+  font-size: 14px !important;
+  text-transform: uppercase;
+  padding: 0px 20px !important;
 }
 
-.drop-menu:active, .drop-menu:hover {
-    text-decoration: none;
-    background-color: #a96b1f !important;
-    color: white !important;
+.btn-user {
+  border: none !important;
 }
-.btn-user{
+
+.drop-menu:active,
+.drop-menu:hover {
+  text-decoration: none;
+  background-color: #a96b1f !important;
   color: white !important;
 }
-/** Profile Page CSS **/
-.card-pad{
-padding: 20px;
+
+.btn-user {
+  color: white !important;
 }
-.card-head{
+
+/** Profile Page CSS **/
+.card-pad {
+  padding: 20px;
+}
+
+.card-head {
   font-size: 18px;
   font-weight: 500;
- }
- .fs-14{
+}
+
+.fs-14 {
   font-size: 14px;
- }
- .fs-16{
+}
+
+.fs-16 {
   font-size: 16px;
   font-weight: 400;
   font-style: regular;
- }
- .toggle-password{
+}
+
+.toggle-password {
   position: absolute;
   top: 50px !important;
- }
+}
 
- .alert{
- 
+.alert {
+
   background: white !important;
   padding: 9px !important;
 }
+
 .alert-success {
-    border: 2px solid green;
+  border: 2px solid green;
 }
-.alert-danger{
-  border:2px solid rgba(196, 37, 37, 0.726)
+
+.alert-danger {
+  border: 2px solid rgba(196, 37, 37, 0.726)
 }
+
 #alertbox {
-    transition: opacity 0.5s ease-in-out;
+  transition: opacity 0.5s ease-in-out;
 }
-.progress-circle {
-    --percent: 0%;
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    background: conic-gradient(#ee962c  var(--percent), #e0e0e0 0%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 10px;
-    font-weight: bold;
-    color: #333;
-}
-.fs-13{
-      font-size: 13px !important;
-    font-style: normal;
-    font-weight: 300 !important;
+
+
+
+.fs-13 {
+  font-size: 13px !important;
+  font-style: normal;
+  font-weight: 300 !important;
 }
 
 /** Profile Page CSS  end**/
+
+/* Leaderboard Page CSS */
+.leader-pad {
+  padding: 50px !important;
+  background: linear-gradient(to right, #2563EB, #9747FF) !important;
+  border-radius: 16px !important;
+}
+.icon-person {
+  color: white;
+  font-size: 25px;         
+  border-radius: 100%;       
+  padding: 25px;           
+  background: #c2bff1;     
+}
+.border-clr{
+  border: 2px solid #F4B972;
+  padding: 15px;
+  border-radius: 8px;
+}
+.bk-icon{
+      background: #2563EB;
+    padding: 7px;
+    border-radius: 21px;
+    color: white;
+    font-size: 13px;
+}
+.tropy-icon{
+   background: #EE962C;
+    padding: 7px;
+    border-radius: 21px;
+    color: white;
+    font-size: 13px;
+}
+.drop-icon{
+    background: #F97316;
+    padding: 7px;
+    border-radius: 21px;
+    color: white;
+    font-size: 13px;
+}
+.award-icon{
+    background: #9747FF;
+    padding: 7px;
+    border-radius: 21px;
+    color: white;
+    font-size: 13px;
+}
+
+.tropy-fill-icon{
+color: #38509A;
+}
+.droplet-icon{
+color: #F4B972
+}
+.star-icon{
+color: #EE962C
+}
+
+.ach-font{
+  font-size:16px;
+  font-weight:500;
+  font-style: normal;
+  line-height: 28px;
+}
+.sub-font{
+  font-weight:400px;
+  
+}
+.stat-card{
+  border-radius: 16px !important;
+}
+
+.resp-menu {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: white;
+  z-index: 1050;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.resp-menu.active {
+  display: block;
+}
+
+.resp-menu-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.resp-menu-item a {
+  display: flex;
+  justify-content: space-between;
+  text-decoration: none;
+  color: #333;
+}
+
+
+@media screen and (max-width: 764px) {
+  .point {
+    margin-top: 30px;
+  }
+}

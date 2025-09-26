@@ -42,20 +42,15 @@
                         </tbody>
                     </table>
                 `);
-
                     tableBody = table.find("tbody");
                     fileUploadDiv.append(table);
                 }
                 function uploadFiles(files) {
                     let formData = new FormData();
-
-                    // module_id is optional now, you can remove or set dynamically
                     formData.append('module_id', $('#module_id').val() || '');
-
                     for (let i = 0; i < files.length; i++) {
                         formData.append('module_videos[]', files[i]);
                     }
-
                     $.ajax({
                         url: "<?= base_url('admin/coursemodule/uploadVideo') ?>",
                         type: "POST",
@@ -185,26 +180,16 @@
         }
 
         $moduleForm.on('input change', 'input, textarea', enableSaveButton);
-        // $('#addModule').click(function () {
-        //     let moduleItem = $('.module-item:first').clone();
-        //     moduleItem.find('input, textarea').val('');
-        //     moduleItem.find('.fileUpload').html('<input type="file" name="module_videos[]">');
-        //     $('#module-container').append(moduleItem);
-        // });
 
-        // $(document).on('click', '.remove-module', function () {
-        //     if ($('.module-item').length > 1) {
-        //         $(this).closest('.module-item').remove();
-        //     } else {
-        //         alert('At least one module is required.');
-        //     }
-        // });
         $('#moduleTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
-            $('#modalDescription').text(fullDescription);
+            var moduleName = $(this).data('name');
+            $('#descriptionModalLabel').text(moduleName); 
+            $('#modalDescription').html(fullDescription);
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
+
         $(document).ready(function () {
             const videoModalEl = document.getElementById('videoModal');
             const videoModal = new bootstrap.Modal(videoModalEl);
@@ -279,7 +264,7 @@
                         .show();
 
                     setTimeout(function () {
-                       location.reload(); 
+                        location.reload();
                     }, 1500);
 
                 } else {
@@ -340,6 +325,7 @@
                             let safeData = data.replace(/"/g, '&quot;');
                             return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}">Read Description</a>`;
                         }
+
                     },
                     { data: "duration_weeks" },
                     {
@@ -503,7 +489,6 @@
             }
         });
     });
-
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());
