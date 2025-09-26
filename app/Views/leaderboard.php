@@ -15,6 +15,8 @@
                 </div>
             </div>
             <div class="row mt-5">
+               
+
                 <!-- Total Scores -->
                 <div class="col-md-6">
                     <div class="card p-3 stat-card">
@@ -22,7 +24,7 @@
                             <!-- Text -->
                             <div class="para">
                                 <p class="mb-1 text-muted fs-14">Total Courses</p>
-                                <h5 class="mb-0">2</h5>
+                                <h5 class="mb-0"> <?= esc($leaderpoints['total_courses'] ?? 'N/A'); ?></h5>
                             </div>
 
                             <!-- Icon -->
@@ -40,7 +42,7 @@
                         <div class="d-flex justify-content-between align-items-center p-3">
                             <div class="para">
                                 <p class="mb-1 text-muted  fs-14">Points</p>
-                                <h5 class="mb-0">210</h5>
+                                <h5 class="mb-0"> <?= esc($leaderpoints['total_points'] ?? '0'); ?> </h5>
                             </div>
                             <div class="icon-sec">
                                 <i class="bi bi-trophy-fill tropy-icon"></i>
