@@ -54,7 +54,7 @@ class CourseModule extends BaseController
     }
 
     foreach ($moduleNames as $index => $name) {
-        $plainDescription = isset($descriptions[$index]) ? strip_tags($descriptions[$index]) : null;
+        $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
 
         $moduleData = [
             'course_id'      => $courseId,
