@@ -41,7 +41,6 @@ class Course extends BaseController
         return $template;
 
     }
-
     public function save()
 {
     $id = $this->request->getPost('course_id');
@@ -65,20 +64,20 @@ class Course extends BaseController
     ];
 
     if ($id) {
-        // ✅ Update existing course
+
         $this->courseModel->update($id, $courseData);
         $courseId = $id;
         $message = 'Course Updated Successfully!';
         $isUpdate = true;
     } else {
-        // ✅ Insert new course
+
         $this->courseModel->insert($courseData);
         $courseId = $this->courseModel->insertID();
         $message = 'Course Saved Successfully! Now Add Modules.';
         $isUpdate = false;
     }
 
-    // ✅ Handle modules
+
     $this->moduleModel->where('course_id', $courseId)->delete();
     $moduleNames = $this->request->getPost('module_name');
     $durations = $this->request->getPost('module_duration');
@@ -99,7 +98,7 @@ class Course extends BaseController
         'status'    => 'success',
         'message'   => $message,
         'course_id' => $courseId,
-        'is_update' => $isUpdate // 👈 added flag for redirect logic
+        'is_update' => $isUpdate 
     ]);
 }
 

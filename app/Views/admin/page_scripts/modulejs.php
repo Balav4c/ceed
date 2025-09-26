@@ -42,20 +42,15 @@
                         </tbody>
                     </table>
                 `);
-
                     tableBody = table.find("tbody");
                     fileUploadDiv.append(table);
                 }
                 function uploadFiles(files) {
                     let formData = new FormData();
-
-                    // module_id is optional now, you can remove or set dynamically
                     formData.append('module_id', $('#module_id').val() || '');
-
                     for (let i = 0; i < files.length; i++) {
                         formData.append('module_videos[]', files[i]);
                     }
-
                     $.ajax({
                         url: "<?= base_url('admin/coursemodule/uploadVideo') ?>",
                         type: "POST",
@@ -189,10 +184,8 @@
         $('#moduleTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
             var moduleName = $(this).data('name');
-
-            $('#descriptionModalLabel').text(moduleName); // set modal title to module name
-            $('#modalDescription').html(fullDescription); // render HTML content
-
+            $('#descriptionModalLabel').text(moduleName); 
+            $('#modalDescription').html(fullDescription);
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
@@ -496,7 +489,6 @@
             }
         });
     });
-
     window.dataLayer = window.dataLayer || [];
     function gtag() { dataLayer.push(arguments); }
     gtag('js', new Date());

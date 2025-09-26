@@ -47,10 +47,10 @@
                     setTimeout(function () {
                         if (response.is_update) {
                             // After editing → back to course list
-                            window.location.href = base_url + '/admin/manage_course';
+                            window.location.href = base_url + 'admin/manage_course';
                         } else {
                             // After adding → go to add modules page
-                            window.location.href = base_url + '/admin/add_module/' + response.course_id;
+                            window.location.href = base_url + 'admin/add_module/' + response.course_id;
                         }
                     }, 1500);
 
