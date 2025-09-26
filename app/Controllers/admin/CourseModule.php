@@ -228,13 +228,25 @@ class CourseModule extends BaseController
             'message' => 'Invalid request'
         ]);
     }
-    public function edit($id)
+    public function editModule($id)
     {
         $module = $this->moduleModel->find($id);
+
+        if (!$module) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
+        }
+
+        $videoModel = new CourseVideoModel();
+        $videos = $videoModel->where('module_id', $id)->where('status', 1)->findAll();
+        $videoFiles = array_column($videos, 'video_file');
+        $existingVideos = implode(',', $videoFiles);
+
         $data = [
             'module' => $module,
+            'existingVideos' => $existingVideos
         ];
-
+        // print_r($data );
+        // exit;
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
         $template .= view('admin/add_module', $data);
@@ -245,16 +257,31 @@ class CourseModule extends BaseController
     }
 
 
+
     public function update($id)
     {
         $moduleData = [
             'module_name' => $this->request->getPost('module_name'),
             'description' => $this->request->getPost('description'),
             'duration_weeks' => $this->request->getPost('duration_weeks'),
-            'video_file' => $this->request->getPost('module_videos'),
         ];
 
         $this->moduleModel->update($id, $moduleData);
+        $videoFiles = $this->request->getPost('module_videos');
+
+        $videoModel = new CourseVideoModel();
+
+        if ($videoFiles) {
+            $videoModel->where('module_id', $id)->delete();
+            $videos = explode(',', $videoFiles);
+            foreach ($videos as $video) {
+                $videoModel->insert([
+                    'module_id' => $id,
+                    'video_file' => $video,
+                    'status' => 1,
+                ]);
+            }
+        }
 
         return $this->response->setJSON([
             'status' => 'success',
