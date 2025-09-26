@@ -8,7 +8,7 @@
 
                     <!-- User info -->
                     <div>
-                        <h6 class="mb-1 text-white"> <?= esc($profile['name'] ?? 'Guest'); ?></h6>
+                        <h6 class="mb-1 text-white"> <?= ucfirst(esc($profile['name'] ?? 'Guest')); ?></h6>
                         <p class="mb-0 text-white fs-14"> <?= esc($profile['grade'] ?? 'N/A'); ?> Grade.
                             <?= esc($profile['school'] ?? ''); ?></p>
                     </div>
