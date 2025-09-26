@@ -55,4 +55,11 @@ class Leaderboard_Model extends Model
         ->get()
         ->getResult();
 }
+public function getUserStats($userId)
+{
+    return $this->select('COUNT(DISTINCT course_id) as total_courses, SUM(points) as total_points')
+                ->where('user_id', $userId)
+                ->first();
+}
+
 }
