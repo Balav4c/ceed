@@ -8,8 +8,9 @@
 
                     <!-- User info -->
                     <div>
-                        <h6 class="mb-1 text-white">Bala</h6>
-                        <p class="mb-0 text-white fs-14">8th Grade.Lincoln Junior School</p>
+                        <h6 class="mb-1 text-white"> <?= esc($profile['name'] ?? 'Guest'); ?></h6>
+                        <p class="mb-0 text-white fs-14"> <?= esc($profile['grade'] ?? 'N/A'); ?> Grade.
+                            <?= esc($profile['school'] ?? ''); ?></p>
                     </div>
                 </div>
             </div>
@@ -42,7 +43,7 @@
                                 <h5 class="mb-0">210</h5>
                             </div>
                             <div class="icon-sec">
-                               <i class="bi bi-trophy-fill tropy-icon"></i>
+                                <i class="bi bi-trophy-fill tropy-icon"></i>
                             </div>
                         </div>
                     </div>
@@ -112,12 +113,12 @@
                     <div class="row mx-auto">
                         <div class="d-flex align-items-center gap-3 border-clr">
                             <!-- Icon -->
-                          <i class="bi bi-star star-icon" ></i>
+                            <i class="bi bi-star star-icon"></i>
 
                             <!-- User info -->
                             <div>
                                 <h6 class="mb-1 text-black ach-font">First Steps</h6>
-                                <p class="mb-0 text-black-50 fs-14 sub-font" >Complete your first course</p>
+                                <p class="mb-0 text-black-50 fs-14 sub-font">Complete your first course</p>
                             </div>
                         </div>
 
@@ -126,7 +127,7 @@
                     <div class="row mx-auto mt-3">
                         <div class="d-flex align-items-center gap-3 border-clr">
                             <!-- Icon -->
-                           <i class="bi bi-droplet droplet-icon"></i>
+                            <i class="bi bi-droplet droplet-icon"></i>
 
                             <!-- User info -->
                             <div>

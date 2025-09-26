@@ -3,6 +3,7 @@
 namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\LoginModel;
+use App\Models\UserProfileModel;
 
 
 
@@ -19,16 +20,15 @@ public function index(): string {
     if (!$userId) {
          return redirect()->to(base_url(''));
          } 
+           $userModel = new LoginModel(); 
+           $profileModel = new UserProfileModel(); 
+           $user = $userModel->find($userId); 
+           $profile = $profileModel->where('user_id', $userId)->first(); 
+           
         
-            $template = view('common/header'); 
-                $template .= view('leaderboard');
+                $template = view('common/header'); 
+                $template .= view('leaderboard',['profile' => $profile]);
                 $template .= view('common/footer');
                 return $template; 
-          
-
-
-
-
-
-}
+          }
 }
