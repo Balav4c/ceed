@@ -77,7 +77,7 @@ $routes->post('admin/manage_role/toggleStatus', 'admin\ManageRole::toggleStatus'
 $routes->get('admin/manage_course', 'admin\Course::index'); 
 $routes->get('admin/add_course', 'admin\Course::addCourse'); 
 $routes->get('admin/add_course/edit/(:num)', 'admin\Course::form/$1'); 
-$routes->post('admin/manage_course/save', 'admin\Course::save'); 
+$routes->post('admin/manage_course/save', 'admin\Course::save');    
 $routes->post('admin/manage_course/courselistajax', 'admin\Course::courseListAjax'); 
 $routes->get('admin/manage_course/edit/(:num)', 'admin\Course::edit/$1');
 $routes->post('admin/manage_course/update/(:num)', 'admin\Course::update/$1');
@@ -92,7 +92,7 @@ $routes->post('admin/save_module', 'admin\CourseModule::save');
 $routes->get('admin/manage_module', 'admin\CourseModule::addModule');
 $routes->post('admin/manage_module/modulelistajax', 'admin\CourseModule::moduleListAjax'); 
 $routes->post('admin/coursemodule/uploadVideo', 'admin\CourseModule::uploadVideo');
-$routes->get('admin/add_module/edit/(:num)', 'admin\CourseModule::edit/$1');
+$routes->get('admin/add_module/edit/(:num)', 'admin\CourseModule::editModule/$1');
 $routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::update/$1');
 $routes->post('admin/manage_module/delete', 'admin\CourseModule::delete');
 $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleStatus');

@@ -9,48 +9,50 @@
                 var fileUploadId = `fileUpload-${++fileUploadCount}`;
 
                 var fileDivContent = `
-                    <label for="${fileUploadId}" class="file-upload">
-                        <div style="margin-top: 42px;">
-                            <i class="material-icons-outlined">video_upload</i>
-                            <p>Drag & Drop Files Here</p>
-                            <span>OR</span>
-                            <div>Browse Files</div>
-                        </div>
-                        <!-- FIX: set correct name -->
-                       <input type="file" id="${fileUploadId}" name="module_videos[]" multiple hidden />
-                    </label>
-                `;
+                <label for="${fileUploadId}" class="file-upload">
+                    <div style="margin-top: 42px;">
+                        <i class="material-icons-outlined">video_upload</i>
+                        <p>Drag & Drop Files Here</p>
+                        <span>OR</span>
+                        <div>Browse Files</div>
+                    </div>
+                    <input type="file" id="${fileUploadId}" name="module_videos[]" multiple hidden />
+                </label>
+            `;
 
                 fileUploadDiv.html(fileDivContent).addClass("file-container");
 
                 var table = null;
                 var tableBody = null;
+                var deletedVideos = []; // Track deleted videos
+
                 function createTable() {
                     table = $(`
-                    <table>
-                        <thead>
-                            <tr>
-                                <th></th>
-                                <th style="width: 30%;">File Name</th>
-                                <th>Preview</th>
-                                <th style="width: 20%;">Size</th>
-                                <th>Type</th>
-                                <th></th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                        </tbody>
-                    </table>
+                <table>
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th style="width: 30%;">File Name</th>
+                            <th>Preview</th>
+                            <th style="width: 20%;">Size</th>
+                            <th>Type</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
                 `);
                     tableBody = table.find("tbody");
                     fileUploadDiv.append(table);
                 }
+
                 function uploadFiles(files) {
                     let formData = new FormData();
                     formData.append('module_id', $('#module_id').val() || '');
                     for (let i = 0; i < files.length; i++) {
                         formData.append('module_videos[]', files[i]);
                     }
+
                     $.ajax({
                         url: "<?= base_url('admin/coursemodule/uploadVideo') ?>",
                         type: "POST",
@@ -66,18 +68,13 @@
                                     .text(response.message || 'Videos uploaded successfully!')
                                     .show();
 
-                                // Store uploaded filenames in hidden input for save later
                                 let existing = $('#uploaded_videos').val();
                                 let newVideos = response.uploaded.join(',');
                                 $('#uploaded_videos').val(existing ? existing + ',' + newVideos : newVideos);
 
                                 setTimeout(function () {
                                     $msg.fadeOut();
-                                    if (typeof table !== "undefined" && table.ajax) {
-                                        table.ajax.reload(null, false);
-                                    }
                                 }, 1500);
-
                             } else {
                                 $msg.addClass('alert-danger')
                                     .text(response.message || (response.errors ? response.errors.join(', ') : 'Upload failed'))
@@ -86,7 +83,7 @@
                                 setTimeout(function () { $msg.fadeOut(); }, 2000);
                             }
                         },
-                        error: function (xhr, status, error) {
+                        error: function () {
                             let $msg = $('#messageBox');
                             $msg.removeClass('d-none alert-success')
                                 .addClass('alert-danger')
@@ -95,6 +92,64 @@
 
                             setTimeout(function () { $msg.fadeOut(); }, 2000);
                         }
+                    });
+                }
+                function addExistingVideos(videos) {
+                    if (!table) createTable();
+
+                    tableBody.empty();
+
+                    if (!videos || videos.length === 0) {
+                        tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
+                        return;
+                    }
+
+                    videos.forEach(function (video, index) {
+                        let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + video;
+
+                        tableBody.append(`
+                        <tr data-existing-video="${video}">
+                            <td>${index + 1}</td>
+                            <td>${video}</td>
+                            <td>
+                                <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
+                                    Play Video <i class="bi bi-play-circle"></i>
+                                </a>
+                            </td>
+                            <td>--</td>
+                            <td>video/mp4</td>
+                            <td>
+                                <button type="button" class="deleteBtn">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                    });
+
+                    tableBody.find(".deleteBtn").click(function () {
+                        let row = $(this).closest("tr");
+                        let existingVideo = row.data("existing-video");
+
+                        if (existingVideo) {
+                            deletedVideos.push(existingVideo);
+                            $('#deleted_videos').val(deletedVideos.join(","));
+                        }
+
+                        row.remove();
+
+                        if (tableBody.find("tr").length === 0) {
+                            tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
+                        }
+                    });
+                    tableBody.off("click", ".play-video-link").on("click", ".play-video-link", function () {
+                        let videoUrl = $(this).data("video");
+                        let videoTitle = $(this).data("title");
+
+                        $("#videoModal .modal-title").text(videoTitle);
+                        $("#videoModal video source").attr("src", videoUrl);
+                        $("#videoModal video")[0].load();
+                        $("#videoModal").modal("show");
                     });
                 }
 
@@ -115,16 +170,21 @@
                                 : `<i class="material-icons-outlined">visibility_off</i>`;
 
                             tableBody.append(`
-                                <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${fileName}</td>
-                                    <td>${preview}</td>
-                                    <td>${fileSize}</td>
-                                    <td>${fileType}</td>
-                                    <td><button type="button" class="deleteBtn"><i class="bi bi-trash-fill"></i></button></td>
-                                </tr>
-                            `);
+                            <tr>
+                                <td>${index + 1}</td>
+                                <td>${fileName}</td>
+                                <td>${preview}</td>
+                                <td>${fileSize}</td>
+                                <td>${fileType}</td>
+                                <td>
+                                    <button type="button" class="deleteBtn">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
                         });
+
                         tableBody.find(".deleteBtn").click(function () {
                             $(this).closest("tr").remove();
 
@@ -132,6 +192,7 @@
                                 tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                             }
                         });
+
                         uploadFiles(files);
                     }
                 }
@@ -154,11 +215,19 @@
                         }
                         fileUploadDiv.find(`#${fileUploadId}`)[0].files = dt.files;
                     },
-
                 });
+
                 fileUploadDiv.find(`#${fileUploadId}`).change(function () {
                     handleFiles(this.files);
                 });
+
+                var existingVideos = $('#existing_videos').val();
+                if (existingVideos) {
+                    addExistingVideos(existingVideos.split(','));
+                } else {
+                    createTable();
+                }
+
             });
         };
     })(jQuery);

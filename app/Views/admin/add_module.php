@@ -9,34 +9,39 @@
                 <form id="moduleForm" method="post" action="<?= base_url('admin/save_module') ?>"
                     enctype="multipart/form-data">
                     <input type="hidden" name="course_id" value="<?= $course_id ?? '' ?>">
-                   <input type="hidden" name="module_id" value="<?= $module->module_id ?? '' ?>">
-                   <input type="hidden" id="uploaded_videos" name="uploaded_videos" value="">
+                    <input type="hidden" name="module_id" value="<?= $module->module_id ?? '' ?>">
                     <div id="module-container">
                         <div class="module-item border rounded p-3 mb-3">
                             <div class="row">
                                 <div class="col-6 mb-3">
                                     <label>Module Name<span class="text-danger">*</span></label>
-                                    <input type="text" name="module_name[]" class="form-control" value="<?= $module['module_name'] ?? '' ?>" required>
+                                    <input type="text" name="module_name[]" class="form-control"
+                                        value="<?= $module['module_name'] ?? '' ?>" required>
                                 </div>
                                 <div class="col-6 mb-3">
                                     <label>Duration (Weeks)<span class="text-danger">*</span></label>
-                                    <input type="text" name="module_duration[]" class="form-control" value="<?= $module['duration_weeks'] ?? '' ?>">
+                                    <input type="text" name="module_duration[]" class="form-control"
+                                        value="<?= $module['duration_weeks'] ?? '' ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="page-wrapper box-content width-word">
                                         <label for="example">Description</label>
-                                        <textarea class="content" id="description" name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
+                                        <textarea class="content" id="description"
+                                            name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 ">
                                     <div class="page-wrapper box-content width-word">
                                         <label>Module Video</label>
-                                        <div id="fileUpload" name="module_videos[]"  value="<?= $module['module_videos'] ?? '' ?>"></div>
+                                        <input type="hidden" id="existing_videos"
+                                            value="<?= esc($existingVideos ?? '') ?>">
+                                        <div id="fileUpload" name="module_videos[]"></div>
+
                                     </div>
                                 </div>
-                            </div>  
+                            </div>
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-end gap-2">
