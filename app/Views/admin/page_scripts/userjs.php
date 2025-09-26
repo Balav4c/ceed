@@ -302,7 +302,7 @@ $(document).ready(function () {
         url: "<?= base_url('admin/manage_leaderboard/leaderboardListAjax') ?>",
         type: "POST",
         data: function(d) {
-            d.selected_date = $('#filterDate').val(); 
+            d.selected_date = $('#filterDate').data('mysql-date') || ''; 
         },
         dataSrc: "data"
     },
@@ -331,14 +331,34 @@ $(document).ready(function () {
             }
         },
     ],
-    order: [], // for default sorting [[5, 'asc']] column5 ascending order
+    order: [],
     columnDefs: [
         { orderable: false, searchable: false, targets: [0,6] }
     ]
 });
-$('#filterDate').on('change', function() {
-    table.ajax.reload();
+
+//leaderboard  calender
+
+$(document).ready(function(){
+    flatpickr("#filterDate", {
+        dateFormat: "d/m/Y",  
+        allowInput: true,
+        onChange: function(selectedDates, dateStr, instance) {
+            if (dateStr) {
+                const parts = dateStr.split('/');
+                const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; 
+                $('#filterDate').data('mysql-date', formattedDate);
+            } else {
+                $('#filterDate').data('mysql-date', '');
+            }
+            if (typeof table !== 'undefined') {
+                table.ajax.reload(); 
+            }
+        }
+    });
+
 });
+
 
 // leaderboard toggle status
 
