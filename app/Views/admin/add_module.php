@@ -40,7 +40,7 @@
                         </div>
                     </div>
                     <div class="col-12 d-flex justify-content-end gap-2">
-                        <a href="<?= base_url('admin/manage_module') ?>" class="btn btn-secondary">Back</a>
+                        <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-secondary">Back</a>
                         <button type="submit" class="btn btn-primary" id="saveBtn">Save Module</button>
                     </div>
                 </form>

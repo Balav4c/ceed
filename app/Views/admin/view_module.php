@@ -3,7 +3,10 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between">
                 <h3>Modules for: <?= esc($course['name']) ?></h3>
-                <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back to Courses</a>
+                <div class="text-end">
+                    <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back to Courses</a>
+                    <a href="<?= base_url('admin/manage_module') ?>" class="btn btn-secondary">View Modules</a>
+                </div>
             </div>
             <div class="card-body">
                 <?php if (!empty($modules)): ?>
@@ -15,6 +18,7 @@
                                 <th>Description</th>
                                 <th>Duration (weeks)</th>
                                 <th>Videos</th>
+                                <th>Action</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -29,7 +33,6 @@
                                             Read Description
                                         </a>
                                     </td>
-
                                     <td><?= esc($module['duration_weeks']) ?></td>
                                     <td>
                                         <?php
@@ -38,16 +41,28 @@
                                             foreach ($videos as $v): ?>
                                                 <a href="javascript:void(0);" class="play-video"
                                                     data-video="<?= base_url('public/uploads/videos/' . $v['video_file']) ?>"
-                                                    data-name="<?= esc($v['video_file'], 'attr') ?>" data-title="${v}">Play Video
-                                                    <i class="bi bi-play-circle"></i>
+                                                    data-name="<?= esc($v['video_file'], 'attr') ?>">
+                                                    Play Video <i class="bi bi-play-circle"></i>
                                                 </a><br>
                                             <?php endforeach;
                                         else: ?>
                                             No videos
                                         <?php endif; ?>
                                     </td>
-
-
+                                    <td>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <a href="<?= base_url('admin/add_module/edit/' . $module['module_id']) ?>"
+                                               title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
+                                                <i class="bi bi-pencil-fill"></i>
+                                            </a>
+                                            <a href="javascript:void(0);" 
+                                               class="delete-module" 
+                                               data-id="<?= $module['module_id'] ?>" 
+                                               title="Delete" style="color:#dc3545;">
+                                                <i class="bi bi-trash-fill"></i>
+                                            </a>
+                                        </div>
+                                    </td>
                                 </tr>
                             <?php endforeach; ?>
                         </tbody>
@@ -59,6 +74,7 @@
         </div>
     </div>
 </div>
+
 <!-- Modal -->
 <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg">

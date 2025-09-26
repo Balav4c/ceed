@@ -42,7 +42,7 @@ class CourseModule extends BaseController
         $moduleNames = $this->request->getPost('module_name');
         $durations = $this->request->getPost('module_duration');
         $descriptions = $this->request->getPost('module_description');
-        $uploadedVideos = $this->request->getPost('uploaded_videos'); 
+        $uploadedVideos = $this->request->getPost('uploaded_videos');
 
         foreach ($moduleNames as $index => $name) {
             if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
@@ -132,6 +132,7 @@ class CourseModule extends BaseController
         $fromstart = $request->getPost('start') ?? 0;
         $tolimit = $request->getPost('length') ?? 10;
         $search = $request->getPost('search')['value'] ?? '';
+        $courseId = $request->getPost('course_id');
         $condition = "1=1";
 
         if (!empty($search)) {
@@ -145,7 +146,9 @@ class CourseModule extends BaseController
             OR REPLACE(LOWER(m.duration_weeks), ' ', '') LIKE '%{$esc}%'
         )";
         }
-
+        if (!empty($courseId)) {
+            $condition .= " AND m.course_id = " . (int) $courseId;
+        }
         $columns = [
             'slno',
             'module_name',
@@ -160,13 +163,13 @@ class CourseModule extends BaseController
         $orderColumnIndex = $order[0]['column'] ?? 0;
         $orderDir = $order[0]['dir'] ?? 'desc';
         $orderBy = $columns[$orderColumnIndex] ?? 'module_id';
-
+        $m_id = $request->getPost('module_id');
         if ($orderBy === 'slno' || $orderBy === 'module_videos') {
             $orderBy = 'module_id';
         }
 
         $moduleRecords = $this->moduleModel
-            ->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir);
+            ->getAllFilteredRecords($condition, $fromstart, $tolimit, $orderBy, $orderDir, $m_id);
 
         $result = [];
         $slno = $fromstart + 1;
@@ -195,6 +198,7 @@ class CourseModule extends BaseController
             "data" => $result
         ]);
     }
+
     public function toggleStatus()
     {
         if ($this->request->isAJAX()) {

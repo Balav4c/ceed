@@ -42,65 +42,65 @@ class Course extends BaseController
 
     }
     public function save()
-{
-    $id = $this->request->getPost('course_id');
-    $name = trim($this->request->getPost('name'));
-    $description = $this->request->getPost('description');
-   $plainDescription = $description; 
-    $duration_weeks = trim($this->request->getPost('duration_weeks'));
+    {
+        $id = $this->request->getPost('course_id');
+        $name = trim($this->request->getPost('name'));
+        $description = $this->request->getPost('description');
+        $plainDescription = $description;
+        $duration_weeks = trim($this->request->getPost('duration_weeks'));
 
-    if (empty($name) || empty($duration_weeks)) {
-        return $this->response->setJSON([
-            'status' => 'error',
-            'message' => 'Please Fill In All Mandatory Fields.'
-        ]);
-    }
+        if (empty($name) || empty($duration_weeks)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Please Fill In All Mandatory Fields.'
+            ]);
+        }
 
-    $courseData = [
-        'name' => $name,
-        'description' => $plainDescription,
-        'duration_weeks' => $duration_weeks,
-        'status' => 1
-    ];
+        $courseData = [
+            'name' => $name,
+            'description' => $plainDescription,
+            'duration_weeks' => $duration_weeks,
+            'status' => 1
+        ];
 
-    if ($id) {
+        if ($id) {
 
-        $this->courseModel->update($id, $courseData);
-        $courseId = $id;
-        $message = 'Course Updated Successfully!';
-        $isUpdate = true;
-    } else {
+            $this->courseModel->update($id, $courseData);
+            $courseId = $id;
+            $message = 'Course Updated Successfully!';
+            $isUpdate = true;
+        } else {
 
-        $this->courseModel->insert($courseData);
-        $courseId = $this->courseModel->insertID();
-        $message = 'Course Saved Successfully! Now Add Modules.';
-        $isUpdate = false;
-    }
+            $this->courseModel->insert($courseData);
+            $courseId = $this->courseModel->insertID();
+            $message = 'Course Saved Successfully! Now Add Modules.';
+            $isUpdate = false;
+        }
 
 
-    $this->moduleModel->where('course_id', $courseId)->delete();
-    $moduleNames = $this->request->getPost('module_name');
-    $durations = $this->request->getPost('module_duration');
+        $this->moduleModel->where('course_id', $courseId)->delete();
+        $moduleNames = $this->request->getPost('module_name');
+        $durations = $this->request->getPost('module_duration');
 
-    if (!empty($moduleNames)) {
-        foreach ($moduleNames as $index => $mname) {
-            if (!empty($mname)) {
-                $this->moduleModel->insert([
-                    'course_id'      => $courseId,
-                    'module_name'    => $mname,
-                    'duration_weeks' => $durations[$index] ?? ''
-                ]);
+        if (!empty($moduleNames)) {
+            foreach ($moduleNames as $index => $mname) {
+                if (!empty($mname)) {
+                    $this->moduleModel->insert([
+                        'course_id' => $courseId,
+                        'module_name' => $mname,
+                        'duration_weeks' => $durations[$index] ?? ''
+                    ]);
+                }
             }
         }
-    }
 
-    return $this->response->setJSON([
-        'status'    => 'success',
-        'message'   => $message,
-        'course_id' => $courseId,
-        'is_update' => $isUpdate 
-    ]);
-}
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => $message,
+            'course_id' => $courseId,
+            'is_update' => $isUpdate
+        ]);
+    }
 
 
     public function courseListAjax()
@@ -184,7 +184,7 @@ class Course extends BaseController
                     'status' => 'error',
                     'message' => 'Update Failed'
                 ]);
-            } 
+            }
         }
         return $this->response->setJSON([
             'status' => 'error',
@@ -211,7 +211,7 @@ class Course extends BaseController
         return $template;
     }
 
- 
+
     public function update($id)
     {
         $courseData = [
@@ -224,38 +224,38 @@ class Course extends BaseController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Course Updated Successfully. Do you want to edit modules?'
+            'message' => 'Course Updated Successfully.'
         ]);
     }
- public function viewCourseModules($courseId)
+    public function viewCourseModules($courseId)
     {
-        
+
 
         $course = $this->courseModel->find($courseId);
-        
+
         if (!$course) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Course not found');
         }
 
         $modules = $this->moduleModel->where('course_id', $courseId)->findAll();
-        
-       
+
+
 
         $videoModel = new CourseVideoModel();
-        
-         
+
+
         // Pass data to view
         $data = [
             'course' => $course,
             'modules' => $modules,
             'videoModel' => $videoModel
         ];
-         
-    $template  = view('admin/common/header');
-    $template .= view('admin/common/sidemenu');
-    $template .= view('admin/view_module', $data);
-    $template .= view('admin/common/footer');
-    $template .= view('admin/page_scripts/coursejs');
+
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/manage_module', $data);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/modulejs');
 
         return $template;
     }

@@ -3,9 +3,10 @@
         <div class="card">
             <div id="messageBox" class="alert d-none text-center"  role="alert"></div>
             <div class="card-header d-flex justify-content-between">
-                <h3>Manage Modules</h3>
+                <h3>Modules For <?= esc($course['name']) ?></h3>
                 <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back To Course</a>
             </div>
+            <input type="hidden" id="course_id" value="<?= esc($course['course_id']) ?>">
             <div class="card-body">
                 <table id="moduleTable" class="table table-bordered">
                     <thead>
