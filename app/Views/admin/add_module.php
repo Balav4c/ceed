@@ -9,8 +9,8 @@
 
                 <form id="moduleForm" method="post" action="<?= base_url('admin/save_module') ?>"
                     enctype="multipart/form-data">
-                    <input type="text" name="module_id" value="<?= $module['module_id'] ?? '' ?>">
-                    <input type="text" name="course_id" value="<?= $course_id ?? $module['course_id'] ??'' ?>">
+                    <input type="hidden" name="module_id" value="<?= $module['module_id'] ?? '' ?>">
+                    <input type="hidden" name="course_id" value="<?= $course_id ?? $module['course_id'] ?? '' ?>">
                     <div id="module-container">
                         <div class="module-item border rounded p-3 mb-3">
                             <div class="row">
@@ -36,8 +36,9 @@
                                 <div class="col-md-6 ">
                                     <div class="page-wrapper box-content width-word">
                                         <label>Module Video</label>
-                                        <input type="hidden" id="existing_videos"
+                                        <input type="hidden" id="existing_videos" name="uploaded_videos"
                                             value="<?= esc($existingVideos ?? '') ?>">
+
                                         <div id="fileUpload" name="module_videos[]"></div>
 
                                     </div>

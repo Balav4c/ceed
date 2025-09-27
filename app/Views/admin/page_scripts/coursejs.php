@@ -24,6 +24,16 @@
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
+        $(document).ready(function () {
+            $(document).on('input', 'input[name="name"],  textarea[name="description"]', function () {
+                let val = $(this).val();
+                val = val.replace(/\b\w/g, function (char) {
+                    return char.toUpperCase();
+                });
+
+                $(this).val(val);
+            });
+        });
 
 
         $('#courseForm').on('submit', function (e) {
