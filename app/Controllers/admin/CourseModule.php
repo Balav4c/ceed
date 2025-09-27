@@ -43,7 +43,7 @@ class CourseModule extends BaseController
     $moduleNames = $this->request->getPost('module_name');
     $durations = $this->request->getPost('module_duration');
     $descriptions = $this->request->getPost('module_description');
-    $uploadedVideos = $this->request->getPost('uploaded_videos');
+    $uploadedVideos = $this->request->getPost('module_videos');
 
     foreach ($moduleNames as $index => $name) {
         if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
@@ -78,15 +78,20 @@ class CourseModule extends BaseController
     }
 
     if (!empty($uploadedVideos)) {
-        $videoArray = explode(',', $uploadedVideos);
-        foreach ($videoArray as $video) {
+    $videoArray = explode(',', $uploadedVideos);
+    foreach ($videoArray as $video) {
+        if (!empty(trim($video))) {
             $this->videoModel->insert([
-                'module_id' => $moduleId,
+                'module_id'  => $moduleId,
                 'video_file' => trim($video),
-                'status' => 1
+                'status'     => 1,
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s')
             ]);
         }
     }
+}
+
 
     return $this->response->setJSON([
         'status' => 'success',
