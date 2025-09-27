@@ -116,7 +116,7 @@ $progress = $profile['profile_percentage'] ?? 0;
                 <div class="col-md-12" id="hero-section">
                     <div class="row">
                         <div class="col-md-12 text-center head-title" data-aos="fade-up">
-                            <h1><span class="orange">Empowering Kids with<br />Growth Mindset Through<span><br /><span
+                            <h1><span class="orange">Empowering Kids with<br />Growth Mindset through<span><br /><span
                                             class="palesky">the Power of games.</span></h1>
                         </div>
                         <div class="col-md-12 text-center" data-aos="fade-up">
