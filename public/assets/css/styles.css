@@ -96,7 +96,8 @@ header p {
 	font-weight:200 !important;
 }
 .puzzle {
-	width:300px;
+	/* width:300px; */
+	width: 350px;
 	margin-left:auto;
 	margin-right:auto;
 	margin-top:50px;
@@ -344,6 +345,9 @@ header p {
 }
 .aboutceed .palesky {
 	font-weight:300;
+}
+.palesky-subtle{
+	font-size:14px;
 }
 footer {
 	background-color:#333944;
