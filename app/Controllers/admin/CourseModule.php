@@ -35,58 +35,132 @@ class CourseModule extends BaseController
         return $template;
 
     }
+    // public function save()
+    // {
+    //     $moduleId = $this->request->getPost('module_id');
+    //    $courseId = $this->request->getPost('course_id');
+    //     $moduleNames = $this->request->getPost('module_name');
+    //     $durations = $this->request->getPost('module_duration');
+    //     $descriptions = $this->request->getPost('module_description');
+    //     $uploadedVideos = $this->request->getPost('uploaded_videos');
+
+    //     foreach ($moduleNames as $index => $name) {
+    //         if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+    //             return $this->response->setJSON([
+    //                 'status' => 'error',
+    //                 'message' => 'Please Fill All Mandatory Fields.'
+    //             ]);
+    //         }
+    //     }
+    //     foreach ($moduleNames as $index => $name) {
+    //         $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
+
+    //         $moduleData = [
+    //             'course_id' => $courseId,
+    //             'module_name' => $name,
+    //             'duration_weeks' => $durations[$index] ?? null,
+    //             'description' => $plainDescription,
+    //             'status' => 1
+    //         ];
+         
+    //          if ($moduleId) {
+
+    //         $this->moduleModel->update($moduleId, $moduleData);
+    //         $courseId = $moduleId;
+    //         $message = 'Module Updated Successfully!';
+    //         $isUpdate = true;
+    //     } else {
+
+    //         $this->moduleModel->insert($moduleData);
+    //         $courseId = $this->moduleModel->insertID();
+    //         $message = 'Module Saved Successfully!.';
+    //         $isUpdate = false;
+    //     }
+
+    //     }
+
+    //     if (!empty($uploadedVideos)) {
+    //         $videoArray = explode(',', $uploadedVideos);
+    //         foreach ($videoArray as $video) {
+    //             $this->videoModel->insert([
+    //                 'module_id' => $moduleId,
+    //                 'video_file' => trim($video),
+    //                 'status' => 1
+    //             ]);
+    //         }
+    //     }
+
+    //     return $this->response->setJSON([
+    //         'status' => 'success',
+    //          'message' => $message,
+    //         'module_id' => $moduleId,
+    //         'course_id' => $courseId,
+    //         'is_update' => $isUpdate
+    //     ]);
+    // }
+
+
     public function save()
-    {
-        $moduleId = $this->request->getPost('module_id');
-        $courseId = $this->request->getPost('course_id');
-        $moduleNames = $this->request->getPost('module_name');
-        $durations = $this->request->getPost('module_duration');
-        $descriptions = $this->request->getPost('module_description');
-        $uploadedVideos = $this->request->getPost('uploaded_videos');
+{
+    $moduleId = $this->request->getPost('module_id');
+    $courseId = $this->request->getPost('course_id');
+    $moduleNames = $this->request->getPost('module_name');
+    $durations = $this->request->getPost('module_duration');
+    $descriptions = $this->request->getPost('module_description');
+    $uploadedVideos = $this->request->getPost('uploaded_videos');
 
-        foreach ($moduleNames as $index => $name) {
-            if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
-                return $this->response->setJSON([
-                    'status' => 'error',
-                    'message' => 'Please Fill All Mandatory Fields.'
-                ]);
-            }
+    foreach ($moduleNames as $index => $name) {
+        if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Please Fill All Mandatory Fields.'
+            ]);
         }
-        foreach ($moduleNames as $index => $name) {
-            $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
-
-            $moduleData = [
-                'course_id' => $courseId,
-                'module_name' => $name,
-                'duration_weeks' => $durations[$index] ?? null,
-                'description' => $plainDescription,
-                'status' => 1
-            ];
-
-            if (!empty($moduleId)) {
-                $this->moduleModel->update($moduleId, $moduleData);
-            } else {
-                $this->moduleModel->insert($moduleData);
-                $moduleId = $this->moduleModel->getInsertID();
-            }
-        }
-
-        if (!empty($uploadedVideos)) {
-            $videoArray = explode(',', $uploadedVideos);
-            foreach ($videoArray as $video) {
-                $this->videoModel->insert([
-                    'module_id' => $moduleId,
-                    'video_file' => trim($video),
-                    'status' => 1
-                ]);
-            }
-        }
-
-        return $this->response->setJSON([
-            'status' => 'success',
-            'msg' => !empty($moduleId) ? 'Module Updated Successfully!' : 'Modules Added Successfully!'
-        ]);
     }
+
+    foreach ($moduleNames as $index => $name) {
+        $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
+
+        $moduleData = [
+            'course_id' => $courseId,
+            'module_name' => $name,
+            'duration_weeks' => $durations[$index] ?? null,
+            'description' => $plainDescription,
+            'status' => 1
+        ];
+
+        if ($moduleId) {
+            $this->moduleModel->update($moduleId, $moduleData);
+            $message = 'Module Updated Successfully!';
+            $isUpdate = true;
+        } else {
+            $this->moduleModel->insert($moduleData);
+            $moduleId = $this->moduleModel->insertID(); // correct module ID after insert
+            $message = 'Module Saved Successfully!.';
+            $isUpdate = false;
+        }
+    }
+
+    if (!empty($uploadedVideos)) {
+        $videoArray = explode(',', $uploadedVideos);
+        foreach ($videoArray as $video) {
+            $this->videoModel->insert([
+                'module_id' => $moduleId,
+                'video_file' => trim($video),
+                'status' => 1
+            ]);
+        }
+    }
+
+    return $this->response->setJSON([
+        'status' => 'success',
+        'message' => $message,
+        'module_id' => $moduleId,
+        'course_id' => $courseId,
+        'is_update' => $isUpdate
+    ]);
+}
+
     public function uploadVideo()
     {
         $videoFiles = $this->request->getFileMultiple('module_videos');

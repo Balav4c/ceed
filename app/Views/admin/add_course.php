@@ -7,7 +7,7 @@
             </div>
             <div class="card-body">
                 <form id="courseForm" action="<?= base_url('admin/manage_course/save') ?>" method="post">
-                    <input type="hidden" name="course_id" value="<?= $course['course_id'] ?? '' ?>">
+                    <input type="text" name="course_id" value="<?= $course['course_id'] ?? '' ?>">
 
                     <div class="mb-3">
                         <label>Name/Title <span class="text-danger">*</span></label>
