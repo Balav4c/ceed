@@ -6,10 +6,11 @@
                 <h3 class="mb-0"><?= isset($course['module_id']) ? 'Edit Module' : 'Add New Module' ?></h3>
             </div>
             <div class="card-body">
+
                 <form id="moduleForm" method="post" action="<?= base_url('admin/save_module') ?>"
                     enctype="multipart/form-data">
-                    <input type="hidden" name="course_id" value="<?= $course_id ?? '' ?>">
-                    <input type="hidden" name="module_id" value="<?= $module->module_id ?? '' ?>">
+                    <input type="text" name="module_id" value="<?= $module['module_id'] ?? '' ?>">
+                    <input type="text" name="course_id" value="<?= $course_id ?? $module['course_id'] ??'' ?>">
                     <div id="module-container">
                         <div class="module-item border rounded p-3 mb-3">
                             <div class="row">

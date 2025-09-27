@@ -242,6 +242,7 @@
         const $moduleForm = $('#moduleForm');
         const $moduleContainer = $('#module-container');
         const $messageBox = $('#messageBox');
+        const base_url = "<?= base_url() ?>";
         $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
 
         function enableSaveButton() {
@@ -333,7 +334,14 @@
                         .show();
 
                     setTimeout(function () {
-                        location.reload();
+                         if (response.is_update) {
+                         window.location.href = base_url + 'admin/manage_course/modules/' +response.course_id;
+                        } else {
+                            // After adding → go to add modules page
+                            window.location.reload();              
+                            
+                        }
+                        
                     }, 1500);
 
                 } else {
