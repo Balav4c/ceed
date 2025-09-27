@@ -36,10 +36,8 @@
                                 <div class="col-md-6 ">
                                     <div class="page-wrapper box-content width-word">
                                         <label>Module Video</label>
-                                        <input type="hidden" id="existing_videos" name="uploaded_videos"
-                                            value="<?= esc($existingVideos ?? '') ?>">
-
-                                        <div id="fileUpload" name="module_videos[]"></div>
+                                        <input type="text" id="uploaded_videos" name="uploaded_videos">
+                                        <div id="fileUpload" name="module_videos[]" value="<?= esc($existingVideos ?? '') ?>"></div>
 
                                     </div>
                                 </div>
