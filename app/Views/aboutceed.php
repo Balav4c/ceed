@@ -13,11 +13,11 @@
 								<h2>About <span class="orange-txt">CEED</span></h2>
 							</div>
 							<div class="col-md-12" data-aos="fade-up">
-								<p class="palesky">CEED (Child Entrepreneurship and Employability Development) is a mindset-building program 
-								designed to help children ages 6–12 grow into confident, creative, and resilient thinkers. 
+								<p class="palesky about-text">CEED (Child Entrepreneurship and Employability Development) is a mindset-building program 
+								designed to help children ages 6–16 grow into confident, creative, and resilient thinkers. 
 								Through daily games, reflection activities, and guided learning, CEED helps kids build 
 								the habits and skills they need to thrive — now and in the future.</p>
-								<p class="palesky">The objective of the games in the CEED program is to help players develop the habit of spotting 
+								<p class="palesky about-text">The objective of the games in the CEED program is to help players develop the habit of spotting 
 								fixed mindset thinking and to use different mindset framing strategies to convert them into growth 
 								mindset thinking for success. </p>
 							</div>

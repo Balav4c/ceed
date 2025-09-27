@@ -11,23 +11,23 @@
 					<div class="clearfix">&nbsp;</div>
 					<div class="row pendulam-lg">
 						<div class="pendulam-blue col-md-2 text-center" data-aos="zoom-in" data-aos-delay="200">
-							<span class="pendulam-wt-box">1 Month</span>
+							<span class="pendulam-wt-box">Week 1 - 3</span>
 							<div class="circle-txt">Mindset<br/>setting for<br/>change</div>
 						</div>
 						<div class="pendulam-yellow col-md-2 text-center" data-aos="zoom-in" data-aos-delay="300">
-							<span class="pendulam-wt-box">1 Month</span>
-							<div class="circle-txt">Understand<br/>ing Mindset<br/>Difference</div>
+							<span class="pendulam-wt-box">Week 4-10</span>
+							<div class="circle-txt">Understanding Mindset<br/>Differences</div>
 						</div>
 						<div class="pendulam-blue col-md-2 text-center" data-aos="zoom-in" data-aos-delay="400">
-							<span class="pendulam-wt-box">1 Month</span>
-							<div class="circle-txt">Framing<br/>Mindset</div>
+							<span class="pendulam-wt-box">Week 11-17</span>
+							<div class="circle-txt">Mindset<br/>Framing</div>  
 						</div>
 						<div class="pendulam-yellow col-md-2 text-center" data-aos="zoom-in" data-aos-delay="500">
-							<span class="pendulam-wt-box">1 Month</span>
-							<div class="circle-txt">Creativity</div>
+							<span class="pendulam-wt-box">Week 18 -23</span>
+							<div class="circle-txt">Creativity </br> Effectuation</div>
 						</div>
 						<div class="pendulam-blue col-md-2 text-center" data-aos="zoom-in" data-aos-delay="600">
-							<span class="pendulam-wt-box">1 Month</span>
+							<span class="pendulam-wt-box">Week 24</span>
 							<div class="circle-txt">Goal Settings<br/>for Mastering<br/>Skills</div>
 						</div>
 						<div class="col-md-12 long-rt-arrow text-center">

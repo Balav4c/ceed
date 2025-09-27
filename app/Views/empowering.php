@@ -1,4 +1,4 @@
- <div class="col-md-12">
+ <!-- <div class="col-md-12">
      <div class="row">
          <div class="col-md-12 text-center head-title" data-aos="fade-up">
              <h1><span class="orange">Empowering Kids with<br />Growth Mindset through<span><br /><span
@@ -19,4 +19,4 @@
              </div>
          </div>
      </div>
- </div>
+ </div> -->
