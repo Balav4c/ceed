@@ -1,12 +1,12 @@
  <div class="col-md-12">
      <div class="row">
          <div class="col-md-12 text-center head-title" data-aos="fade-up">
-             <h1><span class="orange">Empowering Kids with<br />Growth Mindset Through<span><br /><span
+             <h1><span class="orange">Empowering Kids with<br />Growth Mindset through<span><br /><span
                              class="palesky">the Power of games.</span></h1>
          </div>
          <div class="col-md-12 text-center" data-aos="fade-up">
              <div class="clearfix">&nbsp;</div>
-             <p class="palesky">Designed for busy families, CEED turns your child’s screen<br />time into
+             <p class="palesky palesky-subtle">Designed for busy families, CEED turns your child’s screen<br />time into
                  growth time with daily micro-lessons and brain-<br />building games.</p>
          </div>
          <div class="col-md-12">
