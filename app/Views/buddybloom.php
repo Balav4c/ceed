@@ -21,7 +21,7 @@
                                 <img src="<?php echo base_url().ASSET_PATH; ?>assets/img/bb-1.png" />
                             </div>
                             <div class="col-10">
-                                <h4 class="palesky">Modules(1-5)</h4>
+                                <h4 class="palesky">Module(1-5)</h4>
                                 <p class="palesky">Watch animated videos<br />Play daily mindset games</br>Reflect and
                                     track progress</p>
                             </div>
