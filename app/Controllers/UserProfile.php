@@ -48,6 +48,26 @@ public function saveProfile() {
       'bio' => $this->request->getPost('bio'), 
       'phone' => $this->request->getPost('phone'),
       'email' => $this->request->getPost('email'), ]; 
+
+     if (!empty($fields['phone'])) {
+    // Allow digits, +, -, (, ) and must be 10–15 characters
+    if (!preg_match('/^[0-9+\-\(\)]+$/', $fields['phone'])) {
+        return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'Invalid phone number. Only digits, +, -, ( and ) are allowed.'
+        ]);
+    }
+
+    // Optional: check for minimum 10 digits (ignoring symbols)
+    $digitsOnly = preg_replace('/\D/', '', $fields['phone']); // remove non-digits
+    if (strlen($digitsOnly) < 10) {
+        return $this->response->setJSON([
+            'status'  => 'error',
+            'message' => 'Phone number must contain at least 10 digits.'
+        ]);
+    }
+}
+
       // Count filled fields
        $filled = 0; foreach ($fields as $value) { 
         if (!empty($value)) { $filled++; } 
@@ -73,6 +93,10 @@ public function saveProfile() {
             $profileModel->insert($data);
          } 
          return $this->response->setJSON(['status' => 'success', 'message' => 'Profile saved successfully!', 'percentage' => round($percentage)]); 
+      
+      
+      
+      
         }
 
     

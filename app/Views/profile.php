@@ -71,9 +71,11 @@
                         <div class="d-flex align-items-center">
                             <i class="bi bi-telephone fs-5 me-2"></i>
                             <input type="text" id="phone" name="phone" value="<?= esc($user['phone'] ?? '') ?>"
-                                class="form-control fs-13">
+                                class="form-control fs-13" maxlength="15"
+                                oninput="this.value = this.value.replace(/[^0-9+\-()]/g, '')">
                         </div>
                     </div>
+
 
 
                     <input type="hidden" name="profile_percentage" value="">
