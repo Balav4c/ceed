@@ -289,6 +289,14 @@
             });
         });
 
+        $(document).on('input', 'input[name="module_name[]"]', function () {
+            let val = $(this).val();
+            val = val.replace(/\b\w/g, function (char) {
+                return char.toUpperCase();
+            });
+
+            $(this).val(val);
+        });
 
 
         $('#moduleForm').on('submit', function (e) {
@@ -334,14 +342,14 @@
                         .show();
 
                     setTimeout(function () {
-                         if (response.is_update) {
-                         window.location.href = base_url + 'admin/manage_course/modules/' +response.course_id;
+                        if (response.is_update) {
+                            window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
                         } else {
                             // After adding → go to add modules page
-                            window.location.reload();              
-                            
+                            window.location.reload();
+                            //   window.location.href = base_url + 'admin/manage_course/modules/' +response.courseId;
                         }
-                        
+
                     }, 1500);
 
                 } else {
