@@ -124,7 +124,7 @@
                                 </button>
                             </td>
                         </tr>
-                    `);
+        `);
                     });
 
                     tableBody.find(".deleteBtn").click(function () {
@@ -142,17 +142,7 @@
                             tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                         }
                     });
-                    tableBody.off("click", ".play-video-link").on("click", ".play-video-link", function () {
-                        let videoUrl = $(this).data("video");
-                        let videoTitle = $(this).data("title");
-
-                        $("#videoModal .modal-title").text(videoTitle);
-                        $("#videoModal video source").attr("src", videoUrl);
-                        $("#videoModal video")[0].load();
-                        $("#videoModal").modal("show");
-                    });
                 }
-
 
                 function handleFiles(files) {
                     if (!table) {
@@ -259,35 +249,37 @@
             var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
             myModal.show();
         });
+        $(document).on("click", ".play-video-link", function () {
+            debugger;
+            let videoUrl = $(this).data("video");
+            let videoTitle = $(this).data("title");
 
-        $(document).ready(function () {
+            $("#videoTitle").text(videoTitle);
+
+            let videoPlayer = $("#videoPlayer")[0];
+
+            $(videoPlayer).find("source").remove();
+
+            let newSource = document.createElement("source");
+            newSource.src = videoUrl;
+            newSource.type = "video/mp4";
+            videoPlayer.appendChild(newSource);
+
+            videoPlayer.load();
+            videoPlayer.play();
+
             const videoModalEl = document.getElementById('videoModal');
             const videoModal = new bootstrap.Modal(videoModalEl);
-
-            $(document).on("click", ".play-video-link", function () {
-                let videoFile = $(this).data("video");
-                let title = $(this).data("title");
-
-                $("#videoTitle").text(title);
-
-                let videoPlayer = $("#videoPlayer")[0];
-                let source = $("#videoPlayer source")[0];
-
-                source.src = videoFile;
-                source.type = "video/mp4";
-
-                videoPlayer.load();
-                videoPlayer.play();
-
-                videoModal.show();
-            });
-
+            videoModal.show();
             $(videoModalEl).on("hidden.bs.modal", function () {
                 let videoPlayer = $("#videoPlayer")[0];
-                $("#videoPlayer source").attr("src", "");
+                $(videoPlayer).find("source").remove();
                 videoPlayer.load();
             });
         });
+
+
+        // });
 
         $(document).on('input', 'input[name="module_name[]"]', function () {
             let val = $(this).val();

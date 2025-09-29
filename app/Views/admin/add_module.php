@@ -36,8 +36,11 @@
                                 <div class="col-md-6 ">
                                     <div class="page-wrapper box-content width-word">
                                         <label>Module Video</label>
-                                        <input type="text" id="uploaded_videos" name="uploaded_videos">
-                                        <div id="fileUpload" name="module_videos[]" value="<?= esc($existingVideos ?? '') ?>"></div>
+                                        <input type="hidden" id="existing_videos" value="<?= esc($existingVideos ?? '') ?>">
+
+                                        <input type="hidden" id="uploaded_videos" name="uploaded_videos"value="<?= esc($existingVideos ?? '') ?>">
+
+                                        <div id="fileUpload"></div>
 
                                     </div>
                                 </div>
@@ -52,4 +55,21 @@
             </div>
         </div>
     </div>
+</div>
+
+<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="videoTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <video id="videoPlayer" width="100%" controls>
+          <source src="" type="video/mp4">
+          Your browser does not support HTML video.
+        </video>
+      </div>
+    </div>
+  </div>
 </div>
