@@ -12,7 +12,11 @@ $routes->get('/', 'Home::index');
 $routes->get('signin','Login::index');
 $routes->get('signup','Login::signup');
 
-$routes->get('forget_password','Login::forgetPassword');
+$routes->get('forget_password', 'Login::forgetPassword');
+$routes->post('send-reset-link', 'Login::sendResetLink');
+$routes->get('reset_password/(:any)', 'Login::resetPassword/$1');
+$routes->post('update-password', 'Login::updatePassword');
+
 
 $routes->post('auth/login', 'Login::login');
 $routes->post('save/user','Login::saveUser');

@@ -69,7 +69,7 @@ $progress = $profile['profile_percentage'] ?? 0;
                                 <?php else: ?>
                                 <!-- Show login/demo buttons -->
                                 <button class="btn btn-login"
-                                    onclick="window.location.href='<?= base_url('signin'); ?>'">Login</button>
+                                    onclick="window.location.href='<?= base_url(relativePath: 'signin'); ?>'">Login</button>
 
                                 <?php endif; ?>
                                 <button class="btn btn-demo">Request A Demo</button>
