@@ -87,6 +87,9 @@
                     success: function (response) {
                         if (response.status === "success") {
                             showAlert(response.message, 'success');
+                            setTimeout(() => {
+                                window.location.href = "<?= base_url('signin') ?>";
+                            }, 1000);
                         } else {
                             showAlert(response.message, 'danger');
                         }
