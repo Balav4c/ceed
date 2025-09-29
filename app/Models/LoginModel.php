@@ -45,8 +45,7 @@ class LoginModel extends Model
             ->where('reset_expires >=', date('Y-m-d H:i:s'))
             ->first();
     }
-
-    public function resetPassword($user_id, $newPassword)
+public function resetPassword($user_id, $newPassword)
     {
         return $this->update($user_id, [
             'password' => password_hash($newPassword, PASSWORD_DEFAULT),

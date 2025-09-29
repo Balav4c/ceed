@@ -206,7 +206,7 @@ class Login extends BaseController
         if ($emailService->send()) {
             return $this->response->setJSON([
                 'status' => 'success',
-                'message' => 'Reset link sent to your email!'
+                'message' => 'Reset Link Sent To Your Email!'
             ]);
         } else {
             return $this->response->setJSON([
@@ -216,23 +216,22 @@ class Login extends BaseController
         }
     }
 
-   public function resetPassword($token = null)
-{
-    if (!$token) {
-        return redirect()->to('/forget_password');
+ public function resetPassword($token = null)
+    {
+        if (!$token) {
+            return redirect()->to('/forget_password');
+        }
+
+        $hashedToken = hash('sha256', $token);
+        $user = $this->loginModel->verifyToken($hashedToken);
+
+        if (!$user) {
+            return redirect()->to('/forget_password')
+                ->with('error', 'Invalid or Expired Token!');
+        }
+
+        return view('reset_password', ['token' => $token]);
     }
-
-    $hashedToken = hash('sha256', $token);
-    $user = $this->loginModel->verifyToken($hashedToken);
-
-    if (!$user) {
-        return redirect()->to('/forget_password')
-            ->with('error', 'Invalid or expired token!');
-    }
-
-    return view('reset_password', ['token' => $token]);
-}
-
 
     public function updatePassword()
     {
@@ -243,7 +242,7 @@ class Login extends BaseController
         if ($password !== $confirm) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Passwords do not match!'
+                'message' => 'Passwords Do Not Match!'
             ]);
         }
 
@@ -253,7 +252,7 @@ class Login extends BaseController
         if (!$user) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Invalid or expired token!'
+                'message' => 'Invalid or Expired Token!'
             ]);
         }
 
@@ -261,7 +260,7 @@ class Login extends BaseController
 
         return $this->response->setJSON([
             'status' => 'success',
-            'message' => 'Password reset successfully!'
+            'message' => 'Password Updated Successfully!'
         ]);
     }
     public function logout()
