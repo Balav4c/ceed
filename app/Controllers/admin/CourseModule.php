@@ -37,70 +37,72 @@ class CourseModule extends BaseController
     }
 
     public function save()
-{
-    $moduleId = $this->request->getPost('module_id');
-    $courseId = $this->request->getPost('course_id');
-    $moduleNames = $this->request->getPost('module_name');
-    $durations = $this->request->getPost('module_duration');
-    $descriptions = $this->request->getPost('module_description');
-    $uploadedVideos = $this->request->getPost('module_videos');
+    {
+        $moduleId = $this->request->getPost('module_id');
+        $courseId = $this->request->getPost('course_id');
+        $moduleNames = $this->request->getPost('module_name');
+        $durations = $this->request->getPost('module_duration');
+        $descriptions = $this->request->getPost('module_description');
+        $uploadedVideos = $this->request->getPost('uploaded_videos');
 
-    foreach ($moduleNames as $index => $name) {
-        if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
-            return $this->response->setJSON([
-                'status' => 'error',
-                'message' => 'Please Fill All Mandatory Fields.'
-            ]);
+        foreach ($moduleNames as $index => $name) {
+            if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Please Fill All Mandatory Fields.'
+                ]);
+            }
         }
-    }
 
-    foreach ($moduleNames as $index => $name) {
-        $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
+        foreach ($moduleNames as $index => $name) {
+            $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
 
-        $moduleData = [
+            $moduleData = [
+                'course_id' => $courseId,
+                'module_name' => $name,
+                'duration_weeks' => $durations[$index] ?? null,
+                'description' => $plainDescription,
+                'status' => 1
+            ];
+
+            if ($moduleId) {
+                $this->moduleModel->update($moduleId, $moduleData);
+                $message = 'Module Updated Successfully!';
+                $isUpdate = true;
+            } else {
+                $this->moduleModel->insert($moduleData);
+                $moduleId = $this->moduleModel->insertID();
+                $message = 'Module Saved Successfully!.';
+                $isUpdate = false;
+            }
+        }
+
+        if (!empty($uploadedVideos)) {
+            $videoArray = explode(',', $uploadedVideos);
+
+            foreach ($videoArray as $video) {
+                if (!empty(trim($video))) {
+                    $this->videoModel->insert([
+                        'module_id' => $moduleId,
+                        'video_file' => trim($video),
+                        'status' => 1,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
+            }
+        }
+
+
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => $message,
+            'module_id' => $moduleId,
             'course_id' => $courseId,
-            'module_name' => $name,
-            'duration_weeks' => $durations[$index] ?? null,
-            'description' => $plainDescription,
-            'status' => 1
-        ];
-
-        if ($moduleId) {
-            $this->moduleModel->update($moduleId, $moduleData);
-            $message = 'Module Updated Successfully!';
-            $isUpdate = true;
-        } else {
-            $this->moduleModel->insert($moduleData);
-            $moduleId = $this->moduleModel->insertID(); 
-            $message = 'Module Saved Successfully!.';
-            $isUpdate = false;
-        }
+            'is_update' => $isUpdate
+        ]);
     }
-
-    if (!empty($uploadedVideos)) {
-    $videoArray = explode(',', $uploadedVideos);
-    foreach ($videoArray as $video) {
-        if (!empty(trim($video))) {
-            $this->videoModel->insert([
-                'module_id'  => $moduleId,
-                'video_file' => trim($video),
-                'status'     => 1,
-                'created_at' => date('Y-m-d H:i:s'),
-                'updated_at' => date('Y-m-d H:i:s')
-            ]);
-        }
-    }
-}
-
-
-    return $this->response->setJSON([
-        'status' => 'success',
-        'message' => $message,
-        'module_id' => $moduleId,
-        'course_id' => $courseId,
-        'is_update' => $isUpdate
-    ]);
-}
 
     public function uploadVideo()
     {
@@ -243,34 +245,33 @@ class CourseModule extends BaseController
             'message' => 'Invalid request'
         ]);
     }
-    public function editModule($id)
-    {
-        $module = $this->moduleModel->find($id);
+   public function editModule($id)
+{
+    $module = $this->moduleModel->find($id);
 
-        if (!$module) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
-        }
-
-        $videoModel = new CourseVideoModel();
-        $videos = $videoModel->where('module_id', $id)->where('status', 1)->findAll();
-        $videoFiles = array_column($videos, 'video_file');
-        $existingVideos = implode(',', $videoFiles);
-
-        $data = [
-            'module' => $module,
-            'existingVideos' => $existingVideos
-        ];
-    
-        $template = view('admin/common/header');
-        $template .= view('admin/common/sidemenu');
-        $template .= view('admin/add_module', $data);
-        $template .= view('admin/common/footer');
-        $template .= view('admin/page_scripts/modulejs');
-
-        return $template;
+    if (!$module) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
     }
 
+    $videoModel = new CourseVideoModel();
+    $videoFiles = $videoModel
+        ->where('module_id', $id)
+        ->where('status', 1)
+        ->findColumn('video_file'); 
 
+    $data = [
+        'module' => $module,
+        'existingVideos' => $videoFiles ? implode(',', $videoFiles) : ''
+    ];
+
+    $template = view('admin/common/header');
+    $template .= view('admin/common/sidemenu');
+    $template .= view('admin/add_module', $data);
+    $template .= view('admin/common/footer');
+    $template .= view('admin/page_scripts/modulejs');
+
+    return $template;
+}
 
     public function update($id)
     {

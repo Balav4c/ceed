@@ -867,14 +867,14 @@
                 }));
             }
 
-            $bottomToolbar.append($('<a />', {
-                class: 'richText-help',
-                'aria-label': settings.translations.help,
-                'aria-role': 'button',
-                title: settings.translations.help,
-                name: 'help',
-                html: '<span class="fa fa-question-circle"></span>'
-            }));
+            // $bottomToolbar.append($('<a />', {
+            //     class: 'richText-help',
+            //     'aria-label': settings.translations.help,
+            //     'aria-role': 'button',
+            //     title: settings.translations.help,
+            //     name: 'help',
+            //     html: '<span class="fa fa-question-circle"></span>'
+            // }));
             $editor.append($bottomToolbar);
 
 			var maxlength = settings.maxlength;
@@ -884,18 +884,18 @@
             if (maxlength > 0) {
                 // display max length in editor toolbar
                 $editor.data('maxlength', maxlength);
-                $editor.children('.richText-toolbar').children('.richText-help').before($('<a />', {
-                    class: 'richText-length',
-                    text: '0/' + maxlength
-                }));
+                // $editor.children('.richText-toolbar').children('.richText-help').before($('<a />', {
+                //     class: 'richText-length',
+                //     text: '0/' + maxlength
+                // }));
                 updateMaxLength($editor.find('.richText-editor').attr('id'));
             }
             if (settings.wordCount) {
                 // display word count in editor toolbar
-                $editor.children('.richText-toolbar').children('.richText-help').before($('<a />', {
-                    class: 'richText-wordcount',
-                    text: '0 ' + settings.translations.words
-                }));
+                // $editor.children('.richText-toolbar').children('.richText-help').before($('<a />', {
+                //     class: 'richText-wordcount',
+                //     text: '0 ' + settings.translations.words
+                // }));
                 updateWordCount($editor.find('.richText-editor').attr('id'));
             }
 
@@ -950,26 +950,26 @@
         /** EVENT HANDLERS */
 
         // Help popup
-        settings.$editor.find('.richText-help').on('click', function () {
-            var $editor = $(this).parents(".richText");
-            if ($editor) {
-                var $outer = $('<div />', {
-                    class: 'richText-help-popup',
-                    style: 'position:absolute;top:0;right:0;bottom:0;left:0;background-color: rgba(0,0,0,0.3);'
-                });
-                var $inner = $('<div />', {style: 'position:relative;margin:60px auto;padding:20px;background-color:#FAFAFA;width:70%;font-family:Calibri,Verdana,Helvetica,sans-serif;font-size:small;'});
-                var $content = $('<div />', {html: '<span id="closeHelp" style="display:block;position:absolute;top:0;right:0;padding:10px;cursor:pointer;" title="' + settings.translations.close + '"><span class="fa fa-times"></span></span>'});
-                $content.append('<h3 style="margin:0;">RichText</h3>');
-                $content.append('<hr><br>Powered by <a href="https://github.com/webfashionist/RichText" target="_blank">webfashionist/RichText</a> (Github) <br>License: <a href="https://github.com/webfashionist/RichText/blob/master/LICENSE" target="_blank">AGPL-3.0</a>');
+        // settings.$editor.find('.richText-help').on('click', function () {
+        //     var $editor = $(this).parents(".richText");
+        //     if ($editor) {
+        //         var $outer = $('<div />', {
+        //             class: 'richText-help-popup',
+        //             style: 'position:absolute;top:0;right:0;bottom:0;left:0;background-color: rgba(0,0,0,0.3);'
+        //         });
+        //         var $inner = $('<div />', {style: 'position:relative;margin:60px auto;padding:20px;background-color:#FAFAFA;width:70%;font-family:Calibri,Verdana,Helvetica,sans-serif;font-size:small;'});
+        //         var $content = $('<div />', {html: '<span id="closeHelp" style="display:block;position:absolute;top:0;right:0;padding:10px;cursor:pointer;" title="' + settings.translations.close + '"><span class="fa fa-times"></span></span>'});
+        //         $content.append('<h3 style="margin:0;">RichText</h3>');
+        //         $content.append('<hr><br>Powered by <a href="https://github.com/webfashionist/RichText" target="_blank">webfashionist/RichText</a> (Github) <br>License: <a href="https://github.com/webfashionist/RichText/blob/master/LICENSE" target="_blank">AGPL-3.0</a>');
 
-                $outer.append($inner.append($content));
-                $editor.append($outer);
+        //         $outer.append($inner.append($content));
+        //         $editor.append($outer);
 
-                $outer.on("click", "#closeHelp", function () {
-                    $(this).parents('.richText-help-popup').remove();
-                });
-            }
-        });
+        //         $outer.on("click", "#closeHelp", function () {
+        //             $(this).parents('.richText-help-popup').remove();
+        //         });
+        //     }
+        // });
 
         // undo / redo
         settings.$editor.find('.richText-undo, .richText-redo').on('click', function () {
