@@ -339,24 +339,47 @@ $(document).ready(function () {
 
 //leaderboard  calender
 
+// $(document).ready(function(){
+//     flatpickr("#filterDate", {
+//         dateFormat: "d/m/Y",  
+//         allowInput: true,
+//         onChange: function(selectedDates, dateStr, instance) {
+//             if (dateStr) {
+//                 const parts = dateStr.split('/');
+//                 const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; 
+//                 $('#filterDate').data('mysql-date', formattedDate);
+//             } else {
+//                 $('#filterDate').data('mysql-date', '');
+//             }
+//             if (typeof table !== 'undefined') {
+//                 table.ajax.reload(); 
+//             }
+//         }
+//     });
+
+// });
 $(document).ready(function(){
     flatpickr("#filterDate", {
-        dateFormat: "d/m/Y",  
+        dateFormat: "d/m/Y",
         allowInput: true,
-        onChange: function(selectedDates, dateStr, instance) {
+        onChange: function(selectedDates, dateStr) {
             if (dateStr) {
                 const parts = dateStr.split('/');
-                const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`; 
+                const formattedDate = `${parts[2]}-${parts[1]}-${parts[0]}`;
                 $('#filterDate').data('mysql-date', formattedDate);
             } else {
                 $('#filterDate').data('mysql-date', '');
             }
             if (typeof table !== 'undefined') {
-                table.ajax.reload(); 
+                table.ajax.reload();
             }
         }
     });
 
+    //  Make icon clickable to open calendar
+    $('.input-group-text').on('click', function(){
+        $('#filterDate').focus();
+    });
 });
 
 

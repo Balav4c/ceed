@@ -9,9 +9,8 @@ class Login extends BaseController
 	  
 	 public function index(): string
     {
-         return view('admin/login');
-          
-     }
+        return view('admin/login');     
+    }
      public function __construct()  
     {
         $this->session = \Config\Services::session();
@@ -30,24 +29,20 @@ public function login()
             "message" => "Missing Email Or Password"
         ]);
     }
-
     $loginModel = new LoginModel();
     $user = $loginModel->checkLoginUser($email, $password);
-
     if ($user === 'invalid') {
         return $this->response->setJSON([
             "success"  => false,
             "message" => "Invalid Email Or Password."
         ]);
     }
-
     if ($user === 'removed') {
         return $this->response->setJSON([
             "success"  => false,
             "message" => "Access Denied. Your Account Has Been Removed."
         ]);
     }
-
     if ($user === 'suspended') {
         return $this->response->setJSON([
             "success"  => false,
@@ -59,8 +54,7 @@ public function login()
     $menuNames = array_map(function($menu) {
         return $menu['menu_name'];
     }, $menus);
-     
-         // Set session data
+    // Set session data
     $session->set([
         'user_id'    => $user->user_id,
         'user_name'  => $user->name,
@@ -68,16 +62,14 @@ public function login()
         'role_id'    => $user->role_id,
         'role_menu'  => $menuNames,
     ]);
-
-        $redirectUrl = ($user->role_id == 1)
-            ? base_url('admin/dashboard')
-            : base_url('admin/user_dashboard'); 
-
-        return $this->response->setJSON([
-            "success"   => true,
-            "message"  => "Login Successful",
-            "redirect" => $redirectUrl
-        ]);
+    $redirectUrl = ($user->role_id == 1)
+        ? base_url('admin/dashboard')
+        : base_url('admin/user_dashboard'); 
+    return $this->response->setJSON([
+        "success"   => true,
+        "message"  => "Login Successful",
+        "redirect" => $redirectUrl
+    ]);
 }
 
 public function logout()
