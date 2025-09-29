@@ -21,7 +21,6 @@ class LeaderBoard extends BaseController
             exit();
         }
     }
-
     public function index()
     {
         $template = view('admin/common/header');
