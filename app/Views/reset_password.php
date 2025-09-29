@@ -44,22 +44,26 @@
 
                     <form id="resetForm" class="mt-4">
                         <input type="hidden" name="token" value="<?= esc($token) ?>">
-                        <div class="mb-3">
-                            <label for="password" class="form-label fs-14 ">New Password</label>
+                        <div class="mb-3 position-relative">
+                            <label for="password" class="form-label fs-14">New Password</label>
                             <input type="password" id="password" name="password" class="form-control fc-font p-3"
                                 placeholder="Enter new password">
-                            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
-                                <i class="fa-solid fa-eye-slash"></i>
+                            <span class="position-absolute toggle-password" data-target="password"
+                                style="top: 68%; right: 15px; cursor: pointer; transform: translateY(-50%);">
+                                <i class="bi bi-eye-slash"></i>
                             </span>
                         </div>
-                        <div class="mb-3">
-                            <label for="password" class="form-label fs-14 ">Confirm New Password</label>
-                            <input type="email" id="password" name="password" class="form-control fc-font p-3"
-                                placeholder="Enter new password">
-                            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
-                                <i class="fa-solid fa-eye-slash"></i>
+
+                        <div class="mb-3 position-relative">
+                            <label for="confirm_password" class="form-label fs-14">Confirm New Password</label>
+                            <input type="password" id="confirm_password" name="confirm_password"
+                                class="form-control fc-font p-3" placeholder="Confirm new password">
+                            <span class="position-absolute toggle-password" data-target="confirm_password"
+                                style="top: 68%; right: 15px; cursor: pointer; transform: translateY(-50%);">
+                                <i class="bi bi-eye-slash"></i>
                             </span>
                         </div>
+
 
 
                         <button type="submit" class="btn btn-signin w-100 mt-3">Confirm</button>
@@ -75,7 +79,6 @@
         $(document).ready(function () {
             $("#resetForm").submit(function (e) {
                 e.preventDefault();
-
                 $.ajax({
                     url: "<?= base_url('update-password'); ?>",
                     type: "POST",
@@ -83,11 +86,13 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.status === "success") {
-                            alert(response.message);
-                            window.location.href = "<?= base_url('auth/login'); ?>";
+                            showAlert(response.message, 'success');
                         } else {
-                            alert(response.message);
+                            showAlert(response.message, 'danger');
                         }
+                    },
+                    error: function () {
+                        showAlert("Something went wrong.", 'danger');
                     }
                 });
             });
@@ -106,19 +111,20 @@
                 });
             }, 3000);
         }
+        $(document).ready(function () {
+            $(document).on('click', '.toggle-password', function () {
+                let targetId = $(this).data('target');
+                let passwordField = $("#" + targetId);
+                let icon = $(this).find("i");
 
-        //Password Show and hide
-        $(document).on('click', '#togglePassword', function () {
-            const passwordField = $('#password');
-            const icon = $(this).find('i');
-
-            if (passwordField.attr('type') === 'password') {
-                passwordField.attr('type', 'text');
-                icon.removeClass('bi-eye-slash').addClass('bi-eye');
-            } else {
-                passwordField.attr('type', 'password');
-                icon.removeClass('bi-eye').addClass('bi-eye-slash');
-            }
+                if (passwordField.attr("type") === "password") {
+                    passwordField.attr("type", "text");
+                    icon.removeClass("bi-eye-slash").addClass("bi-eye");
+                } else {
+                    passwordField.attr("type", "password");
+                    icon.removeClass("bi-eye").addClass("bi-eye-slash");
+                }
+            });
         });
     </script>
 </body>
