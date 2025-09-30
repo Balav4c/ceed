@@ -33,17 +33,19 @@ class CourseModuleModel extends Model
             ->limit($length, $start)
             ->get()
             ->getResult();
+
     }
 
     public function getFilterModuleCount($condition)
     {
         return $this->db->table($this->table . ' m')
-           ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status = 1', 'left')
+            ->join('course_videos cv', 'cv.module_id = m.module_id AND cv.status = 1', 'left')
             ->select('COUNT(DISTINCT m.module_id) as filRecords')
             ->where('m.status !=', 9)
             ->where($condition, null, false)
             ->get()
             ->getRow();
+
     }
 
 

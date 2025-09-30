@@ -181,13 +181,13 @@ class Login extends BaseController
             ]);
         }
 
-        $token = bin2hex(random_bytes(32)); 
-        $hashedToken = hash('sha256', $token); 
+        $token = bin2hex(random_bytes(32));
+        $hashedToken = hash('sha256', $token);
         $expireTime = date('Y-m-d H:i:s', strtotime('+1 hour'));
 
         $this->loginModel->saveResetToken($user['user_id'], $hashedToken, $expireTime);
 
-       $resetLink = site_url("reset_password/" . urlencode($token)); 
+        $resetLink = site_url("reset_password/" . urlencode($token));
 
         // Send email
         $emailService = \Config\Services::email();
@@ -216,7 +216,7 @@ class Login extends BaseController
         }
     }
 
- public function resetPassword($token = null)
+    public function resetPassword($token = null)
     {
         if (!$token) {
             return redirect()->to('/forget_password');
@@ -255,7 +255,12 @@ class Login extends BaseController
                 'message' => 'Invalid or Expired Token!'
             ]);
         }
-
+        if (!preg_match('/^(?=.*[A-Z])(?=.*[^A-Za-z0-9]).{8,}$/', $password)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Password must be at least 8 characters, include 1 uppercase letter and 1 special character.'
+            ]);
+        }
         $this->loginModel->resetPassword($user['user_id'], $password);
 
         return $this->response->setJSON([
@@ -263,6 +268,7 @@ class Login extends BaseController
             'message' => 'Password Updated Successfully!'
         ]);
     }
+
     public function logout()
     {
         $session = session();

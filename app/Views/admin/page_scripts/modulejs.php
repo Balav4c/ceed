@@ -25,25 +25,78 @@
                 var table = null;
                 var tableBody = null;
                 var deletedVideos = []; // Track deleted videos
+                var allUploadedVideos = []; // Track all uploaded videos
+                var newUploadedVideos = []; // Track all uploaded videos
 
                 function createTable() {
                     table = $(`
-                <table>
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th style="width: 30%;">File Name</th>
-                            <th>Preview</th>
-                            <th style="width: 20%;">Size</th>
-                            <th>Type</th>
-                            <th></th>
-                        </tr>
-                    </thead>
-                    <tbody></tbody>
-                </table>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>#</th>
+                                <th style="width: 30%;">File Name</th>
+                                <th>Preview</th>
+                                <th>Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 `);
                     tableBody = table.find("tbody");
                     fileUploadDiv.append(table);
+                }
+
+                function bindDeleteButtons() {
+                    tableBody.find(".deleteBtn").off("click").on("click", function () {
+                        let row = $(this).closest("tr");
+                        let existingVideo = row.data("existing-video");
+
+                        if (existingVideo) {
+                            deletedVideos.push(existingVideo);
+                            $('#deleted_videos').val(deletedVideos.join(","));
+
+                        }
+
+                        allUploadedVideos = allUploadedVideos.filter(v => v !== existingVideo);
+                        // newUploadedVideos = newUploadedVideos.filter(v => v !== existingVideo);
+                        // $('#uploaded_videos').val(newUploadedVideos.join(','));
+
+                        row.remove();
+
+                        if (tableBody.find("tr").length === 0) {
+                            tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
+                        }
+                    });
+                }
+
+                function addVideosToTable(videos) {
+                    if (!table) createTable();
+
+                    videos.forEach(function (video) {
+                        let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + video;
+                        let rowIndex = tableBody.find("tr").length + 1;
+
+                        tableBody.append(`
+                        <tr data-existing-video="${video}">
+                            <td>${rowIndex}</td>
+                            <td>${video}</td>
+                            <td>
+                                <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
+                                    Play Video <i class="bi bi-play-circle"></i>
+                                </a>
+                            </td>
+                            <td>video/mp4</td>
+                            <td>
+                                <button type="button" class="deleteBtn">
+                                    <i class="bi bi-trash-fill"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `);
+                    });
+
+                    bindDeleteButtons();
                 }
 
                 function uploadFiles(files) {
@@ -68,9 +121,12 @@
                                     .text(response.message || 'Videos uploaded successfully!')
                                     .show();
 
-                                let existing = $('#uploaded_videos').val();
-                                let newVideos = response.uploaded.join(',');
-                                $('#uploaded_videos').val(existing ? existing + ',' + newVideos : newVideos);
+                                let newVideos = response.uploaded || [];
+                                allUploadedVideos = allUploadedVideos.concat(newVideos);
+                                newUploadedVideos = newUploadedVideos.concat(newVideos);
+
+                                $('#uploaded_videos').val(newUploadedVideos.join(','));
+                                addVideosToTable(newVideos);
 
                                 setTimeout(function () {
                                     $msg.fadeOut();
@@ -94,61 +150,11 @@
                         }
                     });
                 }
-                function addExistingVideos(videos) {
-                    if (!table) createTable();
-
-                    tableBody.empty();
-
-                    if (!videos || videos.length === 0) {
-                        tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
-                        return;
-                    }
-
-                    videos.forEach(function (video, index) {
-                        let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + video;
-
-                        tableBody.append(`
-                        <tr data-existing-video="${video}">
-                            <td>${index + 1}</td>
-                            <td>${video}</td>
-                            <td>
-                                <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
-                                    Play Video <i class="bi bi-play-circle"></i>
-                                </a>
-                            </td>
-                            <td>--</td>
-                            <td>video/mp4</td>
-                            <td>
-                                <button type="button" class="deleteBtn">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
-        `);
-                    });
-
-                    tableBody.find(".deleteBtn").click(function () {
-                        let row = $(this).closest("tr");
-                        let existingVideo = row.data("existing-video");
-
-                        if (existingVideo) {
-                            deletedVideos.push(existingVideo);
-                            $('#deleted_videos').val(deletedVideos.join(","));
-                        }
-
-                        row.remove();
-
-                        if (tableBody.find("tr").length === 0) {
-                            tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
-                        }
-                    });
-                }
 
                 function handleFiles(files) {
                     if (!table) {
                         createTable();
                     }
-                    tableBody.empty();
 
                     if (files.length > 0) {
                         $.each(files, function (index, file) {
@@ -159,30 +165,9 @@
                                 ? `<img src="${URL.createObjectURL(file)}" alt="${fileName}" height="30">`
                                 : `<i class="material-icons-outlined">visibility_off</i>`;
 
-                            tableBody.append(`
-                            <tr>
-                                <td>${index + 1}</td>
-                                <td>${fileName}</td>
-                                <td>${preview}</td>
-                                <td>${fileSize}</td>
-                                <td>${fileType}</td>
-                                <td>
-                                    <button type="button" class="deleteBtn">
-                                        <i class="bi bi-trash-fill"></i>
-                                    </button>
-                                </td>
-                            </tr>
-                        `);
                         });
 
-                        tableBody.find(".deleteBtn").click(function () {
-                            $(this).closest("tr").remove();
-
-                            if (tableBody.find("tr").length === 0) {
-                                tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
-                            }
-                        });
-
+                        bindDeleteButtons();
                         uploadFiles(files);
                     }
                 }
@@ -211,12 +196,37 @@
                     handleFiles(this.files);
                 });
 
+                function addExistingVideos(videos) {
+                    if (videos && videos.length) {
+                        // reset first (avoid duplicates when called again)
+                        allUploadedVideos = [];
+
+                        // only add non-deleted videos
+                        videos.forEach(function (video) {
+                            if (!deletedVideos.includes(video)) {
+                                allUploadedVideos.push(video);
+                            }
+                        });
+
+                        // clear and rebuild table
+                        if (!table) createTable();
+                        tableBody.empty();
+                        addVideosToTable(allUploadedVideos);
+                    } else {
+                        createTable();
+                    }
+
+                    // $('#uploaded_videos').val(allUploadedVideos.join(','));
+                }
+
+                // Initial load
                 var existingVideos = $('#existing_videos').val();
                 if (existingVideos) {
                     addExistingVideos(existingVideos.split(','));
                 } else {
                     createTable();
                 }
+
 
             });
         };
@@ -277,9 +287,6 @@
                 videoPlayer.load();
             });
         });
-
-
-        // });
 
         $(document).on('input', 'input[name="module_name[]"]', function () {
             let val = $(this).val();
@@ -407,7 +414,12 @@
                         }
 
                     },
-                    { data: "duration_weeks" },
+                    {
+                        data: "duration_weeks",
+                        render: function (data, type, row) {
+                            return data ? data + " Weeks" : "-";
+                        }
+                    },
                     {
                         data: "module_videos",
                         render: function (data, type, row) {

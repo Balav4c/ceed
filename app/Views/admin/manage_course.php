@@ -13,7 +13,7 @@
                             <th>SI NO</th>
                             <th>Course Name</th>
                             <th>Description</th>
-                            <th>Duration(weeks)</th>
+                            <th>Duration</th>
                             <th>Status</th>
                             <th>Action</th>
                         </tr>

@@ -11,6 +11,7 @@
                     enctype="multipart/form-data">
                     <input type="hidden" name="module_id" value="<?= $module['module_id'] ?? '' ?>">
                     <input type="hidden" name="course_id" value="<?= $course_id ?? $module['course_id'] ?? '' ?>">
+                    <input type="hidden" id="deleted_videos" name="deleted_videos" value="">
                     <div id="module-container">
                         <div class="module-item border rounded p-3 mb-3">
                             <div class="row">
@@ -38,7 +39,7 @@
                                         <label>Module Video</label>
                                         <input type="hidden" id="existing_videos" value="<?= esc($existingVideos ?? '') ?>">
 
-                                        <input type="hidden" id="uploaded_videos" name="uploaded_videos"value="<?= esc($existingVideos ?? '') ?>">
+                                        <input type="hidden" id="uploaded_videos" name="uploaded_videos"value="<?= esc($newUploadedVideos ?? '') ?>">
 
                                         <div id="fileUpload"></div>
 
