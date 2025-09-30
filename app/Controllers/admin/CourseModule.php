@@ -245,33 +245,33 @@ class CourseModule extends BaseController
             'message' => 'Invalid request'
         ]);
     }
-   public function editModule($id)
-{
-    $module = $this->moduleModel->find($id);
+    public function editModule($id)
+    {
+        $module = $this->moduleModel->find($id);
 
-    if (!$module) {
-        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
+        if (!$module) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
+        }
+
+        $videoModel = new CourseVideoModel();
+        $videoFiles = $videoModel
+            ->where('module_id', $id)
+            ->where('status', 1)
+            ->findColumn('video_file');
+
+        $data = [
+            'module' => $module,
+            'existingVideos' => $videoFiles ? implode(',', $videoFiles) : ''
+        ];
+
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/add_module', $data);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/modulejs');
+
+        return $template;
     }
-
-    $videoModel = new CourseVideoModel();
-    $videoFiles = $videoModel
-        ->where('module_id', $id)
-        ->where('status', 1)
-        ->findColumn('video_file'); 
-
-    $data = [
-        'module' => $module,
-        'existingVideos' => $videoFiles ? implode(',', $videoFiles) : ''
-    ];
-
-    $template = view('admin/common/header');
-    $template .= view('admin/common/sidemenu');
-    $template .= view('admin/add_module', $data);
-    $template .= view('admin/common/footer');
-    $template .= view('admin/page_scripts/modulejs');
-
-    return $template;
-}
 
     public function update($id)
     {
@@ -282,19 +282,38 @@ class CourseModule extends BaseController
         ];
 
         $this->moduleModel->update($id, $moduleData);
-        $videoFiles = $this->request->getPost('module_videos');
 
         $videoModel = new CourseVideoModel();
 
-        if ($videoFiles) {
-            $videoModel->where('module_id', $id)->delete();
-            $videos = explode(',', $videoFiles);
+        // Deleted videos list
+        $deletedVideos = $this->request->getPost('deleted_videos');
+        if (!empty($deletedVideos)) {
+            $deletedList = explode(',', $deletedVideos);
+            foreach ($deletedList as $video) {
+                if (!empty($video)) {
+                    $this->videoModel
+                        ->where('module_id', $id)
+                        ->where('video_file', trim($video))
+                        ->set(['status' => 9, 'updated_at' => date('Y-m-d H:i:s')])
+                        ->update();
+                }
+            }
+        }
+
+        // New uploaded videos
+        $uploadedVideos = $this->request->getPost('uploaded_videos') ?? '';
+        if (!empty($uploadedVideos)) {
+            $videos = explode(',', $uploadedVideos);
             foreach ($videos as $video) {
-                $videoModel->insert([
-                    'module_id' => $id,
-                    'video_file' => $video,
-                    'status' => 1,
-                ]);
+                if (!empty(trim($video))) {
+                    $videoModel->insert([
+                        'module_id' => $id,
+                        'video_file' => trim($video),
+                        'status' => 1,
+                        'created_at' => date('Y-m-d H:i:s'),
+                        'updated_at' => date('Y-m-d H:i:s')
+                    ]);
+                }
             }
         }
 
@@ -303,6 +322,7 @@ class CourseModule extends BaseController
             'message' => 'Module Updated Successfully.'
         ]);
     }
+
     public function delete()
     {
         if (!$this->request->isAJAX()) {

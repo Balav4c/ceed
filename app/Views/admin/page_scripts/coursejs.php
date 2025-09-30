@@ -123,7 +123,12 @@
                         return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}" data-name="${safeName}">Read Description</a>`;
                     }
                 },
-                { data: "duration_weeks" },
+                {
+                    data: "duration_weeks",
+                    render: function (data, type, row) {
+                        return data ? data + " Weeks" : "-";
+                    }
+                },
                 {
                     data: "status",
                     render: function (data, type, row) {

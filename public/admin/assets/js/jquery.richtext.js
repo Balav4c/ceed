@@ -149,7 +149,7 @@
                 'addBackgroundColor': 'Background color',
                 'addFontSize': 'Font size',
                 'addImage': 'Add image',
-                'addVideo': 'Add video',
+                // 'addVideo': 'Add video',
                 'addFile': 'Add file',
                 'addURL': 'Add URL',
                 'addTable': 'Add table',
@@ -307,12 +307,12 @@
                 html: '<span class="fa fa-pencil fa-pencil-alt"></span>'
             }), // font color
             $btnBackgroundColor = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addBackgroundColor,
-                name: 'addBackgroundColor',
-                "aria-label": settings.translations.addBackgroundColor,
-                "aria-role": "button",
-                html: '<span class="fa fa-paint-brush"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addBackgroundColor,
+                // name: 'addBackgroundColor',
+                // "aria-label": settings.translations.addBackgroundColor,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-paint-brush"></span>'
             }), // background color
             $btnFontSize = $('<a />', {
                 class: "richText-btn",
@@ -323,62 +323,62 @@
                 html: '<span class="fa fa-text-height"></span>'
             }), // font color
             $btnImageUpload = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addImage,
-                name: 'addImage',
-                "aria-label": settings.translations.addImage,
-                "aria-role": "button",
-                html: '<span class="fa fa-image"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addImage,
+                // name: 'addImage',
+                // "aria-label": settings.translations.addImage,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-image"></span>'
             }), // image
             $btnVideoEmbed = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addVideo,
-                name: 'addVideo',
-                "aria-label": settings.translations.addVideo,
-                "aria-role": "button",
-                html: '<span class="fa fa-video-camera fa-video"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addVideo,
+                // name: 'addVideo',
+                // "aria-label": settings.translations.addVideo,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-video-camera fa-video"></span>'
             }), // video
             $btnFileUpload = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addFile,
-                name: 'addFile',
-                "aria-label": settings.translations.addFile,
-                "aria-role": "button",
-                html: '<span class="fa fa-file-text-o far fa-file-alt"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addFile,
+                // name: 'addFile',
+                // "aria-label": settings.translations.addFile,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-file-text-o far fa-file-alt"></span>'
             }), // file
             $btnURLs = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addURL,
-                name: 'addURL',
-                "aria-label": settings.translations.addURL,
-                "aria-role": "button",
-                html: '<span class="fa fa-link"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addURL,
+                // name: 'addURL',
+                // "aria-label": settings.translations.addURL,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-link"></span>'
             }), // urls/links
             $btnTable = $('<a />', {
-                class: "richText-btn",
-                title: settings.translations.addTable,
-                name: 'addTable',
-                "aria-label": settings.translations.addTable,
-                "aria-role": "button",
-                html: '<span class="fa fa-table"></span>'
+                // class: "richText-btn",
+                // title: settings.translations.addTable,
+                // name: 'addTable',
+                // "aria-label": settings.translations.addTable,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-table"></span>'
             }), // table
             $btnRemoveStyles = $('<a />', {
-                class: "richText-btn",
-                "data-command": "removeFormat",
-                title: settings.translations.removeStyles,
-                name: 'removeStyles',
-                "aria-label": settings.translations.removeStyles,
-                "aria-role": "button",
-                html: '<span class="fa fa-recycle"></span>'
+                // class: "richText-btn",
+                // "data-command": "removeFormat",
+                // title: settings.translations.removeStyles,
+                // name: 'removeStyles',
+                // "aria-label": settings.translations.removeStyles,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-recycle"></span>'
             }), // clean up styles
             $btnCode = $('<a />', {
-                class: "richText-btn",
-                "data-command": "toggleCode",
-                title: settings.translations.code,
-                name: 'code',
-                "aria-label": settings.translations.code,
-                "aria-role": "button",
-                html: '<span class="fa fa-code"></span>'
+                // class: "richText-btn",
+                // "data-command": "toggleCode",
+                // title: settings.translations.code,
+                // name: 'code',
+                // "aria-label": settings.translations.code,
+                // "aria-role": "button",
+                // html: '<span class="fa fa-code"></span>'
             }),
             $btnSave = $('<a />', {
                 class: "save-btn",
