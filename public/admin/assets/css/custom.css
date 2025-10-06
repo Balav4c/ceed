@@ -316,14 +316,12 @@ table.dataTable td.dt-type-date {
 }
 .progress {
     height: 20px;
-    background-color: #f5f5f5;
     border-radius: 4px;
     overflow: hidden;
 }
 
 .progress-bar {
     height: 100%;
-    background-color: #4caf50;
     color: white;
     text-align: center;
     line-height: 20px;

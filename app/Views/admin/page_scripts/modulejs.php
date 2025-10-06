@@ -15,13 +15,14 @@
                         <p>Drag & Drop Files Here</p>
                         <span>OR</span>
                         <div>Select a Video</div>
+                          <div class="progress mt-2" style="display:none; width:100%;">
+                    <div class="progress-bar" role="progressbar" style="width:0%">0%</div>
+                </div>
                     </div>
                     <input type="file" id="${fileUploadId}" name="module_videos[]" multiple accept="video/*" hidden />
                 </label>
                 <div id="videoPreview" class="video-preview mt-2"></div>
-                <div class="progress mt-2" style="display:none;">
-                    <div class="progress-bar" role="progressbar" style="width:0%">0%</div>
-                </div>
+              
             `;
 
                 fileUploadDiv.html(fileDivContent).addClass("file-container");
@@ -66,35 +67,52 @@
                         }).then((willDelete) => {
                             if (willDelete) {
                                 if (existingVideo) {
-                                    // AJAX request to update status to 9
                                     $.ajax({
-                                        url: "<?= base_url('admin/coursemodule/deleteVideo') ?>", // new endpoint
+                                        url: "<?= base_url('admin/coursemodule/deleteVideo') ?>",
                                         type: "POST",
                                         data: { video_file: existingVideo },
+                                        dataType: "json",
                                         success: function (response) {
+                                            let $msg = $('#messageBox');
+                                            $msg.removeClass('d-none alert-success alert-danger');
+
                                             if (response.status === "success") {
                                                 deletedVideos.push(existingVideo);
                                                 $('#deleted_videos').val(deletedVideos.join(","));
-
                                                 allUploadedVideos = allUploadedVideos.filter(v => v !== existingVideo);
                                                 row.remove();
 
                                                 if (tableBody.find("tr").length === 0) {
                                                     tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                                                 }
+                                                $msg.addClass('alert-success')
+                                                    .text('Video Deleted Successfully!')
+                                                    .show();
 
-                                                swal("Deleted!", "Video has been deleted.", { icon: "success" });
+                                                setTimeout(() => $msg.fadeOut(), 2000);
                                             } else {
                                                 swal("Error!", response.message, { icon: "error" });
+
+                                                $msg.addClass('alert-danger')
+                                                    .text(response.message || 'Error deleting video.')
+                                                    .show();
+
+                                                setTimeout(() => $msg.fadeOut(), 2000);
                                             }
                                         },
                                         error: function () {
                                             swal("Error!", "Could not delete video.", { icon: "error" });
+
+                                            let $msg = $('#messageBox');
+                                            $msg.removeClass('d-none alert-success')
+                                                .addClass('alert-danger')
+                                                .text('Error deleting video.')
+                                                .show();
+
+                                            setTimeout(() => $msg.fadeOut(), 2000);
                                         }
                                     });
                                 }
-                            } else {
-                                swal("Your video is safe!", { buttons: { confirm: { className: "btn btn-success" } } });
                             }
                         });
                     });
@@ -375,8 +393,8 @@
                         } else {
                             // After adding → go to add modules page
                             // window.location.reload();
-                             window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
-                            
+                            window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
+
                         }
 
                     }, 1500);
