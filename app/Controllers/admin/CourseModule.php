@@ -343,6 +343,29 @@ class CourseModule extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Delete failed.']);
         }
     }
+    public function deleteVideo()
+    {
+        if (!$this->request->isAJAX()) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Invalid request']);
+        }
+
+        $videoFile = $this->request->getPost('video_file');
+        if (!$videoFile) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Video file missing']);
+        }
+
+        $videoModel = new CourseVideoModel();
+        $updated = $videoModel
+            ->where('video_file', $videoFile)
+            ->set(['status' => 9, 'updated_at' => date('Y-m-d H:i:s')])
+            ->update();
+
+        if ($updated) {
+            return $this->response->setJSON(['status' => 'success', 'message' => 'Video deleted successfully']);
+        } else {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to delete video']);
+        }
+    }
 
 
 }

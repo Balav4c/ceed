@@ -99,6 +99,7 @@ $routes->post('admin/coursemodule/uploadVideo', 'admin\CourseModule::uploadVideo
 $routes->get('admin/add_module/edit/(:num)', 'admin\CourseModule::editModule/$1');
 $routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::update/$1');
 $routes->post('admin/manage_module/delete', 'admin\CourseModule::delete');
+$routes->post('admin/coursemodule/deleteVideo', 'admin\CourseModule::deleteVideo');
 $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleStatus');
 
 
