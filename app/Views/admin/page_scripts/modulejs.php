@@ -11,10 +11,10 @@
                 var fileDivContent = `
                 <label for="${fileUploadId}" class="file-upload">
                     <div style="margin-top: 42px;">
-                        <i class="material-icons-outlined">video_upload</i>
+                        <i class="material-icons-outlined">Upload Video</i>
                         <p>Drag & Drop Files Here</p>
                         <span>OR</span>
-                        <div>Browse Files</div>
+                        <div>Select a Video</div>
                     </div>
                     <input type="file" id="${fileUploadId}" name="module_videos[]" multiple hidden />
                 </label>
@@ -33,8 +33,8 @@
                     <table>
                         <thead>
                             <tr>
-                                <th>#</th>
-                                <th style="width: 30%;">File Name</th>
+                                <th>SI NO</th>
+                                <th Style="width: 25%;">File Name</th>
                                 <th>Preview</th>
                                 <th>Type</th>
                                 <th>Action</th>
@@ -52,23 +52,56 @@
                         let row = $(this).closest("tr");
                         let existingVideo = row.data("existing-video");
 
-                        if (existingVideo) {
-                            deletedVideos.push(existingVideo);
-                            $('#deleted_videos').val(deletedVideos.join(","));
+                        swal({
+                            title: "Are You Sure?",
+                            text: "You want to delete this video!",
+                            icon: "warning",
+                            buttons: {
+                                cancel: {
+                                    visible: true,
+                                    text: "Cancel",
+                                    className: "btn btn-danger",
+                                },
+                                confirm: {
+                                    text: "Delete",
+                                    className: "btn btn-success",
+                                },
+                            },
+                        }).then((willDelete) => {
+                            if (willDelete) {
+                                if (existingVideo) {
+                                    deletedVideos.push(existingVideo);
+                                    $('#deleted_videos').val(deletedVideos.join(","));
+                                }
 
-                        }
+                                allUploadedVideos = allUploadedVideos.filter(v => v !== existingVideo);
+                                row.remove();
 
-                        allUploadedVideos = allUploadedVideos.filter(v => v !== existingVideo);
-                        // newUploadedVideos = newUploadedVideos.filter(v => v !== existingVideo);
-                        // $('#uploaded_videos').val(newUploadedVideos.join(','));
+                                if (tableBody.find("tr").length === 0) {
+                                    tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
+                                }
 
-                        row.remove();
-
-                        if (tableBody.find("tr").length === 0) {
-                            tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
-                        }
+                                swal("Deleted!", "Video has been deleted.", {
+                                    icon: "success",
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-success",
+                                        },
+                                    },
+                                });
+                            } else {
+                                swal("Your video is safe!", {
+                                    buttons: {
+                                        confirm: {
+                                            className: "btn btn-success",
+                                        },
+                                    },
+                                });
+                            }
+                        });
                     });
                 }
+
 
                 function addVideosToTable(videos) {
                     if (!table) createTable();

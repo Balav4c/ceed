@@ -64,25 +64,22 @@ class Course extends BaseController
         ];
 
         if ($id) {
-
             $this->courseModel->update($id, $courseData);
             $courseId = $id;
             $message = 'Course Updated Successfully!';
             $isUpdate = true;
         } else {
-
             $this->courseModel->insert($courseData);
             $courseId = $this->courseModel->insertID();
             $message = 'Course Saved Successfully! Now Add Modules.';
             $isUpdate = false;
         }
-
-
-        $this->moduleModel->where('course_id', $courseId)->delete();
         $moduleNames = $this->request->getPost('module_name');
         $durations = $this->request->getPost('module_duration');
 
         if (!empty($moduleNames)) {
+            $this->moduleModel->where('course_id', $courseId)->delete();
+
             foreach ($moduleNames as $index => $mname) {
                 if (!empty($mname)) {
                     $this->moduleModel->insert([
@@ -101,7 +98,6 @@ class Course extends BaseController
             'is_update' => $isUpdate
         ]);
     }
-
 
     public function courseListAjax()
     {
