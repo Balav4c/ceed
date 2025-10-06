@@ -15,9 +15,15 @@ class Course extends BaseController
 
     public function __construct()
     {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
         $this->courseModel = new CourseModel();
         $this->moduleModel = new CourseModuleModel();
         $this->videoModel = new CourseVideoModel();
+         if (!$this->session->has('user_id')) {
+            header('Location: ' . base_url('admin'));
+            exit();
+        }
     }
 
     public function index()
