@@ -4,8 +4,11 @@
             <div id="messageBox" class="alert d-none text-center"  role="alert"></div>
             <div class="card-header d-flex justify-content-between">
                 <h3>Modules For <?= esc($course['name']) ?></h3>
-                <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back To Course</a>
-            </div>
+                <div class="text-end">
+                  <!-- <a href="<?= base_url('admin/manage_course') ?>" class="btn btn-primary">Back To Course</a> -->
+                   <a href="javascript:void(0);" id="addModuleBtn" class="btn btn-primary">Add Module</a>
+                </div>
+              </div>
             <input type="hidden" id="course_id" value="<?= esc($course['course_id']) ?>">
             <div class="card-body">
                 <table id="moduleTable" class="table table-bordered">
@@ -56,6 +59,18 @@
     </div>
   </div>
 </div>
+<script>
+    const base_url = "<?= base_url() ?>";
+    document.getElementById('addModuleBtn').addEventListener('click', function () {
+        const courseId = document.getElementById('course_id').value;
+        if (courseId) {
+            window.location.href = base_url + 'admin/add_module/' + courseId;
+            
+        } else {
+            alert('Course ID not found!');
+        }
+    });
+</script>
 
 
 

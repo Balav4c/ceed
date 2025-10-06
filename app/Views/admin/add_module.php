@@ -21,7 +21,7 @@
                                         value="<?= $module['module_name'] ?? '' ?>" required>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label>Duration (Weeks)<span class="text-danger">*</span></label>
+                                    <label>Duration (In Weeks)<span class="text-danger">*</span></label>
                                     <input type="text" name="module_duration[]" class="form-control"
                                         value="<?= $module['duration_weeks'] ?? '' ?>">
                                 </div>
