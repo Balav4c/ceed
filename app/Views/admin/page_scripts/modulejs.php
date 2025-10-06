@@ -374,8 +374,9 @@
                             window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
                         } else {
                             // After adding → go to add modules page
-                            window.location.reload();
-                            //   window.location.href = base_url + 'admin/manage_course/modules/' +response.courseId;
+                            // window.location.reload();
+                             window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
+                            
                         }
 
                     }, 1500);
