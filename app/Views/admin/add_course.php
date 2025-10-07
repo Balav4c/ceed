@@ -10,15 +10,15 @@
                     <input type="hidden" name="course_id" value="<?= $course['course_id'] ?? '' ?>">
 
                     <div class="mb-3">
-                        <label>Name/Title <span class="text-danger">*</span></label>
+                        <label  class="form-label fw-bold" >Name/Title <span class="text-danger">*</span></label>
                         <input type="text" name="name" class="form-control" value="<?= $course['name'] ?? '' ?>" required>
                     </div>
-                    <div class="page-wrapper box-content width-word">
-                        <label for="example">Description</label>
+                    <div class=" width-word">
+                        <label  class="form-label fw-bold" for="example">Description</label>
                         <textarea class="content" id="description" name="description" ><?= esc($course['description'] ?? '') ?></textarea>
                     </div>
                     <div class="mb-3">
-                        <label>Total Duration (In Weeks)<span class="text-danger">*</span></label>
+                        <label  class="form-label fw-bold" >Total Duration (In Weeks)<span class="text-danger">*</span></label>
                         <input type="number" name="duration_weeks" class="form-control" value="<?= $course['duration_weeks'] ?? '' ?>" >
                     </div>
                     <br><br>

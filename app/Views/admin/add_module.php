@@ -16,27 +16,27 @@
                         <div class="module-item border rounded p-3 mb-3">
                             <div class="row">
                                 <div class="col-6 mb-3">
-                                    <label>Module Name<span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Module Name<span class="text-danger">*</span></label>
                                     <input type="text" name="module_name[]" class="form-control"
                                         value="<?= $module['module_name'] ?? '' ?>" required>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label>Duration (In Weeks)<span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Duration (In Weeks)<span class="text-danger">*</span></label>
                                     <input type="number" name="module_duration[]" class="form-control"
                                         value="<?= $module['duration_weeks'] ?? '' ?>">
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
-                                    <div class=" width-word">
-                                        <label for="example">Description</label>
-                                        <textarea class="content" id="description"
+                                    <div class=" ">
+                                        <label class="form-label fw-bold" for="example">Description</label>
+                                        <textarea class="content" id="description" style="margin-top:12px;"
                                             name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6 ">
                                     <div class="width-word">
-                                        <label>Module Video</label>
+                                        <label class="form-label fw-bold">Module Video</label>
                                         <input type="hidden" id="existing_videos" value="<?= esc($existingVideos ?? '') ?>">
 
                                         <input type="hidden" id="uploaded_videos" name="uploaded_videos"value="<?= esc($newUploadedVideos ?? '') ?>">
