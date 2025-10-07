@@ -61,6 +61,8 @@ $progress = $profile['profile_percentage'] ?? 0;
                                         <a class="dropdown-item drop-menu"
                                             href="<?= base_url('profile'); ?>">Profile</a>
                                         <a class="dropdown-item drop-menu"
+                                            href="<?= base_url('course'); ?>">Course</a>
+                                        <a class="dropdown-item drop-menu"
                                             href="<?= base_url('leaderboard'); ?>">Leaderboard</a>
                                         <a class="dropdown-item drop-menu" id="logout-btn">Logout</a>
                                     </div>
