@@ -28,6 +28,8 @@ $routes->post('change/password', 'UserProfile::changePassword');
 
 $routes->get('leaderboard', 'LeaderBoard::index');
 
+$routes->get('course', 'Course::index');
+
 
 
 
