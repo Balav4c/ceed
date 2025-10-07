@@ -6,13 +6,23 @@
         const base_url = "<?= base_url() ?>";
         let initialFormData = $courseForm.serialize();
         $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-        $courseForm.on('input change', 'input, textarea, select', function () {
+        function checkFormChanges() {
             let currentFormData = $courseForm.serialize();
             if (currentFormData !== initialFormData) {
                 $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
             } else {
                 $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
             }
+        }
+        $courseForm.on('input change', 'input, textarea, select', function () {
+            checkFormChanges();
+        });
+
+        // Detect changes in RichText editor
+        $(document).on('keyup paste', '.richText-editor', function () {
+            // Update the underlying textarea value
+            $('.content').val($(this).html());
+            checkFormChanges();
         });
         $('#courseTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
@@ -41,7 +51,7 @@
             var form = $(this);
             var url = form.attr('action');
             $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
-
+             $('.content').val($('.richText-editor').html());
             $.post(url, $('#courseForm').serialize(), function (response) {
                 var $messageBox = $('#messageBox');
                 $messageBox.removeClass('d-none alert-success alert-danger');

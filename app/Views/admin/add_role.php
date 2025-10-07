@@ -10,7 +10,7 @@
                     <input type="hidden" name="role_id" id="role_id"
                         value="<?= isset($role['role_id']) ? esc($role['role_id']) : '' ?>">
                     <div class="mb-3">
-                        <label for="role_name" class="form-label">Role Name <span class="text-danger">*</span></label>
+                        <label for="role_name"  class="form-label fw-bold">Role Name <span class="text-danger">*</span></label>
                         <input type="text" name="role_name" id="role_name" class="form-control capitalize"
                             value="<?= isset($role['role_name']) ? esc($role['role_name']) : '' ?>" required required>
                     </div>

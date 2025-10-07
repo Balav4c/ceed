@@ -2,28 +2,28 @@
     // fileupload
     (function ($) {
         var fileUploadCount = 0;
-
         $.fn.fileUpload = function () {
             return this.each(function () {
                 var fileUploadDiv = $(this);
                 var fileUploadId = `fileUpload-${++fileUploadCount}`;
 
                 var fileDivContent = `
-                <label for="${fileUploadId}" class="file-upload">
-                    <div style="margin-top: 42px;">
+                <label for="${fileUploadId}" class="file-upload ">
+                    <div style="margin-top: 15px; margin-left: 2px; margin-right: 2px;">
                         <i class="material-icons-outlined">Upload Video</i>
                         <p>Drag & Drop Files Here</p>
                         <span>OR</span>
                         <div>Select a Video</div>
-                          <div class="progress mt-2" style="display:none; width:100%;">
-                    <div class="progress-bar" role="progressbar" style="width:0%">0%</div>
-                </div>
+                        
+                        <div class="progress mt-2 p-0" style="display:none; width:100%;">
+                            <div class="progress-bar" role="progressbar" style="width:0%; color: white;">0%</div>
+                        </div>
                     </div>
+                    
                     <input type="file" id="${fileUploadId}" name="module_videos[]" multiple accept="video/*" hidden />
                 </label>
                 <div id="videoPreview" class="video-preview mt-2"></div>
-              
-            `;
+                `;
 
                 fileUploadDiv.html(fileDivContent).addClass("file-container");
 
@@ -90,6 +90,7 @@
                                                     .show();
 
                                                 setTimeout(() => $msg.fadeOut(), 2000);
+                                                resetFileInput();
                                             } else {
                                                 swal("Error!", response.message, { icon: "error" });
 
@@ -146,6 +147,12 @@
 
                     bindDeleteButtons();
                 }
+                function resetFileInput() {
+                    let fileInput = document.querySelector('input[type="file"][name="module_videos[]"]');
+                    if (fileInput) {
+                        fileInput.value = ''; // Clear file input
+                    }
+                }
 
                 function uploadFiles(files) {
                     let formData = new FormData();
@@ -197,16 +204,17 @@
                             } else {
                                 $msg.addClass('alert-danger').text(response.message || (response.errors ? response.errors.join(', ') : 'Upload failed')).show();
                                 setTimeout(() => $msg.fadeOut(), 2000);
+                                resetFileInput();
                             }
                         },
                         error: function () {
                             let $msg = $('#messageBox');
                             $msg.removeClass('d-none alert-success').addClass('alert-danger').text('Error uploading video(s)').show();
                             setTimeout(() => $msg.fadeOut(), 2000);
+                            resetFileInput();
                         }
                     });
                 }
-
                 function handleFiles(files) {
                     if (!table) {
                         createTable();
@@ -279,7 +287,6 @@
         };
     })(jQuery);
 
-
     $(document).ready(function () {
 
         $('.content').richText();
@@ -287,34 +294,71 @@
 
         const $saveBtn = $('#saveBtn');
         const $moduleForm = $('#moduleForm');
-        const $moduleContainer = $('#module-container');
         const $messageBox = $('#messageBox');
         const base_url = "<?= base_url() ?>";
-        $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
 
-        function enableSaveButton() {
-            $saveBtn.prop('disabled', false).css({ opacity: 1, pointerEvents: 'auto' });
+        let initialFormData = $moduleForm.serialize();
+
+        toggleSaveButton(false);
+
+        function toggleSaveButton(enable) {
+            $saveBtn.prop('disabled', !enable).css({
+                opacity: enable ? 1 : 0.6,
+                pointerEvents: enable ? 'auto' : 'none'
+            });
         }
 
-        $moduleForm.on('input change', 'input, textarea', enableSaveButton);
+        function checkFormChanges() {
+            $('.content').val($('.richText-editor').html());
+            let currentFormData = $moduleForm.serialize();
 
+            let fileChanged = false;
+            $moduleForm.find('input[type="file"]').each(function () {
+                if (this.files.length > 0) {
+                    fileChanged = true;
+                }
+            });
+
+            toggleSaveButton(currentFormData !== initialFormData || fileChanged);
+        }
+
+        $moduleForm.on('input change', 'input, textarea, select', checkFormChanges);
+
+        $(document).on('keyup paste', '.richText-editor', function () {
+            checkFormChanges();
+        });
+
+        $(document).on('change', 'input[type="file"][name="module_videos[]"]', function () {
+            checkFormChanges();
+        });
+
+        // Capitalize module name
+        $(document).on('input', 'input[name="module_name[]"]', function () {
+            let val = $(this).val();
+            val = val.replace(/\b\w/g, function (char) {
+                return char.toUpperCase();
+            });
+            $(this).val(val);
+            checkFormChanges();
+        });
+
+        // View description modal
         $('#moduleTable').on('click', '.read-desc', function () {
             var fullDescription = $(this).data('description');
             var moduleName = $(this).data('name');
             $('#descriptionModalLabel').text(moduleName);
             $('#modalDescription').html(fullDescription);
-            var myModal = new bootstrap.Modal(document.getElementById('descriptionModal'));
-            myModal.show();
+            new bootstrap.Modal(document.getElementById('descriptionModal')).show();
         });
+
+        // Play video modal
         $(document).on("click", ".play-video-link", function () {
-            debugger;
             let videoUrl = $(this).data("video");
             let videoTitle = $(this).data("title");
 
             $("#videoTitle").text(videoTitle);
 
             let videoPlayer = $("#videoPlayer")[0];
-
             $(videoPlayer).find("source").remove();
 
             let newSource = document.createElement("source");
@@ -328,6 +372,7 @@
             const videoModalEl = document.getElementById('videoModal');
             const videoModal = new bootstrap.Modal(videoModalEl);
             videoModal.show();
+
             $(videoModalEl).on("hidden.bs.modal", function () {
                 let videoPlayer = $("#videoPlayer")[0];
                 $(videoPlayer).find("source").remove();
@@ -335,22 +380,14 @@
             });
         });
 
-        $(document).on('input', 'input[name="module_name[]"]', function () {
-            let val = $(this).val();
-            val = val.replace(/\b\w/g, function (char) {
-                return char.toUpperCase();
-            });
-
-            $(this).val(val);
-        });
-
-
+        // Form submit
         $('#moduleForm').on('submit', function (e) {
             e.preventDefault();
             var form = $(this);
             var url = form.attr('action');
             let isValid = true;
 
+            // Validate video files
             form.find('input[name="module_videos[]"]').each(function () {
                 let files = this.files;
                 if (files.length > 0) {
@@ -364,21 +401,22 @@
             });
 
             if (!isValid) {
-                $('#messageBox')
+                $messageBox
                     .removeClass('d-none alert-success')
                     .addClass('alert-danger')
                     .html("Please Upload Video Files Only.")
                     .fadeIn()
                     .delay(2000)
                     .fadeOut(500);
-
                 return;
             }
 
-            $saveBtn.prop('disabled', true).css({ opacity: 0.6, pointerEvents: 'none' });
+            toggleSaveButton(false);
+
+            // Sync editor content before submit
+            $('.content').val($('.richText-editor').html());
 
             $.post(url, form.serialize(), function (response) {
-                var $messageBox = $('#messageBox');
                 $messageBox.removeClass('d-none alert-success alert-danger');
 
                 if (response.status === 'success' || response.status == 1) {
@@ -387,18 +425,13 @@
                         .text(response.msg || response.message)
                         .show();
 
+                    // Update initial state
+                    initialFormData = $moduleForm.serialize();
+                    toggleSaveButton(false);
+
                     setTimeout(function () {
-                        if (response.is_update) {
-                            window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
-                        } else {
-                            // After adding → go to add modules page
-                            // window.location.reload();
-                            window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
-
-                        }
-
+                        window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
                     }, 1500);
-
                 } else {
                     $messageBox
                         .addClass('alert-danger')
@@ -406,102 +439,102 @@
                         .fadeIn()
                         .delay(2000)
                         .fadeOut(500);
+                    checkFormChanges();
                 }
-            }, 'json')
-                .fail(function () {
-                    $('#messageBox')
-                        .removeClass('d-none alert-success')
-                        .addClass('alert-danger')
-                        .text('Error submitting the form. Please try again.')
-                        .show();
-                });
+            }, 'json').fail(function () {
+                $messageBox
+                    .removeClass('d-none alert-success')
+                    .addClass('alert-danger')
+                    .text('Error submitting the form. Please try again.')
+                    .show();
+                checkFormChanges();
+            });
         });
 
-        $(document).ready(function () {
-            let table = "";
-            const alertBox = $('.alert');
+        let table = "";
+        const alertBox = $('.alert');
 
-            table = $('#moduleTable').DataTable({
-                ajax: {
-                    url: "<?= base_url('admin/manage_module/modulelistajax') ?>",
-                    type: "POST",
-                    data: function (d) {
-                        d.course_id = $('#course_id').val(); // send course_id
-                    },
-                    dataSrc: "data"
+        table = $('#moduleTable').DataTable({
+            ajax: {
+                url: "<?= base_url('admin/manage_module/modulelistajax') ?>",
+                type: "POST",
+                data: function (d) {
+                    d.course_id = $('#course_id').val(); // send course_id
                 },
-                serverSide: true,
-                processing: true,
-                ordering: true,
-                searching: true,
-                paging: true,
-                dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
-                    "<'row'<'col-sm-12'tr>>" +
-                    "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
-                drawCallback: function () {
-                    $('.dataTables_info').text(function (_, txt) {
-                        return txt.replace(/\(filtered.*\)/, '').trim();
-                    });
+                dataSrc: "data"
+            },
+            serverSide: true,
+            processing: true,
+            ordering: true,
+            searching: true,
+            paging: true,
+            dom: "<'row mb-3'<'col-sm-6'l><'col-sm-6 text-end'f>>" +
+                "<'row'<'col-sm-12'tr>>" +
+                "<'row mt-3 d-flex align-items-center'<'col-sm-5'i><'col-sm-7 text-end'p>>",
+            drawCallback: function () {
+                $('.dataTables_info').text(function (_, txt) {
+                    return txt.replace(/\(filtered.*\)/, '').trim();
+                });
+            },
+            columns: [
+                { data: "slno", className: "text-start" },
+                {
+                    data: "module_name",
+                    render: function (data) {
+                        return (data && typeof data === 'string')
+                            ? data.replace(/\b\w/g, c => c.toUpperCase())
+                            : '';
+                    }
                 },
-                columns: [
-                    { data: "slno", className: "text-start" },
-                    {
-                        data: "module_name",
-                        render: function (data) {
-                            return (data && typeof data === 'string')
-                                ? data.replace(/\b\w/g, c => c.toUpperCase())
-                                : '';
-                        }
-                    },
-                    {
-                        data: "description",
-                        render: function (data) {
-                            if (!data) return '<a href="javascript:void(0)" class="read-desc" data-description="">Read Description</a>';
-                            let safeData = data.replace(/"/g, '&quot;');
-                            return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}">Read Description</a>`;
-                        }
+                {
+                    data: "description",
+                    render: function (data) {
+                        if (!data) return '<a href="javascript:void(0)" class="read-desc" data-description="">Read Description</a>';
+                        let safeData = data.replace(/"/g, '&quot;');
+                        return `<a href="javascript:void(0)" class="read-desc" data-description="${safeData}">Read Description</a>`;
+                    }
 
-                    },
-                    {
-                        data: "duration_weeks",
-                        render: function (data, type, row) {
-                            return data ? data + " Weeks" : "-";
-                        }
-                    },
-                    {
-                        data: "module_videos",
-                        render: function (data, type, row) {
-                            if (!data || data.trim() === "")
-                                return '<span class="text-muted">No Videos</span>';
+                },
+                {
+                    data: "duration_weeks",
+                    render: function (data, type, row) {
+                        return data ? data + " Weeks" : "-";
+                    }
+                },
+                {
+                    data: "module_videos",
+                    render: function (data, type, row) {
+                        if (!data || data.trim() === "")
+                            return '<span class="text-muted">No Videos</span>';
 
-                            let videos = data.split(',');
-                            return videos.map(v => {
-                                v = v.trim();
-                                let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + v;
-                                return `<a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${v}">Play Video
+                        let videos = data.split(',');
+                        return videos.map(v => {
+                            v = v.trim();
+                            let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + v;
+                            return `<a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${v}">Play Video
                                             <i class="bi bi-play-circle"></i> 
                                         </a>`;
-                            }).join('<br>');
-                        }
-                    },
+                        }).join('<br>');
+                    }
+                },
 
-                    {
-                        data: "status",
-                        render: function (data, type, row) {
-                            let checked = data == 1 ? 'checked' : '';
-                            return `
+                {
+                    data: "status",
+                    render: function (data, type, row) {
+                        let checked = data == 1 ? 'checked' : '';
+                        return `
                         <div class="form-check form-switch">
                             <input class="form-check-input toggle-status" type="checkbox" 
                                 data-id="${row.module_id}" ${checked}>
                             
                         </div>
                     `;
-                        }
-                    },
-                    {
-                        data: "module_id",
-                        render: function (id) {
-                            return `<div class="d-flex align-items-center gap-3">
+                    }
+                },
+                {
+                    data: "module_id",
+                    render: function (id) {
+                        return `<div class="d-flex align-items-center gap-3">
                         <a href="<?= base_url('admin/add_module/edit/') ?>${id}" title="Edit" style="color:rgb(13, 162, 199); margin-right: 10px;">
                             <i class="bi bi-pencil-fill"></i>
                         </a>
@@ -509,26 +542,25 @@
                             <i class="bi bi-trash-fill"></i>
                         </a>
                     </div>`;
-                        }
                     }
-                ],
-                order: [[7, 'desc']],
-                columnDefs: [
-                    { searchable: false, orderable: false, targets: [0, 5, 6] }
-                ],
-                language: { infoFiltered: "" },
-                scrollX: false,
-                autoWidth: false
-            });
+                }
+            ],
+            order: [[7, 'desc']],
+            columnDefs: [
+                { searchable: false, orderable: false, targets: [0, 5, 6] }
+            ],
+            language: { infoFiltered: "" },
+            scrollX: false,
+            autoWidth: false
+        });
 
-            table.on('order.dt search.dt draw.dt', function () {
-                table.column(0, { search: 'applied', order: 'applied' })
-                    .nodes()
-                    .each(function (cell, i) {
-                        var pageInfo = table.page.info();
-                        cell.innerHTML = pageInfo.start + i + 1;
-                    });
-            });
+        table.on('order.dt search.dt draw.dt', function () {
+            table.column(0, { search: 'applied', order: 'applied' })
+                .nodes()
+                .each(function (cell, i) {
+                    var pageInfo = table.page.info();
+                    cell.innerHTML = pageInfo.start + i + 1;
+                });
         });
     });
     // toggle status 
@@ -571,8 +603,6 @@
         });
     });
     // delete pop up 
-
-
     $(document).on("click", ".delete-module", function (e) {
         e.preventDefault();
         let roleId = $(this).data("id");

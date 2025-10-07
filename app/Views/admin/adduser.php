@@ -16,12 +16,12 @@
     
                         <div class="row">
                             <div class="col-md-6">
-                                <label class="form-label">Name<span class="text-danger">*</span></label>
+                                <label  class="form-label fw-bold">Name<span class="text-danger">*</span></label>
                                 <input type="text" name="name" class="form-control"  
                                     value="<?= isset($userData['name']) ? esc($userData['name']) : '' ?>" autocomplete="off" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label">Email<span class="text-danger">*</span></label>
+                                <label  class="form-label fw-bold">Email<span class="text-danger">*</span></label>
                                 <input type="email" name="email" class="form-control"
                                     value="<?= isset($userData['email']) ? esc($userData['email']) : '' ?>" autocomplete="off" required>
                             </div>
@@ -29,7 +29,7 @@
     
                         <div class="row">
                             <div class="col-md-6 mt-4">
-                                <label class="form-label">User Role <span class="text-danger">*</span></label>
+                                <label  class="form-label fw-bold">User Role <span class="text-danger">*</span></label>
                                 <select name="role_id" id="role_id" class="form-control" required>
                                     <option value="">Select Role</option>
                                     <?php if (isset($roles) && !empty($roles)): ?>
@@ -45,7 +45,7 @@
                                 </select>
                             </div>
                             <div class="col-md-6 mt-4">
-                                <label class="form-label">Phone Number <span class="text-danger"></span></label>
+                                <label  class="form-label fw-bold">Phone Number <span class="text-danger"></span></label>
                                 <input type="text" name="phone" class="form-control" maxlength="20"
                                     value="<?= isset($userData['phone']) ? esc($userData['phone']) : '' ?>"
                                     oninput="this.value = this.value.replace(/[^0-9 +]/g, '')" autocomplete="off" required>
@@ -54,7 +54,7 @@
                         <?php if (!isset($userData['user_id'])): ?>
                             <div class="row">
                                 <div class="col-md-6 mt-4">
-                                    <label class="form-label">Password <span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="password" id="password" name="password" class="form-control" autocomplete="off" required>
                                         <span class="input-group-text">
@@ -63,7 +63,7 @@
                                     </div>
                                 </div>
                                 <div class="col-md-6 mt-4">
-                                    <label class="form-label">Confirm Password <span class="text-danger">*</span></label>
+                                    <label  class="form-label fw-bold">Confirm Password <span class="text-danger">*</span></label>
                                     <div class="input-group">
                                         <input type="password" id="confirm_password" name="confirm_password" class="form-control" required>
                                         <span class="input-group-text">
@@ -80,7 +80,7 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-6 mt-4">
-                                        <label class="form-label">New Password</label>
+                                        <label  class="form-label fw-bold">New Password</label>
                                         <div class="input-group">
                                             <input type="password" name="new_password" id="new_password" class="form-control">
                                             <span class="input-group-text">
@@ -90,7 +90,7 @@
                                     </div>
     
                                     <div class="col-md-6 mt-4">
-                                        <label class="form-label">Confirm Password</label>
+                                        <label  class="form-label fw-bold">Confirm Password</label>
                                         <div class="input-group">
                                             <input type="password" name="confirm_password" id="confirm_password" class="form-control">
                                             <span class="input-group-text">
