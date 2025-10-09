@@ -284,15 +284,16 @@
                         swal("Error!", "Something went wrong. Try again.", "error");
                     },
                 });
-            } else {
-                swal("Your Course Is Safe!", {
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                });
-            }
+            } 
+            // else {
+            //     swal("Your Course Is Safe!", {
+            //         buttons: {
+            //             confirm: {
+            //                 className: "btn btn-success",
+            //             },
+            //         },
+            //     });
+            // }
         });
     });
     $(window).on('keydown', function (e) {
