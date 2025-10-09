@@ -467,6 +467,17 @@ footer .social-ico {
   font-weight: 500;
   color: #333;
 }
+.menu-item {
+    text-decoration: none;
+    padding: 5px 10px;
+    color: black;
+    transition: color 0.2s, background-color 0.2s;
+}
+.menu-item.active {
+  color: orange; /* Green highlight */
+   background: none;
+}
+
 
 
 @media screen and (max-width:990px) {

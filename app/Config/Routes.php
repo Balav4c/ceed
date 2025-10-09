@@ -29,6 +29,11 @@ $routes->post('change/password', 'UserProfile::changePassword');
 $routes->get('leaderboard', 'LeaderBoard::index');
 
 $routes->get('course', 'Course::index');
+$routes->get('course/modules/(:num)', 'Course::modules/$1');
+$routes->get('course/module/(:num)', 'Course::moduleDetails/$1');
+$routes->get('course/lesson/(:num)', 'Course::lesson/$1');
+
+
 
 
 

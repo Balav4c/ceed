@@ -10,6 +10,20 @@
   function closeRespMenu() {
     document.getElementById("respMenu").style.display = "none";
   }
+  $(document).ready(function(){
+    let currentPath = window.location.pathname.replace(/\/$/, "");
+
+    $(".menu-item").each(function(){
+        let href = $(this).attr("href");
+        if (href) {
+            let linkPath = new URL(href, window.location.origin).pathname.replace(/\/$/, "");
+            if (linkPath === currentPath) {
+                $(this).addClass("active");
+            }
+        }
+    })
+  });
+
 </script>
 
 

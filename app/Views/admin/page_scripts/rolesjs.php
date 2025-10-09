@@ -258,15 +258,16 @@
                         swal("Error!", "Something went wrong. Try again.", "error");
                     },
                 });
-            } else {
-                swal("Your role is safe!", {
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                });
-            }
+            } 
+            // else {
+            //     swal("Your role is safe!", {
+            //         buttons: {
+            //             confirm: {
+            //                 className: "btn btn-success",
+            //             },
+            //         },
+            //     });
+            // }
         });
     });
 </script>

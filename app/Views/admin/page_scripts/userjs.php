@@ -283,15 +283,16 @@ $(document).ready(function () {
                         swal("Error!", "Something Went Wrong. Try Again.", "Error");
                     },
                 });
-            } else {
-                swal("Your Data Is Safe!", {
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                });
             }
+            //  else {
+            //     swal("Your Data Is Safe!", {
+            //         buttons: {
+            //             confirm: {
+            //                 className: "btn btn-success",
+            //             },
+            //         },
+            //     });
+            // }
         });
     });
 

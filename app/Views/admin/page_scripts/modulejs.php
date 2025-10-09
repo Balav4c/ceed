@@ -81,7 +81,7 @@
                                                 $('#deleted_videos').val(deletedVideos.join(","));
                                                 allUploadedVideos = allUploadedVideos.filter(v => v !== existingVideo);
                                                 row.remove();
-
+                                                updateSerialNumbers();
                                                 if (tableBody.find("tr").length === 0) {
                                                     tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                                                 }
@@ -92,7 +92,6 @@
                                                 setTimeout(() => $msg.fadeOut(), 2000);
                                                 resetFileInput();
                                             } else {
-                                                swal("Error!", response.message, { icon: "error" });
 
                                                 $msg.addClass('alert-danger')
                                                     .text(response.message || 'Error deleting video.')
@@ -122,31 +121,36 @@
                 function addVideosToTable(videos) {
                     if (!table) createTable();
 
+                    // ✅ Remove "No files selected!" row if present
+                    tableBody.find(".no-file").remove();
+
                     videos.forEach(function (video) {
                         let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + video;
                         let rowIndex = tableBody.find("tr").length + 1;
 
                         tableBody.append(`
-                        <tr data-existing-video="${video}">
-                            <td>${rowIndex}</td>
-                            <td>${video}</td>
-                            <td>
-                                <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
-                                    Play Video <i class="bi bi-play-circle"></i>
-                                </a>
-                            </td>
-                            <td>video/mp4</td>
-                            <td>
-                                <button type="button" class="deleteBtn">
-                                    <i class="bi bi-trash-fill"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    `);
+                            <tr data-existing-video="${video}">
+                                <td>${rowIndex}</td>
+                                <td>${video}</td>
+                                <td>
+                                    <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
+                                        Play Video <i class="bi bi-play-circle"></i>
+                                    </a>
+                                </td>
+                                <td>video/mp4</td>
+                                <td>
+                                    <button type="button" class="deleteBtn">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        `);
                     });
 
                     bindDeleteButtons();
+                    // updateSerialNumbers();
                 }
+
                 function resetFileInput() {
                     let fileInput = document.querySelector('input[type="file"][name="module_videos[]"]');
                     if (fileInput) {
@@ -164,8 +168,8 @@
 
                     let progressContainer = fileUploadDiv.find(".progress");
                     let progressBar = progressContainer.find(".progress-bar");
+                    progressBar.css("width", "0%").text("0%"); // Reset before upload
                     progressContainer.show();
-
                     $.ajax({
                         url: "<?= base_url('admin/coursemodule/uploadVideo') ?>",
                         type: "POST",
@@ -187,8 +191,9 @@
                             let $msg = $('#messageBox');
                             $msg.removeClass('d-none alert-success alert-danger');
 
-                            progressBar.css("width", "100%").text("Upload Complete");
-                            setTimeout(() => progressContainer.hide(), 1500);
+                            // progressBar.css("width", "100%").text("Upload Complete");
+                            progressBar.css("width", "100%");
+                            setTimeout(() => progressContainer.hide(), 1000);
 
                             if (response.status === 'success') {
                                 $msg.addClass('alert-success').text(response.message || 'Videos uploaded successfully!').show();
@@ -201,6 +206,7 @@
                                 addVideosToTable(newVideos);
 
                                 setTimeout(() => $msg.fadeOut(), 1500);
+                                resetFileInput();
                             } else {
                                 $msg.addClass('alert-danger').text(response.message || (response.errors ? response.errors.join(', ') : 'Upload failed')).show();
                                 setTimeout(() => $msg.fadeOut(), 2000);
@@ -215,6 +221,12 @@
                         }
                     });
                 }
+                function updateSerialNumbers() {
+                    tableBody.find("tr").each(function (index) {
+                        $(this).find("td:first").text(index + 1);
+                    });
+                }
+
                 function handleFiles(files) {
                     if (!table) {
                         createTable();
@@ -648,15 +660,16 @@
                         swal("Error!", "Something went wrong. Try again.", "error");
                     },
                 });
-            } else {
-                swal("Your Module Is Safe!", {
-                    buttons: {
-                        confirm: {
-                            className: "btn btn-success",
-                        },
-                    },
-                });
             }
+            // else {
+            //     swal("Your Module Is Safe!", {
+            //         buttons: {
+            //             confirm: {
+            //                 className: "btn btn-success",
+            //             },
+            //         },
+            //     });
+            // }
         });
     });
     window.dataLayer = window.dataLayer || [];
