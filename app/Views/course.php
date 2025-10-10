@@ -110,8 +110,10 @@
                 <h5><?= esc($course['name']) ?></h5>
                 <div class="truncate"><?= $course['description'] ?></div>
                 <div class="course-meta">
-                  <span>⏱ <?= esc($course['duration_weeks']) ?> Weeks</span>
-                  <span class="status text-success">Not Started</span>
+                  <span>⏱ Not Started</span>
+                  <span><?= esc($course['module_count']) ?> Modules</span>
+                  <span><i class="bi bi-hourglass"></i> <?= esc($course['duration_weeks']) ?> Weeks</span>
+                  
                 </div>
               </div>
             </div>
