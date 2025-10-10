@@ -109,6 +109,10 @@ $routes->post('admin/manage_module/delete', 'admin\CourseModule::delete');
 $routes->post('admin/coursemodule/deleteVideo', 'admin\CourseModule::deleteVideo');
 $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleStatus');
 
+// open add_lesson with module_id
+$routes->get('admin/module/add_lesson/(:num)', 'admin\CourseModule::add_lesson/$1');
+$routes->post('admin/module/saveLesson', 'admin\CourseModule::saveLesson');
+$routes->get('admin/manage_module/lessons/(:num)', 'admin\CourseModule::viewModuleLessons/$1');
 
 
 

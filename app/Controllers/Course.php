@@ -4,17 +4,29 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\CourseModel;
 use App\Models\CourseModuleModel;
+use App\Models\CourseVideoModel;
 use App\Models\ModuleProgressModel;
 class Course extends BaseController
 {
     public function index()
     {
         $courseModel = new CourseModel();
+        $moduleModel = new CourseModuleModel();
 
-        $data['courses'] = $courseModel
+        $courses = $courseModel
             ->where('status', 1)
             ->orderBy('course_id', 'ASC')
             ->findAll();
+
+        // Add module count for each course
+        foreach ($courses as &$course) {
+            $course['module_count'] = $moduleModel
+                ->where('course_id', $course['course_id'])
+                ->where('status', 1)
+                ->countAllResults();
+        }
+
+        $data['courses'] = $courses;
 
         echo view('common/course_header');
         echo view('course', $data);
@@ -22,11 +34,20 @@ class Course extends BaseController
     }
     public function modules($courseId)
     {
+        $userId = session()->get('user_id');
+        // if (!$userId) {
+        //     return redirect()->to(base_url('login')); // redirect to login if no user
+        // }
+
         $courseModel = new CourseModel();
         $moduleModel = new CourseModuleModel();
         $moduleProgressModel = new ModuleProgressModel();
 
         $data['course'] = $courseModel->find($courseId);
+
+        if (!$data['course']) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Course not found');
+        }
 
         $modules = $moduleModel
             ->where('course_id', $courseId)
@@ -34,37 +55,29 @@ class Course extends BaseController
             ->orderBy('module_id', 'ASC')
             ->findAll();
 
-        $userId = session()->get('user_id');
-
-        $unlockNext = true; // First module unlocked initially
+        $unlockNext = true;
 
         foreach ($modules as $index => &$mod) {
-            // Check completion
             $completed = $moduleProgressModel
                 ->where('module_id', $mod['module_id'])
                 ->where('user_id', $userId)
-                ->where('status', 1)
+                ->where('status', 3) // completed
                 ->first() ? 1 : 0;
 
             $mod['completed'] = $completed;
             $mod['lessons_count'] = 4;
-
             $mod['locked'] = !$unlockNext ? 1 : 0;
             $unlockNext = $completed ? true : false;
 
-            // Assign level (example logic)
-            if ($index == 0) {
+            if ($index == 0)
                 $mod['level'] = "Beginner";
-            } elseif ($index == 1) {
+            elseif ($index == 1)
                 $mod['level'] = "Intermediate";
-            } else {
+            else
                 $mod['level'] = "Genius";
-            }
-
         }
 
         $data['modules'] = $modules;
-        $data['unlockNext'] = true; // pass to view
 
         echo view('common/course_header');
         echo view('course_modules', $data);
@@ -72,8 +85,8 @@ class Course extends BaseController
     }
     public function moduleDetails($moduleId)
     {
-        $moduleModel = new \App\Models\CourseModuleModel();
-        $courseModel = new \App\Models\CourseModel();
+        $moduleModel = new CourseModuleModel();
+        $courseModel = new CourseModel();
 
         // Fetch module details
         $module = $moduleModel->find($moduleId);
@@ -82,31 +95,27 @@ class Course extends BaseController
             throw new \CodeIgniter\Exceptions\PageNotFoundException("Module not found");
         }
 
-        // Fetch parent course (optional)
         $course = $courseModel->find($module['course_id']);
 
-        // Send data to view
         $data = [
             'module' => $module,
             'course' => $course,
         ];
 
         echo view('common/course_header');
-        echo view('module1', $data); // view file
+        echo view('module1', $data);
         echo view('common/course_footer');
     }
     public function lesson($moduleId)
     {
-        $moduleModel = new \App\Models\CourseModuleModel();
-        $courseVideoModel = new \App\Models\CourseVideoModel(); // Create model for course_videos table
+        $moduleModel = new CourseModuleModel();
+        $courseVideoModel = new CourseVideoModel();
 
         $module = $moduleModel->find($moduleId);
 
         if (!$module) {
             throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound("Module not found");
         }
-
-        // Fetch videos for this module
         $videos = $courseVideoModel->where('module_id', $moduleId)->findAll();
 
         $data = [

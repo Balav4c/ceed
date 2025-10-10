@@ -28,6 +28,11 @@ $allMenus = [
         'icon'  => 'bi bi-bar-chart-fill',
         'match' => ['manage_leaderboard']
     ],
+     'Manage Question Bank' => [
+        'url'   => 'manage_questionbank',
+        'icon'  => 'bi bi-question-circle',
+        'match' => ['manage_questionbank']
+    ],
     // add more menus with their subpage keywords
 ];
 ?>

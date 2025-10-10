@@ -16,7 +16,7 @@ class CourseModule extends BaseController
         $this->input = \Config\Services::request();
         $this->moduleModel = new CourseModuleModel();
         $this->videoModel = new CourseVideoModel();
-         if (!$this->session->has('user_id')) {
+        if (!$this->session->has('user_id')) {
             header('Location: ' . base_url('admin'));
             exit();
         }
@@ -41,6 +41,20 @@ class CourseModule extends BaseController
         return $template;
 
     }
+    public function add_lesson($moduleId, $courseId = null)
+    {
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .= view('admin/add_lesson', [
+            'module_id' => $moduleId,
+            'course_id' => $courseId
+        ]);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/lessonjs');
+        return $template;
+    }
+
+
 
     public function save()
     {
@@ -78,7 +92,7 @@ class CourseModule extends BaseController
             } else {
                 $this->moduleModel->insert($moduleData);
                 $moduleId = $this->moduleModel->insertID();
-                $message = 'Module Saved Successfully!.';
+                $message = 'Module Saved Successfully! Now Add Lessons';
                 $isUpdate = false;
             }
         }
@@ -372,6 +386,71 @@ class CourseModule extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Failed to delete video']);
         }
     }
+ public function viewModuleLessons($moduleId)
+{
+    $module = $this->moduleModel->find($moduleId);
 
+    if (!$module) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
+    }
+
+    $lessons = $this->videoModel->where('module_id', $moduleId)->findAll();
+
+    $data = [
+        'modules' => $module,
+        'lessons' => $lessons,
+        'videoModel' => $this->videoModel
+    ];
+
+    return view('admin/common/header')
+        . view('admin/common/sidemenu')
+        // . view('admin/manage_lesson', $data)
+        . view('admin/common/footer')
+        . view('admin/page_scripts/lessonjs');
+}
+
+    public function saveLesson()
+    {
+        $moduleId = $this->request->getPost('module_id');
+        $courseId = $this->request->getPost('course_id');
+        $lessonTitle = $this->request->getPost('lesson_title');
+        $lessonNames = $this->request->getPost('lesson_name');
+        $uploadedVideos = $this->request->getPost('uploaded_videos');
+        $courseVideoModel = new CourseVideoModel();
+
+        if (empty($lessonTitle) || empty($uploadedVideos) || empty($lessonNames)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Please fill all required fields.'
+            ]);
+        }
+        $videos = explode(',', $uploadedVideos);
+        $videos = array_map('trim', $videos);
+        $videos = array_filter($videos);
+
+        if (count($videos) !== count($lessonNames)) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Lesson name count does not match video count.'
+            ]);
+        }
+        foreach ($videos as $index => $video) {
+            $data = [
+                'course_id' => $courseId,
+                'module_id' => $moduleId,
+                'lesson_title' => $lessonTitle,
+                'lesson_name' => $lessonNames[$index],
+                'video_file' => $video,
+                'status' => 1,
+            ];
+
+            $courseVideoModel->insert($data);
+        }
+
+        return $this->response->setJSON([
+            'status' => 'success',
+            'message' => 'Lesson saved successfully!'
+        ]);
+    }
 
 }
