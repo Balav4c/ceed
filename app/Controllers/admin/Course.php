@@ -5,7 +5,7 @@ namespace App\Controllers\admin;
 use App\Controllers\BaseController;
 use App\Models\admin\CourseModel;
 use App\Models\admin\CourseModuleModel;
-use App\Models\admin\CourseVideoModel;
+use App\Models\admin\CourseLessonModel;
 
 class Course extends BaseController
 {
@@ -19,7 +19,7 @@ class Course extends BaseController
         $this->input = \Config\Services::request();
         $this->courseModel = new CourseModel();
         $this->moduleModel = new CourseModuleModel();
-        $this->videoModel = new CourseVideoModel();
+        $this->videoModel = new CourseLessonModel();
          if (!$this->session->has('user_id')) {
             header('Location: ' . base_url('admin'));
             exit();
@@ -240,10 +240,7 @@ class Course extends BaseController
         }
 
         $modules = $this->moduleModel->where('course_id', $courseId)->findAll();
-
-
-
-        $videoModel = new CourseVideoModel();
+        $videoModel = new CourseLessonModel();
 
 
         // Pass data to view

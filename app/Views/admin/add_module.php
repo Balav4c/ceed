@@ -34,7 +34,7 @@
                                             name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
                                     </div>
                                 </div>
-                                <div class="col-md-6 ">
+                                <!-- <div class="col-md-6 ">
                                     <div class="width-word">
                                         <label class="form-label fw-bold">Module Video</label>
                                         <input type="hidden" id="existing_videos" value="<?= esc($existingVideos ?? '') ?>">
@@ -44,7 +44,7 @@
                                         <div id="fileUpload"></div>
 
                                     </div>
-                                </div>
+                                </div> -->
                             </div>
                         </div>
                     </div>
@@ -58,7 +58,7 @@
     </div>
 </div>
 
-<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+<!-- <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -73,4 +73,4 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->

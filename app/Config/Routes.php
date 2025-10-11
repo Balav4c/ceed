@@ -113,6 +113,9 @@ $routes->post('admin/manage_module/toggleStatus', 'admin\CourseModule::toggleSta
 $routes->get('admin/module/add_lesson/(:num)', 'admin\CourseModule::add_lesson/$1');
 $routes->post('admin/module/saveLesson', 'admin\CourseModule::saveLesson');
 $routes->get('admin/manage_module/lessons/(:num)', 'admin\CourseModule::viewModuleLessons/$1');
+$routes->get('admin/add_lesson/(:num)', 'admin\CourseModule::add_lesson/$1');
+$routes->post('admin/coursemodule/deleteLesson', 'admin\CourseModule::deleteLesson');
+$routes->get('admin/edit_lesson/(:num)', 'admin\CourseModule::editLesson/$1');
 
 
 

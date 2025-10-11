@@ -18,7 +18,7 @@
                             <th>Module Name</th>
                             <th>Description</th>
                             <th>Duration</th>
-                            <th>Module Videos</th>
+                            <!-- <th>Module Videos</th> -->
                             <th>Status</th>
                             <th>Action</th>
                         </tr>
@@ -43,7 +43,7 @@
 </div>
 
 
-<div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
+<!-- <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
@@ -58,7 +58,7 @@
       </div>
     </div>
   </div>
-</div>
+</div> -->
 <script>
     const base_url = "<?= base_url() ?>";
     document.getElementById('addModuleBtn').addEventListener('click', function () {

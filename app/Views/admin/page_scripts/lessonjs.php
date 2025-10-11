@@ -310,7 +310,7 @@
 
             $.post(base_url + 'admin/module/saveLesson', form.serialize(), function (response) {
                 messageBox.removeClass('d-none alert-success alert-danger');
-
+               
                 if (response.status === 'success') {
                     messageBox
                         .addClass('alert-success')
@@ -363,4 +363,48 @@
             });
         });
     });
+    // delete pop up 
+   $(document).on("click", ".delete-lesson", function (e) {
+    e.preventDefault();
+    let lessonId = $(this).data("id");
+
+    swal({
+        title: "Are You Sure?",
+        text: "You want to delete this lesson!",
+        icon: "warning",
+        buttons: {
+            cancel: { visible: true, text: "Cancel", className: "btn btn-danger" },
+            confirm: { text: "Delete", className: "btn btn-success" }
+        },
+    }).then((willDelete) => {
+        if (willDelete) {
+            $.ajax({
+                url: "<?= base_url('admin/coursemodule/deleteLesson'); ?>", // corrected
+                type: "POST",
+                data: { 
+                    lesson_id: lessonId,
+                    <?= csrf_token() ?>: '<?= csrf_hash() ?>' // include CSRF if enabled
+                },
+                dataType: "json",
+                success: function (response) {
+                    if (response.status === "success") {
+                        swal("Deleted!", response.message, {
+                            icon: "success",
+                            buttons: { confirm: { className: "btn btn-success" } }
+                        }).then(() => {
+                            location.reload(); // refresh after delete
+                        });
+                    } else {
+                        swal("Error!", response.message, "error");
+                    }
+                },
+                error: function (xhr, status, error) {
+                    console.log(xhr.responseText); // debug server error
+                    swal("Error!", "Something went wrong. Try again.", "error");
+                },
+            });
+        }
+    });
+});
+
 </script>
