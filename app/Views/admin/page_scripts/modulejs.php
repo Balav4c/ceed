@@ -212,22 +212,6 @@
                         return data ? data + " Weeks" : "-";
                     }
                 },
-                {
-                    data: "module_videos",
-                    render: function (data, type, row) {
-                        if (!data || data.trim() === "")
-                            return '<span class="text-muted">No Videos</span>';
-
-                        let videos = data.split(',');
-                        return videos.map(v => {
-                            v = v.trim();
-                            let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + v;
-                            return `<a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${v}">Play Video
-                                            <i class="bi bi-play-circle"></i> 
-                                        </a>`;
-                        }).join('<br>');
-                    }
-                },
 
                 {
                     data: "status",
@@ -259,9 +243,9 @@
                     }
                 }
             ],
-            order: [[7, 'desc']],
+            order: [[5, 'desc']],
             columnDefs: [
-                { searchable: false, orderable: false, targets: [0, 5, 6] }
+                { searchable: false, orderable: false, targets: [0, 5] }
             ],
             language: { infoFiltered: "" },
             scrollX: false,
@@ -276,15 +260,15 @@
                     cell.innerHTML = pageInfo.start + i + 1;
                 });
         });
-        $(document).on('click', '.view-lesson', function () {
-            const moduleId = $(this).data('id');
-            console.log("Module ID:", moduleId);
-            if (!moduleId) {
-                alert("Module ID not found!");
-                return;
-            }
-            window.location.href = "<?= base_url('admin/manage_module/lessons/') ?>" + moduleId;
-        });
+       $(document).on('click', '.view-lesson', function () {
+    const moduleId = $(this).data('id');
+    console.log("Module ID:", moduleId);
+    if (!moduleId) {
+        alert("Module ID not found!");
+        return;
+    }
+    window.location.href = "<?= base_url('admin/manage_module/lessons/') ?>" + moduleId;
+});
 
 
     });
@@ -374,15 +358,6 @@
                     },
                 });
             }
-            // else {
-            //     swal("Your Module Is Safe!", {
-            //         buttons: {
-            //             confirm: {
-            //                 className: "btn btn-success",
-            //             },
-            //         },
-            //     });
-            // }
         });
     });
     window.dataLayer = window.dataLayer || [];

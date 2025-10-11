@@ -6,13 +6,14 @@ use CodeIgniter\Model;
 
 class CourseLessonModel extends Model
 {
-    protected $table = 'course_videos';
+    protected $table = 'course_lessons';
     protected $primaryKey = 'lesson_id';
     protected $allowedFields = [
+        'lesson_id',
         'module_id',
         'course_id',
         'lesson_title',
-        'videos',  // store lesson_name + video_file as JSON
+        'videos',  
         'status',
         'created_at',
         'updated_at'
