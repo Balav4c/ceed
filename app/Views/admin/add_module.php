@@ -40,14 +40,15 @@
                                     <div class=" ">
                                         <label class="form-label fw-bold" for="about">About</label>
                                         <textarea class="content" id="about" style="margin-top:12px;"
-                                            name="module_about[]"></textarea>
+                                            name="module_about[]"><?= esc($module['about'] ?? '') ?></textarea>
                                     </div>
                                 </div>
                             </div>
                             <div class="row" style="margin-top:18px;">
                                 <!-- Searchable Dropdown -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Select Teacher</label>
+                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Select
+                                        Teacher</label>
                                     <select name="teacher_id" id="teacher_id" class="form-control select2">
                                         <option value="">Select or Search...</option>
                                         <option value="AI">Artificial Intelligence</option>
@@ -62,10 +63,23 @@
                                     <label class="form-label fw-bold" style="margin-bottom: 15px;">Module Level</label>
                                     <select class="form-select" name="module_level[]">
                                         <option value="">Select Level</option>
-                                        <option value="beginner" <?= isset($module['module_level']) && $module['module_level'] == 'beginner' ? 'selected' : '' ?>>Beginner</option>
-                                        <option value="master" <?= isset($module['module_level']) && $module['module_level'] == 'master' ? 'selected' : '' ?>>Master</option>
-                                        <option value="genius" <?= isset($module['module_level']) && $module['module_level'] == 'genius' ? 'selected' : '' ?>>Genius</option>
+                                        <option value="Beginner" <?= (isset($module['module_level']) && strtolower($module['module_level']) === 'beginner') ||
+                                            (isset($module->module_level) && strtolower($module->module_level) === 'beginner')
+                                            ? 'selected' : '' ?>>
+                                            Beginner
+                                        </option>
+                                        <option value="Master" <?= (isset($module['module_level']) && strtolower($module['module_level']) === 'master') ||
+                                            (isset($module->module_level) && strtolower($module->module_level) === 'master')
+                                            ? 'selected' : '' ?>>
+                                            Master
+                                        </option>
+                                        <option value="Genius" <?= (isset($module['module_level']) && strtolower($module['module_level']) === 'genius') ||
+                                            (isset($module->module_level) && strtolower($module->module_level) === 'genius')
+                                            ? 'selected' : '' ?>>
+                                            Genius
+                                        </option>
                                     </select>
+
                                 </div>
                             </div>
                         </div>

@@ -63,57 +63,47 @@ class CourseModule extends BaseController
         $moduleNames = $this->request->getPost('module_name');
         $durations = $this->request->getPost('module_duration');
         $descriptions = $this->request->getPost('module_description');
-        $uploadedVideos = $this->request->getPost('uploaded_videos');
+        $about = $this->request->getPost('module_about');
+        $moduleLevels = $this->request->getPost('module_level');
 
+        // Validation check
         foreach ($moduleNames as $index => $name) {
-            if (empty(trim($name)) || empty(trim($durations[$index] ?? ''))) {
+            if (
+                empty(trim($name)) ||
+                empty(trim($durations[$index] ?? '')) ||
+                empty(trim($about[$index] ?? '')) ||
+                empty(trim($moduleLevels[$index] ?? ''))
+            ) {
                 return $this->response->setJSON([
                     'status' => 'error',
-                    'message' => 'Please Fill All Mandatory Fields.'
+                    'message' => 'Please fill all mandatory fields.'
                 ]);
             }
         }
 
+        // Loop through modules
         foreach ($moduleNames as $index => $name) {
-            $plainDescription = isset($descriptions[$index]) ? $descriptions[$index] : null;
-
             $moduleData = [
                 'course_id' => $courseId,
                 'module_name' => $name,
                 'duration_weeks' => $durations[$index] ?? null,
-                'description' => $plainDescription,
+                'description' => $descriptions[$index] ?? null,
+                'about' => $about[$index] ?? null,
+                'module_level' => $moduleLevels[$index] ?? 'Beginner',
                 'status' => 1
             ];
 
             if ($moduleId) {
                 $this->moduleModel->update($moduleId, $moduleData);
-                $message = 'Module Updated Successfully!';
+                $message = 'Module updated successfully!';
                 $isUpdate = true;
             } else {
                 $this->moduleModel->insert($moduleData);
                 $moduleId = $this->moduleModel->insertID();
-                $message = 'Module Saved Successfully! Now Add Lessons';
+                $message = 'Module saved successfully! Now add lessons.';
                 $isUpdate = false;
             }
         }
-
-        if (!empty($uploadedVideos)) {
-            $videoArray = explode(',', $uploadedVideos);
-
-            foreach ($videoArray as $video) {
-                if (!empty(trim($video))) {
-                    $this->lessonModel->insert([
-                        'module_id' => $moduleId,
-                        'video_file' => trim($video),
-                        'status' => 1,
-                        'created_at' => date('Y-m-d H:i:s'),
-                        'updated_at' => date('Y-m-d H:i:s')
-                    ]);
-                }
-            }
-        }
-
-
 
         return $this->response->setJSON([
             'status' => 'success',
@@ -254,33 +244,35 @@ class CourseModule extends BaseController
             'message' => 'Invalid request'
         ]);
     }
-    public function editModule($id)
-    {
-        $module = $this->moduleModel->find($id);
+   public function editModule($id)
+{
+    $module = $this->moduleModel->find($id);
 
-        if (!$module) {
-            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
-        }
-
-        $lessonModel = new CourseLessonModel();
-        $videoFiles = $lessonModel
-            ->where('module_id', $id)
-            ->where('status', 1)
-            ->findColumn('videos');
-
-        $data = [
-            'module' => $module,
-            'existingVideos' => $videoFiles ? implode(',', $videoFiles) : ''
-        ];
-
-        $template = view('admin/common/header');
-        $template .= view('admin/common/sidemenu');
-        $template .= view('admin/add_module', $data);
-        $template .= view('admin/common/footer');
-        $template .= view('admin/page_scripts/modulejs');
-
-        return $template;
+    if (!$module) {
+        throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound('Module not found');
     }
+
+    $lessonModel = new CourseLessonModel();
+    $videoFiles = $lessonModel
+        ->where('module_id', $id)
+        ->where('status', 1)
+        ->findColumn('videos');
+
+    $data = [
+        'module' => $module,
+        'existingVideos' => $videoFiles ? implode(',', $videoFiles) : '',
+        'isEdit' => true
+    ];
+
+    $template = view('admin/common/header');
+    $template .= view('admin/common/sidemenu');
+    $template .= view('admin/add_module', $data);
+    $template .= view('admin/common/footer');
+    $template .= view('admin/page_scripts/modulejs');
+
+    return $template;
+}
+
 
     public function update($id)
     {
@@ -495,7 +487,7 @@ class CourseModule extends BaseController
             'message' => 'Lesson saved successfully!'
         ]);
     }
-     public function editLesson($lessonId = null)
+    public function editLesson($lessonId = null)
     {
         $moduleModel = new CourseModuleModel();
         $lessonModel = new CourseLessonModel();
@@ -533,78 +525,75 @@ class CourseModule extends BaseController
             . view('admin/common/footer')
             . view('admin/page_scripts/lessonjs');
     }
-   public function updateLesson()
-{
-    $lessonModel = new CourseLessonModel();
+    public function updateLesson()
+    {
+        $lessonModel = new CourseLessonModel();
 
-    $lessonId = $this->request->getPost('lesson_id');
-    if (!$lessonId) {
-        return $this->response->setJSON([
-            'status' => 'error',
-            'message' => 'Lesson ID missing'
-        ]);
-    }
-
-    $moduleId = $this->request->getPost('module_id');
-    $courseId = $this->request->getPost('course_id');
-    $lessonTitle = $this->request->getPost('lesson_title');
-
-    $existingVideos = json_decode($this->request->getPost('existing_videos'), true) ?? [];
-    $deletedVideos = json_decode($this->request->getPost('deleted_videos'), true) ?? [];
-    $uploadedVideos = $this->request->getPost('uploaded_videos') ?? '';
-    $lessonNames = $this->request->getPost('lesson_name') ?? [];
-
-    // 1️⃣ Remove deleted videos
-    $updatedVideos = array_filter($existingVideos, function ($v) use ($deletedVideos) {
-        return !in_array($v['video_file'], $deletedVideos);
-    });
-
-    // 2️⃣ Add new uploaded videos
-    if (!empty($uploadedVideos)) {
-        $newVideos = explode(',', $uploadedVideos);
-        foreach ($newVideos as $index => $video) {
-            $video = trim($video);
-            if ($video != '') {
-                $updatedVideos[] = [
-                    'name' => $lessonNames[$index] ?? '',  // map lesson name to new video
-                    'link' => $video
-                ];
-            }
-        }
-    }
-
-    // 3️⃣ Optional: Check that lesson names exist for all videos
-    foreach ($updatedVideos as $v) {
-        if (empty($v['name']) || empty($v['link'])) {
+        $lessonId = $this->request->getPost('lesson_id');
+        if (!$lessonId) {
             return $this->response->setJSON([
                 'status' => 'error',
-                'message' => 'Please provide lesson names for all videos.'
+                'message' => 'Lesson ID missing'
+            ]);
+        }
+
+        $moduleId = $this->request->getPost('module_id');
+        $courseId = $this->request->getPost('course_id');
+        $lessonTitle = $this->request->getPost('lesson_title');
+
+        $existingVideos = json_decode($this->request->getPost('existing_videos'), true) ?? [];
+        $deletedVideos = json_decode($this->request->getPost('deleted_videos'), true) ?? [];
+        $uploadedVideos = $this->request->getPost('uploaded_videos') ?? '';
+        $lessonNames = $this->request->getPost('lesson_name') ?? [];
+
+        $updatedVideos = array_filter($existingVideos, function ($v) use ($deletedVideos) {
+            return !in_array($v['video_file'], $deletedVideos);
+        });
+
+        if (!empty($uploadedVideos)) {
+            $newVideos = explode(',', $uploadedVideos);
+            foreach ($newVideos as $index => $video) {
+                $video = trim($video);
+                if ($video != '') {
+                    $updatedVideos[] = [
+                        'name' => $lessonNames[$index] ?? '',
+                        'link' => $video
+                    ];
+                }
+            }
+        }
+
+        foreach ($updatedVideos as $v) {
+            if (empty($v['name']) || empty($v['link'])) {
+                return $this->response->setJSON([
+                    'status' => 'error',
+                    'message' => 'Please provide lesson names for all videos.'
+                ]);
+            }
+        }
+
+        $lessonData = [
+            'module_id' => $moduleId,
+            'course_id' => $courseId,
+            'lesson_title' => $lessonTitle,
+            'videos' => json_encode(array_values($updatedVideos)),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+
+        $updated = $lessonModel->update($lessonId, $lessonData);
+
+        if ($updated) {
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Lesson updated successfully'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Failed to update lesson'
             ]);
         }
     }
-
-    $lessonData = [
-        'module_id' => $moduleId,
-        'course_id' => $courseId,
-        'lesson_title' => $lessonTitle,
-        'videos' => json_encode(array_values($updatedVideos)),
-        'updated_at' => date('Y-m-d H:i:s')
-    ];
-
-    $updated = $lessonModel->update($lessonId, $lessonData);
-
-    if ($updated) {
-        return $this->response->setJSON([
-            'status' => 'success',
-            'message' => 'Lesson updated successfully'
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'status' => 'error',
-            'message' => 'Failed to update lesson'
-        ]);
-    }
-}
     public function deleteLesson()
     {
         if (!$this->request->isAJAX()) {
