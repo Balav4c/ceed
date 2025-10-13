@@ -11,17 +11,19 @@
                     enctype="multipart/form-data">
                     <input type="hidden" name="module_id" value="<?= $module['module_id'] ?? '' ?>">
                     <input type="hidden" name="course_id" value="<?= $course_id ?? $module['course_id'] ?? '' ?>">
-                    
+
                     <div id="module-container">
-                        <div class="module-item border rounded p-3 mb-3">
+                        <div class="module-item  p-3 mb-3">
                             <div class="row">
                                 <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold">Module Name<span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Module Name<span
+                                            class="text-danger">*</span></label>
                                     <input type="text" name="module_name[]" class="form-control"
                                         value="<?= $module['module_name'] ?? '' ?>" required>
                                 </div>
                                 <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold">Duration (In Weeks)<span class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Duration (In Weeks)<span
+                                            class="text-danger">*</span></label>
                                     <input type="number" name="module_duration[]" class="form-control"
                                         value="<?= $module['duration_weeks'] ?? '' ?>">
                                 </div>
@@ -29,22 +31,42 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class=" ">
-                                        <label class="form-label fw-bold" for="example">Description</label>
+                                        <label class="form-label fw-bold" for="description">Description</label>
                                         <textarea class="content" id="description" style="margin-top:12px;"
                                             name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
                                     </div>
                                 </div>
-                                <!-- <div class="col-md-6 ">
-                                    <div class="width-word">
-                                        <label class="form-label fw-bold">Module Video</label>
-                                        <input type="hidden" id="existing_videos" value="<?= esc($existingVideos ?? '') ?>">
-
-                                        <input type="hidden" id="uploaded_videos" name="uploaded_videos"value="<?= esc($newUploadedVideos ?? '') ?>">
-
-                                        <div id="fileUpload"></div>
-
+                                <div class="col-md-6">
+                                    <div class=" ">
+                                        <label class="form-label fw-bold" for="about">About</label>
+                                        <textarea class="content" id="about" style="margin-top:12px;"
+                                            name="module_about[]"></textarea>
                                     </div>
-                                </div> -->
+                                </div>
+                            </div>
+                            <div class="row" style="margin-top:18px;">
+                                <!-- Searchable Dropdown -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Select Teacher</label>
+                                    <select name="teacher_id" id="teacher_id" class="form-control select2">
+                                        <option value="">Select or Search...</option>
+                                        <option value="AI">Artificial Intelligence</option>
+                                        <option value="ML">Machine Learning</option>
+                                        <option value="DS">Data Science</option>
+                                        <option value="WD">Web Development</option>
+                                        <option value="CS">Cyber Security</option>
+                                    </select>
+                                </div>
+                                <!-- Normal Dropdown -->
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Module Level</label>
+                                    <select class="form-select" name="module_level[]">
+                                        <option value="">Select Level</option>
+                                        <option value="beginner" <?= isset($module['module_level']) && $module['module_level'] == 'beginner' ? 'selected' : '' ?>>Beginner</option>
+                                        <option value="master" <?= isset($module['module_level']) && $module['module_level'] == 'master' ? 'selected' : '' ?>>Master</option>
+                                        <option value="genius" <?= isset($module['module_level']) && $module['module_level'] == 'genius' ? 'selected' : '' ?>>Genius</option>
+                                    </select>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,20 +79,12 @@
         </div>
     </div>
 </div>
-
-<!-- <div class="modal fade" id="videoModal" tabindex="-1" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="videoTitle"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <video id="videoPlayer" width="100%" controls>
-          <source src="" type="video/mp4">
-          Your browser does not support HTML video.
-        </video>
-      </div>
-    </div>
-  </div>
-</div> -->
+<script>
+    $(document).ready(function () {
+        $('.select2').select2({
+            placeholder: "Select or search teacher",
+            allowClear: true,
+            width: '100%'
+        });
+    });
+</script>

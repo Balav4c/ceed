@@ -120,21 +120,22 @@
                 function addVideosToTable(videos) {
                     if (!table) createTable();
 
-                    // ✅ Remove "No files selected!" row if present
                     tableBody.find(".no-file").remove();
 
                     videos.forEach(function (video) {
-                        let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + video;
+                        let videoFile = video.link || ''; 
+                        let lessonName = video.name || '';   
+                         let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + videoFile;
                         let rowIndex = tableBody.find("tr").length + 1;
-                        // <td style="width: 100px;>${video}</td>
+
                         tableBody.append(`
-                            <tr data-existing-video="${video}">
+                            <tr data-existing-video="${videoFile}">
                                 <td>${rowIndex}</td>
                                 <td>
-                                    <input type="text" name="lesson_name[]" class="form-control" placeholder="Enter lesson name" required>
+                                    <input type="text" name="lesson_name[]" class="form-control" placeholder="Enter lesson name" required value="${lessonName}">
                                 </td>
                                 <td>
-                                    <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${video}">
+                                    <a href="javascript:void(0);" class="play-video-link text-primary" data-video="${videoUrl}" data-title="${videoFile}">
                                         Play Video <i class="bi bi-play-circle"></i>
                                     </a>
                                 </td>
@@ -151,6 +152,7 @@
                     bindDeleteButtons();
                     // updateSerialNumbers();
                 }
+
 
                 function resetFileInput() {
                     let fileInput = document.querySelector('input[type="file"][name="module_videos[]"]');
@@ -273,32 +275,36 @@
                 });
 
                 function addExistingVideos(videos) {
-                    if (videos && videos.length) {
-                        allUploadedVideos = [];
+                    if (!table) createTable();
 
+                    tableBody.empty();
+                    allUploadedVideos = [];
+
+                    if (videos && videos.length) {
                         videos.forEach(function (video) {
-                            if (!deletedVideos.includes(video)) {
+                            if (!deletedVideos.includes(video.video_file)) {
                                 allUploadedVideos.push(video);
                             }
                         });
 
-                        if (!table) createTable();
-                        tableBody.empty();
                         addVideosToTable(allUploadedVideos);
                     } else {
-                        createTable();
+                        tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                     }
                 }
 
-                var existingVideos = $('#existing_videos').val();
+              var existingVideos = <?php echo isset($existingVideos) ? json_encode($existingVideos) : '[]'; ?>;
                 if (existingVideos) {
-                    addExistingVideos(existingVideos.split(','));
+                    addExistingVideos(JSON.parse(existingVideos));
                 } else {
                     createTable();
                 }
+
             });
         };
     })(jQuery);
+    
+    
     $(document).ready(function () {
         $("#fileUpload").fileUpload();
         $('#lessonForm').on('submit', function (e) {
@@ -310,7 +316,7 @@
 
             $.post(base_url + 'admin/module/saveLesson', form.serialize(), function (response) {
                 messageBox.removeClass('d-none alert-success alert-danger');
-               
+
                 if (response.status === 'success') {
                     messageBox
                         .addClass('alert-success')
@@ -364,47 +370,47 @@
         });
     });
     // delete pop up 
-   $(document).on("click", ".delete-lesson", function (e) {
-    e.preventDefault();
-    let lessonId = $(this).data("id");
+    $(document).on("click", ".delete-lesson", function (e) {
+        e.preventDefault();
+        let lessonId = $(this).data("id");
 
-    swal({
-        title: "Are You Sure?",
-        text: "You want to delete this lesson!",
-        icon: "warning",
-        buttons: {
-            cancel: { visible: true, text: "Cancel", className: "btn btn-danger" },
-            confirm: { text: "Delete", className: "btn btn-success" }
-        },
-    }).then((willDelete) => {
-        if (willDelete) {
-            $.ajax({
-                url: "<?= base_url('admin/coursemodule/deleteLesson'); ?>", // corrected
-                type: "POST",
-                data: { 
-                    lesson_id: lessonId,
-                    <?= csrf_token() ?>: '<?= csrf_hash() ?>' // include CSRF if enabled
-                },
-                dataType: "json",
-                success: function (response) {
-                    if (response.status === "success") {
-                        swal("Deleted!", response.message, {
-                            icon: "success",
-                            buttons: { confirm: { className: "btn btn-success" } }
-                        }).then(() => {
-                            location.reload(); // refresh after delete
-                        });
-                    } else {
-                        swal("Error!", response.message, "error");
-                    }
-                },
-                error: function (xhr, status, error) {
-                    console.log(xhr.responseText); // debug server error
-                    swal("Error!", "Something went wrong. Try again.", "error");
-                },
-            });
-        }
+        swal({
+            title: "Are You Sure?",
+            text: "You want to delete this lesson!",
+            icon: "warning",
+            buttons: {
+                cancel: { visible: true, text: "Cancel", className: "btn btn-danger" },
+                confirm: { text: "Delete", className: "btn btn-success" }
+            },
+        }).then((willDelete) => {
+            if (willDelete) {
+                $.ajax({
+                    url: "<?= base_url('admin/coursemodule/deleteLesson'); ?>", // corrected
+                    type: "POST",
+                    data: {
+                        lesson_id: lessonId,
+                        <?= csrf_token() ?>: '<?= csrf_hash() ?>' // include CSRF if enabled
+                    },
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === "success") {
+                            swal("Deleted!", response.message, {
+                                icon: "success",
+                                buttons: { confirm: { className: "btn btn-success" } }
+                            }).then(() => {
+                                location.reload(); // refresh after delete
+                            });
+                        } else {
+                            swal("Error!", response.message, "error");
+                        }
+                    },
+                    error: function (xhr, status, error) {
+                        console.log(xhr.responseText); // debug server error
+                        swal("Error!", "Something went wrong. Try again.", "error");
+                    },
+                });
+            }
+        });
     });
-});
 
 </script>

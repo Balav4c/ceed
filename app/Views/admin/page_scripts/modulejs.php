@@ -1,7 +1,8 @@
 <script>
     $(document).ready(function () {
 
-        $('.content').richText();
+        $('#description').richText();
+        $('#about').richText();
         const $saveBtn = $('#saveBtn');
         const $moduleForm = $('#moduleForm');
         const $messageBox = $('#messageBox');
@@ -260,17 +261,15 @@
                     cell.innerHTML = pageInfo.start + i + 1;
                 });
         });
-       $(document).on('click', '.view-lesson', function () {
-    const moduleId = $(this).data('id');
-    console.log("Module ID:", moduleId);
-    if (!moduleId) {
-        alert("Module ID not found!");
-        return;
-    }
-    window.location.href = "<?= base_url('admin/manage_module/lessons/') ?>" + moduleId;
-});
-
-
+        $(document).on('click', '.view-lesson', function () {
+            const moduleId = $(this).data('id');
+            console.log("Module ID:", moduleId);
+            if (!moduleId) {
+                alert("Module ID not found!");
+                return;
+            }
+            window.location.href = "<?= base_url('admin/manage_module/lessons/') ?>" + moduleId;
+        });
     });
     // toggle status 
     $('#moduleTable').on('change', '.toggle-status', function () {
