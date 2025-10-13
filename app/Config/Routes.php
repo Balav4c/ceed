@@ -116,7 +116,7 @@ $routes->get('admin/manage_module/lessons/(:num)', 'admin\CourseModule::viewModu
 $routes->get('admin/add_lesson/(:num)', 'admin\CourseModule::add_lesson/$1');
 $routes->post('admin/coursemodule/deleteLesson', 'admin\CourseModule::deleteLesson');
 $routes->get('admin/edit_lesson/(:num)', 'admin\CourseModule::editLesson/$1');
-
+$routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::updateLesson/$1');
 
 
 
