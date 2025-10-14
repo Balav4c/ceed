@@ -29,9 +29,9 @@ $allMenus = [
         'match' => ['manage_leaderboard']
     ],
      'Manage Question Bank' => [
-        'url'   => 'manage_questionbank',
+        'url'   => 'manage_miniquiz',
         'icon'  => 'bi bi-question-circle',
-        'match' => ['manage_questionbank']
+        'match' => ['manage_miniquiz']
     ],
     // add more menus with their subpage keywords
 ];
