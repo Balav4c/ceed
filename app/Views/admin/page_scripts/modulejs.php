@@ -20,7 +20,7 @@
         }
 
         function checkFormChanges() {
-            $('.content').val($('.richText-editor').html());
+            $('#description').val($('.richText-editor').html());
             let currentFormData = $moduleForm.serialize();
 
             let fileChanged = false;
@@ -62,70 +62,16 @@
             new bootstrap.Modal(document.getElementById('descriptionModal')).show();
         });
 
-        // Play video modal
-        $(document).on("click", ".play-video-link", function () {
-            let videoUrl = $(this).data("video");
-            let videoTitle = $(this).data("title");
-
-            $("#videoTitle").text(videoTitle);
-
-            let videoPlayer = $("#videoPlayer")[0];
-            $(videoPlayer).find("source").remove();
-
-            let newSource = document.createElement("source");
-            newSource.src = videoUrl;
-            newSource.type = "video/mp4";
-            videoPlayer.appendChild(newSource);
-
-            videoPlayer.load();
-            videoPlayer.play();
-
-            const videoModalEl = document.getElementById('videoModal');
-            const videoModal = new bootstrap.Modal(videoModalEl);
-            videoModal.show();
-
-            $(videoModalEl).on("hidden.bs.modal", function () {
-                let videoPlayer = $("#videoPlayer")[0];
-                $(videoPlayer).find("source").remove();
-                videoPlayer.load();
-            });
-        });
-
         // Form submit
         $('#moduleForm').on('submit', function (e) {
             e.preventDefault();
             var form = $(this);
             var url = form.attr('action');
             let isValid = true;
-
-            // Validate video files
-            form.find('input[name="module_videos[]"]').each(function () {
-                let files = this.files;
-                if (files.length > 0) {
-                    $.each(files, function (i, file) {
-                        let fileType = file.type;
-                        if (!['video/mp4', 'video/webm', 'video/ogg'].includes(fileType)) {
-                            isValid = false;
-                        }
-                    });
-                }
-            });
-
-            if (!isValid) {
-                $messageBox
-                    .removeClass('d-none alert-success')
-                    .addClass('alert-danger')
-                    .html("Please Upload Video Files Only.")
-                    .fadeIn()
-                    .delay(2000)
-                    .fadeOut(500);
-                return;
-            }
-
             toggleSaveButton(false);
 
             // Sync editor content before submit
-            $('.content').val($('.richText-editor').html());
+            $('#description').val($('.richText-editor').html());
 
             $.post(url, form.serialize(), function (response) {
                 $messageBox.removeClass('d-none alert-success alert-danger');
@@ -139,11 +85,14 @@
                     // Update initial state
                     initialFormData = $moduleForm.serialize();
                     toggleSaveButton(false);
-
                     setTimeout(function () {
-                        window.location.href = base_url + 'admin/module/add_lesson/' + response.module_id;
+                        if (response.is_update) {
+                            window.location.href = base_url + 'admin/manage_course/modules/' + response.course_id;
+                        } else {
+                            window.location.href = base_url + 'admin/module/add_lesson/' + response.module_id;
+                        }
+                       
                     }, 1500);
-
                 } else {
                     $messageBox
                         .addClass('alert-danger')
@@ -244,9 +193,9 @@
                     }
                 }
             ],
-            order: [[5, 'desc']],
+            order: [[6, 'desc']],
             columnDefs: [
-                { searchable: false, orderable: false, targets: [0, 5] }
+                { searchable: false, orderable: false, targets: [0, 2,5] }
             ],
             language: { infoFiltered: "" },
             scrollX: false,

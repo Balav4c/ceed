@@ -123,9 +123,9 @@
                     tableBody.find(".no-file").remove();
 
                     videos.forEach(function (video) {
-                        let videoFile = video.link || ''; 
-                        let lessonName = video.name || '';   
-                         let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + videoFile;
+                        let videoFile = video.link || '';
+                        let lessonName = video.name || '';
+                        let videoUrl = "<?= base_url('public/uploads/videos/') ?>" + videoFile;
                         let rowIndex = tableBody.find("tr").length + 1;
 
                         tableBody.append(`
@@ -269,7 +269,6 @@
                         fileUploadDiv.find(`#${fileUploadId}`)[0].files = dt.files;
                     },
                 });
-
                 fileUploadDiv.find(`#${fileUploadId}`).change(function () {
                     handleFiles(this.files);
                 });
@@ -286,16 +285,26 @@
                                 allUploadedVideos.push(video);
                             }
                         });
+                        let videoBaseUrl = "<?= base_url('public/uploads/videos/') ?>";
 
+                        allUploadedVideos.forEach(v => {
+                            // if video_file is not a full URL, prefix it
+                            if (!v.video_file.startsWith('http')) {
+                                v.full_path = videoBaseUrl + v.video_file;
+                            } else {
+                                v.full_path = v.video_file;
+                            }
+                        });
                         addVideosToTable(allUploadedVideos);
                     } else {
                         tableBody.append('<tr><td colspan="6" class="no-file">No files selected!</td></tr>');
                     }
                 }
 
-              var existingVideos = <?php echo isset($existingVideos) ? json_encode($existingVideos) : '[]'; ?>;
-                if (existingVideos) {
-                    addExistingVideos(JSON.parse(existingVideos));
+                const existingVideos = <?= isset($existingVideos) ? $existingVideos : '[]' ?>;
+
+                if (Array.isArray(existingVideos) && existingVideos.length > 0) {
+                    addExistingVideos(existingVideos);
                 } else {
                     createTable();
                 }
@@ -303,36 +312,36 @@
             });
         };
     })(jQuery);
-    
-    
+
     $(document).ready(function () {
         $("#fileUpload").fileUpload();
         $('#lessonForm').on('submit', function (e) {
             e.preventDefault();
 
-            const form = $(this);
-            const messageBox = $('#messageBox');
-            const base_url = "<?= base_url() ?>";
+            var form = $(this);
+            var url = form.attr('action');
+            var messageBox = $('#messageBox');
 
-            $.post(base_url + 'admin/module/saveLesson', form.serialize(), function (response) {
-                messageBox.removeClass('d-none alert-success alert-danger');
+            messageBox.removeClass('d-none alert-success alert-danger');
 
+            $.post(url, form.serialize(), function (response) {
                 if (response.status === 'success') {
                     messageBox
                         .addClass('alert-success')
                         .text(response.message)
                         .fadeIn();
+
                     setTimeout(function () {
                         location.reload();
                     }, 1500);
-
                 } else {
                     messageBox
                         .addClass('alert-danger')
                         .text(response.message || 'Something went wrong.')
                         .fadeIn();
                 }
-            }, 'json').fail(function () {
+            }, 'json').fail(function (xhr, status, error) {
+                console.error('AJAX Error:', status, error, xhr.responseText);
                 messageBox
                     .removeClass('d-none alert-success')
                     .addClass('alert-danger')
@@ -340,6 +349,7 @@
                     .fadeIn();
             });
         });
+
         // Play video modal
         $(document).on("click", ".play-video-link", function () {
             let videoUrl = $(this).data("video");

@@ -16,8 +16,7 @@
                         <div class="module-item  p-3 mb-3">
                             <div class="row">
                                 <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold">Module Name<span
-                                            class="text-danger">*</span></label>
+                                    <label class="form-label fw-bold">Module Name<span class="text-danger">*</span></label>
                                     <input type="text" name="module_name[]" class="form-control"
                                         value="<?= $module['module_name'] ?? '' ?>" required>
                                 </div>
@@ -31,14 +30,14 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class=" ">
-                                        <label class="form-label fw-bold" for="description">Description</label>
+                                        <label class="form-label fw-bold" for="description">Description<span class="text-danger">*</span></label>
                                         <textarea class="content" id="description" style="margin-top:12px;"
                                             name="module_description[]"><?= esc($module['description'] ?? '') ?></textarea>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class=" ">
-                                        <label class="form-label fw-bold" for="about">About</label>
+                                        <label class="form-label fw-bold" for="about">About<span class="text-danger">*</span></label>
                                         <textarea class="content" id="about" style="margin-top:12px;"
                                             name="module_about[]"><?= esc($module['about'] ?? '') ?></textarea>
                                     </div>
@@ -47,20 +46,19 @@
                             <div class="row" style="margin-top:18px;">
                                 <!-- Searchable Dropdown -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Select
-                                        Teacher</label>
+                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Select Teacher<span class="text-danger">*</span></label>
                                     <select name="teacher_id" id="teacher_id" class="form-control select2">
                                         <option value="">Select or Search...</option>
-                                        <option value="AI">Artificial Intelligence</option>
-                                        <option value="ML">Machine Learning</option>
-                                        <option value="DS">Data Science</option>
-                                        <option value="WD">Web Development</option>
-                                        <option value="CS">Cyber Security</option>
+                                        <option value="AI">Divya</option>
+                                        <option value="ML">Smitha</option>
+                                        <option value="DS">Arathi</option>
+                                        <option value="WD">Aparna</option>
+                                        <option value="CS">Sreeji</option>
                                     </select>
                                 </div>
                                 <!-- Normal Dropdown -->
                                 <div class="col-md-6 mb-3">
-                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Module Level</label>
+                                    <label class="form-label fw-bold" style="margin-bottom: 15px;">Module Level<span class="text-danger">*</span></label>
                                     <select class="form-select" name="module_level[]">
                                         <option value="">Select Level</option>
                                         <option value="Beginner" <?= (isset($module['module_level']) && strtolower($module['module_level']) === 'beginner') ||
