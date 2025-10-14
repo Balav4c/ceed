@@ -18,7 +18,6 @@
                             <th>Module Name</th>
                             <th>Description</th>
                             <th>Duration</th>
-                            <!-- <th>Module Videos</th> -->
                             <th>Status</th>
                             <th>Action</th>
                         </tr>

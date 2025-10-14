@@ -6,7 +6,7 @@
                 <h3 class="mb-0"><?= isset($lesson) ? 'Edit Lesson' : 'Add New Lesson' ?></h3>
             </div>
             <div class="card-body">
-                <form id="lessonForm">
+                <form id="lessonForm" method="post" action="<?= base_url('admin/module/save_lesson') ?>">
                     <input type="hidden" id="deleted_videos" name="deleted_videos" value="">
                     <input type="hidden" name="module_id" value="<?= esc($module_id ?? '') ?>">
                     <input type="hidden" name="course_id" value="<?= esc($course_id ?? '') ?>">
@@ -26,9 +26,7 @@
                         <label class="form-label fw-bold">Lesson Videos <span class="text-danger">*</span></label>
                         <input type="hidden" name="existing_videos" id="existing_videos"
                             value='<?= isset($lesson['videos']) ? esc($lesson['videos']) : "[]" ?>'>
-                        <input type="hidden" id="uploaded_videos" name="uploaded_videos"
-                            value="<?= esc($newUploadedVideos ?? '') ?>">
-
+                       <input type="hidden" id="uploaded_videos" name="uploaded_videos" value="<?= esc($newUploadedVideos ?? '') ?>">
                         <div id="fileUpload" class="d-flex flex-wrap gap-2">
                             <!-- Display existing videos if editing -->
                             <?php if (isset($existingVideos) && !empty($existingVideos)): ?>
@@ -55,7 +53,7 @@
                     <div class="col-12 d-flex justify-content-end gap-2 mt-4">
                         <a href="<?= base_url('admin/manage_module/lessons/' . $module_id) ?>"
                             class="btn btn-secondary">Back</a>
-                        <button type="submit" class="btn btn-primary">Save Lesson</button>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">Save Lesson</button>
                     </div>
                 </form>
             </div>
