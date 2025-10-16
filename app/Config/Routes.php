@@ -122,11 +122,11 @@ $routes->post('admin/manage_module/update/(:num)', 'admin\CourseModule::updateLe
 
 $routes->get('admin/manage_miniquiz', 'admin\MiniQuiz::index');
 $routes->get('admin/mini_quiz/add', 'admin\MiniQuiz::add');
-$routes->post('admin/mini_quiz/save', 'admin/MiniQuiz::saveQuiz');
-$routes->get('admin/mini_quiz/edit/(:num)', 'admin/MiniQuiz::editQuiz/$1');
-$routes->post('admin/mini_quiz/update/(:num)', 'admin/MiniQuiz::updatev/$1');
-$routes->post('admin/mini_quiz/delete', 'admin/MiniQuiz::deleteQuiz');
-$routes->post('admin/mini_quiz/quizListAjax', 'admin/MiniQuiz::QuizlistAjax');
+$routes->post('admin/mini_quiz/save', 'admin\MiniQuiz::saveQuiz');
+$routes->get('admin/mini_quiz/edit/(:num)', 'admin\MiniQuiz::editQuiz/$1');
+$routes->post('admin/mini_quiz/update/(:num)', 'admin\MiniQuiz::updatev/$1');
+$routes->post('admin/mini_quiz/delete', 'admin\MiniQuiz::deleteQuiz');
+$routes->post('admin/mini_quiz/quizListAjax', 'admin\MiniQuiz::QuizlistAjax');
 
 
 

@@ -1,30 +1,19 @@
 <?php
 
 namespace App\Models\admin;
+
 use CodeIgniter\Model;
 
 class MiniQuizModel extends Model
 {
     protected $table = 'mini_quizzes';
     protected $primaryKey = 'quiz_id';
-
     protected $allowedFields = [
-        'course_id',
-        'module_id',
-        'question_text',
-        'options',
-        'correct_answer',
-        'status',
-        'created_at',
-        'updated_at'
+        'course_id', 'module_id', 'question_text', 'options',
+        'correct_answer', 'status', 'created_at', 'updated_at'
     ];
 
-    protected $useTimestamps = true;
-    protected $casts = [
-        'options' => 'json'
-    ];
-
-    // Total count excluding soft-deleted
+    //  Get total count of all quizzes (except deleted)
     public function getAllQuizCount()
     {
         return $this->db->table($this->table)
@@ -32,26 +21,42 @@ class MiniQuizModel extends Model
             ->countAllResults();
     }
 
-    // Get filtered records with limit and order
-    public function getAllFilteredRecords($condition, $start, $length, $orderBy = 'quiz_id', $orderDir = 'desc')
+    //  Get total count after applying search
+    public function getAllFilteredCount($search = '')
     {
-        return $this->db->table($this->table)
-            ->where('status !=', 'delete')
-            ->where($condition, null, false)
-            ->orderBy($orderBy, $orderDir)
-            ->limit($length, $start)
-            ->get()
-            ->getResult();
+        $builder = $this->db->table($this->table)
+            ->where('status !=', 'delete');
+
+        if ($search !== '') {
+            $builder->groupStart()
+                ->like('question_text', $search)
+                ->orLike('correct_answer', $search)
+                ->orLike('course_id', $search)
+                ->orLike('module_id', $search)
+                ->groupEnd();
+        }
+
+        return $builder->countAllResults();
     }
 
-    // Count of filtered records
-    public function getFilterQuizCount($condition)
+    //  Get records after search + pagination
+    public function getAllFilteredRecords($search = '', $start = 0, $length = 10)
     {
-        return $this->db->table($this->table)
-            ->select('COUNT(*) as filRecords')
-            ->where('status !=', 'delete')
-            ->where($condition, null, false)
+        $builder = $this->db->table($this->table)
+            ->where('status !=', 'delete');
+
+        if ($search !== '') {
+            $builder->groupStart()
+                ->like('question_text', $search)
+                ->orLike('correct_answer', $search)
+                ->orLike('course_id', $search)
+                ->orLike('module_id', $search)
+                ->groupEnd();
+        }
+
+        return $builder->orderBy('quiz_id', 'DESC')
+            ->limit($length, $start)
             ->get()
-            ->getRow();
+            ->getResultArray();
     }
 }
