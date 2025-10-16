@@ -26,30 +26,39 @@ class MiniQuiz extends BaseController
         return $template;
     }
 
-    public function saveQuiz()
-    {
-        $model = new MiniQuizModel();
+public function saveQuiz()
+{
+    $model = new MiniQuizModel();
 
-        // Build JSON options array
-        $options = [
-            'A' => $this->request->getPost('option_a'),
-            'B' => $this->request->getPost('option_b'),
-            'C' => $this->request->getPost('option_c'),
-            'D' => $this->request->getPost('option_d'),
-        ];
+    $options = [
+        'A' => $this->request->getPost('option_a'),
+        'B' => $this->request->getPost('option_b'),
+        'C' => $this->request->getPost('option_c'),
+        'D' => $this->request->getPost('option_d'),
+    ];
 
-        $data = [
-            'course_id' => $this->request->getPost('course_id'),
-            'module_id' => $this->request->getPost('module_id'),
-            'question_text' => $this->request->getPost('question_text'),
-            'options' => json_encode($options), // store as JSON
-            'correct_answer' => $this->request->getPost('correct_answer'),
-            'status' => 'active'
-        ];
+    $data = [
+        'course_id' => $this->request->getPost('course_id'),
+        'module_id' => $this->request->getPost('module_id'),
+        'question_text' => $this->request->getPost('question_text'),
+        'options' => json_encode($options),
+        'correct_answer' => $this->request->getPost('correct_answer'),
+        'status' => '1'
+    ];
 
-        $model->insert($data);
-        return redirect()->to('admin/mini_quiz')->with('success', 'Quiz added successfully!');
+    // Try inserting and send JSON response
+    if ($model->insert($data)) {
+        return $this->response->setJSON([
+            'success' => true,
+            'message' => 'Quiz Added Successfully!'
+        ]);
+    } else {
+        return $this->response->setJSON([
+            'success' => false,
+            'message' => 'Failed to add quiz. Please try again.'
+        ]);
     }
+}
 
     public function editQuiz($id)
     {
@@ -59,8 +68,12 @@ class MiniQuiz extends BaseController
         // Decode options JSON for form display
         $quiz['options'] = json_decode($quiz['options'], true);
         $data['quiz'] = $quiz;
-
-        return view('admin/add_miniquiz', $data);
+        $template = view('admin/common/header');
+        $template .= view('admin/common/sidemenu');
+        $template .=  view('admin/add_miniquiz', $data);
+        $template .= view('admin/common/footer');
+        $template .= view('admin/page_scripts/coursejs');
+          return $template;
     }
 
     public function updateQuiz($id)
@@ -95,64 +108,40 @@ class MiniQuiz extends BaseController
         return $this->response->setJSON(['status' => 'success']);
     }
 
-   public function quizListAjax()
-{
-    try {
+  public function quizListAjax()
+    {
         $quizModel = new MiniQuizModel();
 
         $request = service('request');
 
-        $draw = $request->getPost('draw') ?? 1;
-        $start = $request->getPost('start') ?? 0;
-        $length = $request->getPost('length') ?? 10;
+        $draw   = $request->getPost('draw');
+        $start  = $request->getPost('start');
+        $length = $request->getPost('length');
         $search = $request->getPost('search')['value'] ?? '';
 
-        $condition = "1=1";
-        if (!empty($search)) {
-            $search = trim(preg_replace('/\s+/', ' ', $search));
-            $esc = $quizModel->db->escapeLikeString($search);
-            $condition .= " AND (
-                question_text LIKE '%{$esc}%'
-                OR correct_answer LIKE '%{$esc}%'
-            )";
-        }
+        $totalRecords = $quizModel->getAllQuizCount();
+        $filteredRecords = $quizModel->getAllFilteredCount($search);
+        $quizList = $quizModel->getAllFilteredRecords($search, $start, $length);
 
-        $columns = ['quiz_id', 'course_id', 'module_id', 'question_text', 'correct_answer', 'status'];
-        $orderColumnIndex = $request->getPost('order')[0]['column'] ?? 6;
-        $orderDir = $request->getPost('order')[0]['dir'] ?? 'desc';
-        $orderBy = $columns[$orderColumnIndex] ?? 'quiz_id';
-
-        $quizRecords = $quizModel->getAllFilteredRecords($condition, $start, $length, $orderBy, $orderDir);
-
-        $result = [];
+        $data = [];
         $slno = $start + 1;
-        foreach ($quizRecords as $q) {
-            $result[] = [
+
+        foreach ($quizList as $row) {
+            $data[] = [
                 'slno' => $slno++,
-                'quiz_id' => $q->quiz_id,
-                'course_id' => $q->course_id,
-                'module_id' => $q->module_id,
-                'question_text' => $q->question_text,
-                'correct_answer' => $q->correct_answer,
-                'status' => $q->status
+                'course_id' => $row['course_id'],
+                'module_id' => $row['module_id'],
+                'question_text' => $row['question_text'],
+                'correct_answer' => $row['correct_answer'],
+                'quiz_id' => $row['quiz_id'],
             ];
         }
 
-        $totalCount = $quizModel->getAllQuizCount();
-        $filteredCountObj = $quizModel->getFilterQuizCount($condition);
-        $filteredCount = $filteredCountObj->filRecords ?? 0;
-
         return $this->response->setJSON([
-            "draw" => intval($draw),
-            "recordsTotal" => $totalCount,
-            "recordsFiltered" => $filteredCount,
-            "data" => $result
+            'draw' => $draw,
+            'recordsTotal' => $totalRecords,
+            'recordsFiltered' => $filteredRecords,
+            'data' => $data,
         ]);
-    } catch (\Throwable $e) {
-        log_message('error', $e->getMessage());
-        return $this->response->setStatusCode(500)
-            ->setJSON(['error' => $e->getMessage()]);
     }
-}
-
 }

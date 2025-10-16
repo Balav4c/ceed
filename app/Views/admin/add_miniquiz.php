@@ -1,6 +1,7 @@
 <div class="container">
     <div class="page-inner">
         <div class="card">
+            <div id="messageBox" class="alert d-none text-center" role="alert"></div>
             <div class="card-header">
                 <h3 class="mb-0"><?= isset($quiz) ? 'Edit Quiz' : 'Add New Quiz' ?></h3>
             </div>

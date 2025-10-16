@@ -37,7 +37,7 @@
                     }
                 }
             ],
-            order: [[6, 'desc']],
+            order: [[1, 'desc']],
             columnDefs: [
                 { searchable: false, orderable: false, targets: [0, 5] }
             ],
@@ -54,17 +54,60 @@
                     cell.innerHTML = pageInfo.start + i + 1;
                 });
         });
+ const form = $("#quizForm");
+    const messageBox = $("#messageBox");
 
+    form.on("submit", function (e) {
+        e.preventDefault();
 
+        $.ajax({
+            url: form.attr("action"),
+            type: "POST",
+            data: form.serialize(),
+            dataType: "json",
+            beforeSend: function () {
+                messageBox
+                    .removeClass("d-none alert-success alert-danger")
+                    .addClass("alert-info")
+                    .text("Saving quiz...");
+            },
+            success: function (response) {
+                if (response.success) {
+                    messageBox
+                        .removeClass("alert-info alert-danger")
+                        .addClass("alert-success")
+                        .text(response.message);
+                    form.trigger("reset");
 
-
-    $(document).on('click', '.deleteQuiz', function () {
-        let id = $(this).data('id');
-        if (confirm('Are you sure you want to delete this quiz?')) {
-            $.post("<?= base_url('admin/mini_quiz/delete') ?>", { id: id }, function (res) {
-                if (res.status === 'success') table.ajax.reload();
-            });
-        }
+                    // Hide success after 3 seconds
+                    setTimeout(() => {
+                        messageBox.fadeOut('slow', function () {
+                            $(this).addClass('d-none').show();
+                        });
+                    }, 3000);
+                } else {
+                    messageBox
+                        .removeClass("alert-info alert-success")
+                        .addClass("alert-danger")
+                        .text(response.message || "Something went wrong!");
+                }
+            },
+            error: function (xhr) {
+                console.error(xhr.responseText);
+                messageBox
+                    .removeClass("alert-info alert-success")
+                    .addClass("alert-danger")
+                    .text("Server Error: Failed to save quiz.");
+            }
+        });
     });
+        $(document).on('click', '.deleteQuiz', function () {
+            let id = $(this).data('id');
+            if (confirm('Are you sure you want to delete this quiz?')) {
+                $.post("<?= base_url('admin/mini_quiz/delete') ?>", { id: id }, function (res) {
+                    if (res.status === 'success') table.ajax.reload();
+                });
+            }
+        });
     });
 </script>
