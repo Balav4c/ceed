@@ -62,8 +62,8 @@
                         </select>
                     </div>
                     <div class="col-12 d-flex justify-content-end gap-2 mt-4">
-                        <a href="" class="btn btn-secondary">Back</a>
-                        <button type="submit" class="btn btn-primary" id="saveBtn">Save Lesson</button>
+                        <a href="<?= base_url('admin/manage_miniquiz') ?>" class="btn btn-secondary">Back</a>
+                        <button type="submit" class="btn btn-primary" id="saveBtn">Save Quiz</button>
                     </div>
             </div>
         </div>
