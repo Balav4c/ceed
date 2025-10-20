@@ -6,6 +6,18 @@ use App\Models\admin\MiniQuizModel;
 
 class MiniQuiz extends BaseController
 {
+    public function __construct()
+    {
+        $this->session = \Config\Services::session();
+        $this->input = \Config\Services::request();
+        $this->courseModel = new MiniQuizModel();
+        // $this->courseModel = new CourseModel();
+        // $this->moduleModel = new CourseModuleModel();
+         if (!$this->session->has('user_id')) {
+            header('Location: ' . base_url('admin'));
+            exit();
+        }
+    }
     public function index()
     {
         $template = view('admin/common/header');
