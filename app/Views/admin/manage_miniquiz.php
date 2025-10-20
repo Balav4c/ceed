@@ -3,17 +3,17 @@
     <div class="card">
       <div class="card-header">
         <div class="card-header d-flex justify-content-between">
-            <h3>Manage Mini Quizzes</h3>
-            <a href="<?= base_url('admin/mini_quiz/add') ?>" class="btn btn-primary">Add New Quiz</a>
+          <h3>Manage Mini Quizzes</h3>
+          <a href="<?= base_url('admin/mini_quiz/add') ?>" class="btn btn-primary">Add New Quiz</a>
         </div>
-    </div>
+      </div>
       <div class="card-body">
-        <table id="quizTable" class="table table-striped">
+        <table id="quizTable" class="table table-bordered">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>Course</th>
-              <th>Module</th>
+              <th style="width: 11%;">SI NO</th>
+              <th>Course Name</th>
+              <th>Module Name</th>
               <th>Question</th>
               <th>Correct Answer</th>
               <th>Action</th>
@@ -24,5 +24,3 @@
     </div>
   </div>
 </div>
-
-

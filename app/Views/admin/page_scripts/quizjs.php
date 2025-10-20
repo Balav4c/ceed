@@ -31,19 +31,24 @@
                 {
                     data: "quiz_id",
                     render: function (id) {
-                        let editUrl = "<?= base_url('admin/mini_quiz/edit/') ?>" + id;
-                        return `<a href="${editUrl}" class="btn btn-sm btn-info me-1">Edit</a>
-                        <button class="btn btn-sm btn-danger deleteQuiz" data-id="${id}">Delete</button>`;
+                        return `<div class="d-flex align-items-center gap-3">
+                                    <a href="<?= base_url('admin/mini_quiz/edit/') ?>${id}" title="Edit" style="color: rgb(13, 162, 199);">
+                                        <i class="bi bi-pencil-fill"></i>
+                                    </a>
+                                    <a href="javascript:void(0);" class="deleteQuiz" data-id="${id}" title="Delete" style="color: #dc3545;">
+                                        <i class="bi bi-trash-fill"></i>
+                                    </a>
+                                </div>`;
                     }
                 }
+
             ],
-            order: [[1, 'desc']],
+            order: [[6, 'desc']],
             columnDefs: [
                 { searchable: false, orderable: false, targets: [0, 5] }
             ],
-            language: {
-                infoFiltered: "",
-            }, scrollX: false,
+            language: { infoFiltered: "" },
+            scrollX: false,
             autoWidth: false
         });
         table.on('order.dt search.dt draw.dt', function () {
@@ -54,60 +59,109 @@
                     cell.innerHTML = pageInfo.start + i + 1;
                 });
         });
- const form = $("#quizForm");
-    const messageBox = $("#messageBox");
+        const form = $("#quizForm");
+        const messageBox = $("#messageBox");
 
-    form.on("submit", function (e) {
-        e.preventDefault();
+        form.on("submit", function (e) {
+            e.preventDefault();
 
-        $.ajax({
-            url: form.attr("action"),
-            type: "POST",
-            data: form.serialize(),
-            dataType: "json",
-            beforeSend: function () {
-                messageBox
-                    .removeClass("d-none alert-success alert-danger")
-                    .addClass("alert-info")
-                    .text("Saving quiz...");
-            },
-            success: function (response) {
-                if (response.success) {
+            $.ajax({
+                url: form.attr("action"),
+                type: "POST",
+                data: form.serialize(),
+                dataType: "json",
+                beforeSend: function () {
                     messageBox
-                        .removeClass("alert-info alert-danger")
-                        .addClass("alert-success")
-                        .text(response.message);
-                    form.trigger("reset");
+                        .removeClass("d-none alert-success alert-danger")
+                        .addClass("alert-info")
+                        .text("Saving quiz...");
+                },
+                success: function (response) {
+                    if (response.success) {
+                        messageBox
+                            .removeClass("alert-info alert-danger")
+                            .addClass("alert-success")
+                            .text(response.message);
+                        form.trigger("reset");
 
-                    // Hide success after 3 seconds
-                    setTimeout(() => {
-                        messageBox.fadeOut('slow', function () {
-                            $(this).addClass('d-none').show();
-                        });
-                    }, 3000);
-                } else {
+                        // Hide success after 3 seconds
+                        setTimeout(() => {
+                            messageBox.fadeOut('slow', function () {
+                                $(this).addClass('d-none').show();
+                            });
+                        }, 3000);
+                    } else {
+                        messageBox
+                            .removeClass("alert-info alert-success")
+                            .addClass("alert-danger")
+                            .text(response.message || "Something went wrong!");
+                    }
+                },
+                error: function (xhr) {
+                    console.error(xhr.responseText);
                     messageBox
                         .removeClass("alert-info alert-success")
                         .addClass("alert-danger")
-                        .text(response.message || "Something went wrong!");
+                        .text("Server Error: Failed to save quiz.");
                 }
-            },
-            error: function (xhr) {
-                console.error(xhr.responseText);
-                messageBox
-                    .removeClass("alert-info alert-success")
-                    .addClass("alert-danger")
-                    .text("Server Error: Failed to save quiz.");
-            }
+            });
         });
-    });
-        $(document).on('click', '.deleteQuiz', function () {
-            let id = $(this).data('id');
-            if (confirm('Are you sure you want to delete this quiz?')) {
-                $.post("<?= base_url('admin/mini_quiz/delete') ?>", { id: id }, function (res) {
-                    if (res.status === 'success') table.ajax.reload();
+        
+        // delete pop up 
+        $(document).on("click", ".deleteQuiz", function (e) {
+            e.preventDefault();
+
+            // correct variable name (was roleId / quizId confusion)
+            const quizId = $(this).data("id");
+            if (!quizId) return;
+
+            swal({
+                title: "Are You Sure?",
+                text: "You want to delete this quiz!",
+                icon: "warning",
+                buttons: {
+                    cancel: {
+                        visible: true,
+                        text: "Cancel",
+                        className: "btn btn-danger",
+                    },
+                    confirm: {
+                        text: "Delete",
+                        className: "btn btn-success",
+                    },
+                },
+            }).then((willDelete) => {
+                if (!willDelete) return;
+                let postData = { id: quizId };
+
+                $.ajax({
+                    url: "<?= base_url('admin/mini_quiz/delete') ?>",
+                    type: "POST",
+                    data: postData,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.status === "success") {
+                            swal("Deleted!", response.message, {
+                                icon: "success",
+                                buttons: {
+                                    confirm: { className: "btn btn-success" },
+                                },
+                            });
+                            if ($.fn.DataTable.isDataTable('#quizTable')) {
+                                $('#quizTable').DataTable().ajax.reload(null, false);
+                            } else {
+                                // fallback: reload page
+                                location.reload();
+                            }
+                        } else {
+                            swal("Error!", response.message || "Delete failed", "error");
+                        }
+                    },
+                    error: function () {
+                        swal("Error!", "Something went wrong. Try again.", "error");
+                    },
                 });
-            }
+            });
         });
     });
 </script>

@@ -26,39 +26,39 @@ class MiniQuiz extends BaseController
         return $template;
     }
 
-public function saveQuiz()
-{
-    $model = new MiniQuizModel();
+    public function saveQuiz()
+    {
+        $model = new MiniQuizModel();
 
-    $options = [
-        'A' => $this->request->getPost('option_a'),
-        'B' => $this->request->getPost('option_b'),
-        'C' => $this->request->getPost('option_c'),
-        'D' => $this->request->getPost('option_d'),
-    ];
+        $options = [
+            'A' => $this->request->getPost('option_a'),
+            'B' => $this->request->getPost('option_b'),
+            'C' => $this->request->getPost('option_c'),
+            'D' => $this->request->getPost('option_d'),
+        ];
 
-    $data = [
-        'course_id' => $this->request->getPost('course_id'),
-        'module_id' => $this->request->getPost('module_id'),
-        'question_text' => $this->request->getPost('question_text'),
-        'options' => json_encode($options),
-        'correct_answer' => $this->request->getPost('correct_answer'),
-        'status' => '1'
-    ];
+        $data = [
+            'course_id' => $this->request->getPost('course_id'),
+            'module_id' => $this->request->getPost('module_id'),
+            'question_text' => $this->request->getPost('question_text'),
+            'options' => json_encode($options),
+            'correct_answer' => $this->request->getPost('correct_answer'),
+            'status' => '1'
+        ];
 
-    // Try inserting and send JSON response
-    if ($model->insert($data)) {
-        return $this->response->setJSON([
-            'success' => true,
-            'message' => 'Quiz Added Successfully!'
-        ]);
-    } else {
-        return $this->response->setJSON([
-            'success' => false,
-            'message' => 'Failed to add quiz. Please try again.'
-        ]);
+        // Try inserting and send JSON response
+        if ($model->insert($data)) {
+            return $this->response->setJSON([
+                'success' => true,
+                'message' => 'Quiz Added Successfully!'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'success' => false,
+                'message' => 'Failed to add quiz. Please try again.'
+            ]);
+        }
     }
-}
 
     public function editQuiz($id)
     {
@@ -70,10 +70,10 @@ public function saveQuiz()
         $data['quiz'] = $quiz;
         $template = view('admin/common/header');
         $template .= view('admin/common/sidemenu');
-        $template .=  view('admin/add_miniquiz', $data);
+        $template .= view('admin/add_miniquiz', $data);
         $template .= view('admin/common/footer');
         $template .= view('admin/page_scripts/coursejs');
-          return $template;
+        return $template;
     }
 
     public function updateQuiz($id)
@@ -103,19 +103,37 @@ public function saveQuiz()
     public function deleteQuiz()
     {
         $id = $this->request->getPost('id');
-        $model = new MiniQuizModel();
-        $model->update($id, ['status' => 'delete']);
-        return $this->response->setJSON(['status' => 'success']);
+        if (!$id) {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Invalid quiz ID.'
+            ]);
+        }
+
+        $quizModel = new MiniQuizModel();
+        $updated = $quizModel->update($id, ['status' => 9]);
+
+        if ($updated) {
+            return $this->response->setJSON([
+                'status' => 'success',
+                'message' => 'Quiz deleted successfully.'
+            ]);
+        } else {
+            return $this->response->setJSON([
+                'status' => 'error',
+                'message' => 'Failed to delete quiz.'
+            ]);
+        }
     }
 
-  public function quizListAjax()
+    public function quizListAjax()
     {
         $quizModel = new MiniQuizModel();
 
         $request = service('request');
 
-        $draw   = $request->getPost('draw');
-        $start  = $request->getPost('start');
+        $draw = $request->getPost('draw');
+        $start = $request->getPost('start');
         $length = $request->getPost('length');
         $search = $request->getPost('search')['value'] ?? '';
 

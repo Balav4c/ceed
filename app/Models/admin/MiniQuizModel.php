@@ -9,15 +9,21 @@ class MiniQuizModel extends Model
     protected $table = 'mini_quizzes';
     protected $primaryKey = 'quiz_id';
     protected $allowedFields = [
-        'course_id', 'module_id', 'question_text', 'options',
-        'correct_answer', 'status', 'created_at', 'updated_at'
+        'course_id',
+        'module_id',
+        'question_text',
+        'options',
+        'correct_answer',
+        'status',
+        'created_at',
+        'updated_at'
     ];
 
     //  Get total count of all quizzes (except deleted)
     public function getAllQuizCount()
     {
         return $this->db->table($this->table)
-            ->where('status !=', 'delete')
+            ->where('status', 1)
             ->countAllResults();
     }
 
@@ -25,7 +31,7 @@ class MiniQuizModel extends Model
     public function getAllFilteredCount($search = '')
     {
         $builder = $this->db->table($this->table)
-            ->where('status !=', 'delete');
+            ->where('status', 1);
 
         if ($search !== '') {
             $builder->groupStart()
@@ -38,12 +44,11 @@ class MiniQuizModel extends Model
 
         return $builder->countAllResults();
     }
-
     //  Get records after search + pagination
     public function getAllFilteredRecords($search = '', $start = 0, $length = 10)
     {
         $builder = $this->db->table($this->table)
-            ->where('status !=', 'delete');
+            ->where('status', 1);
 
         if ($search !== '') {
             $builder->groupStart()
